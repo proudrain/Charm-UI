@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="uiSimbaDemon">
+<head>
+    <meta charset="UTF-8">
+    <title>UI-SIMBA</title>
+    <link rel="stylesheet" href="./lib/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../../dist/ui-simba.css"/>
+    <script src="./lib/angular.js"></script>
+    <script src="../../dist/ui-simba.js"></script>
+    <script src="./main.js"></script>
+</head>
+<body ng-controller="UiSimbaController" style="margin: 0 10px;">
+    <filter-group filter-options="filterOptions">
+        <span>所有分类 &gt; 共 {{ tableCount }} 张表</span>
+    </filter-group>
+</body>
+</html>
