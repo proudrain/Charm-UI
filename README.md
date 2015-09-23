@@ -1,6 +1,6 @@
 ### Charm-UI - UI Components for React.
 
-# Demo
+# Demo 
 
 # Installation
 
