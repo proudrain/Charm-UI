@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <script src="../lib/react.js"></script>
+    <script src="../lib/JSXTransformer.js"></script>
+    <script src="../../../dist/Charm-UI.js"></script>
+    <link rel="stylesheet" href="../../../dist/Charm-UI.css" />
+    <style>
+        #tooltip {
+            display: block;
+            margin-left: 800px;
+            margin-top: 200px;
+        }
+    </style>
+</head>
+<body>
+<span id="tooltip"></span>
+<script type="text/jsx">
+React.render(
+    <ToolTip
+        tip="提提示文字字,提提示字字,提提示字,提提示字字,提提示字,提提示字字,提提示字,提提示字字,提提示字,提提示字字,提提示字,提提示字字,提提示文字。"
+        trigger='click'
+        delay={1000}
+        hoverable={false}
+        position="right"
+        width="300px"
+    >
+        点击文字
+    </ToolTip>,
+    document.getElementById("tooltip")
+);
+</script>
+</body>
+</html>
