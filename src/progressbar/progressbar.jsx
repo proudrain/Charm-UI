@@ -17,13 +17,13 @@ var Progressbar = React.createClass({
   },
   getDefaultProps: function() {
     return {
-      speed: 0.2,
+      speed: 0.6,
       spinner: true,
       easing: 'ease',
-      maxRate: 0.9996,
+      maxRate: 0.98,
       incStep: 0.04,
-      minStep: 0.02,
-      maxStep: 0.06,
+      minStep: 0.005,
+      maxStep: 0.03,
       trickle: true,
       trickleSpeed: 800,
       setTrickle: false
@@ -31,7 +31,7 @@ var Progressbar = React.createClass({
   },
   start: function() {
   	this._init();
-  	this.set('1%');
+  	this.set('0.5%');
 	  this.props.trickle && this._autoInc();
   },
   set: function(n, trickle) {
@@ -126,4 +126,3 @@ var Progressbar = React.createClass({
     ) : null;
   }
 });
-
