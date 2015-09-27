@@ -1,4 +1,16 @@
 var ToolTip = React.createClass({
+    getDefaultProps: function() {
+        return {
+            tip: "tip",
+            trigger: 'hover',
+            delay: 0,
+            hoverable: false,
+            position: "tip",
+            width: "200px",
+            type: 'span',
+            aHref: "#"
+        };
+    },
     getInitialState: function() {
         return {
             position: this.props.position,
@@ -70,7 +82,8 @@ var ToolTip = React.createClass({
             case "bottom":tip.style.left = -(tipWidth-contWidth)/2+"px";
                         tip.style.top = "100%";
                 break;
-            default:
+            default: tip.style.top = -(tipHeight-contHeight)/2+"px";
+                    tip.style.left = -(tipWidth+20)+"px";
         }
         tip.style.height = this.state.tipHeight-20+"px";
         this.prevertTipOverflow();
@@ -115,11 +128,29 @@ var ToolTip = React.createClass({
         };
     },
     render: function() {
-        return (
-            <span className={"tooltip "+this.state.position}>
-                <span ref="cont" onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut} onClick={this.handleClick}>{this.props.children}</span>
-                <div onMouseOver={this.handleTipMouseOver} onMouseOut={this.handleTipMouseOut} className="tip" ref="tip" style={this.getTipStyle()}>{this.props.tip}</div>
-            </span>
-        );
+        if(this.props.type=="span") {
+            return (
+                <span className={"tooltip "+this.state.position}>
+                    <span ref="cont" onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut} onClick={this.handleClick}>{this.props.children}</span>
+                    <div onMouseOver={this.handleTipMouseOver} onMouseOut={this.handleTipMouseOut} className="tip" ref="tip" style={this.getTipStyle()}>{this.props.tip}</div>
+                </span>
+            );
+        }
+        if(this.props.type=="a") {
+            return (
+                <span className={"tooltip "+this.state.position}>
+                    <a href={this.props.aHref} ref="cont" onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut} onClick={this.handleClick}>{this.props.children}</a>
+                    <div onMouseOver={this.handleTipMouseOver} onMouseOut={this.handleTipMouseOut} className="tip" ref="tip" style={this.getTipStyle()}>{this.props.tip}</div>
+                </span>
+            );
+        }
+        if(this.props.type=="button") {
+            return (
+                <span className={"tooltip "+this.state.position}>
+                    <button ref="cont" onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut} onClick={this.handleClick}>{this.props.children}</button>
+                    <div onMouseOver={this.handleTipMouseOver} onMouseOut={this.handleTipMouseOut} className="tip" ref="tip" style={this.getTipStyle()}>{this.props.tip}</div>
+                </span>
+            );
+        }
     }
 });

@@ -21,11 +21,13 @@
 React.render(
     <ToolTip
         tip="提提示文字字,提提示字字,提提示字,提提示字字,提提示字,提提示字字,提提示字,提提示字字,提提示字,提提示字字,提提示字,提提示字字,提提示文字。"
-        trigger='click'
-        delay={1000}
-        hoverable={false}
-        position="right"
+        trigger='hover'
+        delay={700}
+        hoverable={true}
+        position="top"
         width="300px"
+        // type="a"
+        // aHref="www.baidu.com"
     >
         点击文字
     </ToolTip>,
