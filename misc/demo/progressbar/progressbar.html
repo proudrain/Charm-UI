@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Charm UI ProgressBar Component</title>
+		<link rel="stylesheet" href="../../../dist/Charm-UI.css" />
+		<script src="../lib/react.js"></script>
+		<script src="../lib/JSXTransformer.js"></script>
+		<script src="../../../dist/Charm-UI.js"></script>
+		<style>
+			body {
+				margin: 0;
+			}
+			#progress-demo {
+				margin-top: 150px;
+			}
+			button {
+				height: 34px;
+				padding: 0 1em;
+				border: none;
+				border-radius: 2px;
+				background-color: #1BBC9B;
+				font-size: 16px;
+				color: #FAFAFA;
+			}
+			button:focus {
+				outline: none;
+			}
+			button:active {
+				background-color: #13866f;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<div id="progressbar"></div>
+		<div id="progress-demo">
+			<button id="start">start()</button>
+			<button id="set-20">set(0.2)</button>
+			<button id="set-50">set('50%')</button>
+			<button id="inc">inc()</button>
+			<button id="inc-20">inc(0.2)</button>
+			<button id="done">done()</button>
+		</div>
+
+		<script type="text/jsx">
+			var prog = React.render(
+			  <Progressbar />,
+			  document.getElementById('progressbar')
+			);
+
+			var prbar = document.getElementById('progress-demo');
+			prbar.onclick = function(e) {
+			  switch(e.target.id) {
+			      case "start":
+			        prog.start();
+			        break;
+			      case "set-20":
+			        prog.set(.2);
+			        break;
+			      case "set-50":
+			        prog.set('50%');
+			        break;
+			      case "inc":
+			        prog.inc();
+			        break;
+			      case "inc-20":
+			        prog.inc(.2);
+			        break;
+			      case "done":
+			        prog.done();
+			        break;
+			    }
+			}
+  	</script>
+	</body>
+
+</html>
