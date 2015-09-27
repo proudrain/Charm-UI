@@ -2,7 +2,266 @@
 
 
 
+// 整体组件
+var AddressList = React.createClass({displayName: "AddressList",
+    getInitialState: function() {
+        return {
+            nowAddress: this.props.localAddress,
+            isWrapShow: false
+        };
+    },
+    getDefaultProps: function() {
+        return {
+            
+        };
+    },
+    handleBtnClick: function() {
+        if(!this.state.isWrapShow) {
+            this.setState({isWrapShow: true});
+            // 出现列表事件
+            console.log('000000000000000');
+        } else {
+            this.setState({isWrapShow: false});
+        }
+    },
+    handleSelectAddress: function(selectAddress) {
+        this.setState({nowAddress: selectAddress});
+        this.setState({isWrapShow: false});
+    },
+    render: function() {
+        var addressWrap = this.state.isWrapShow?React.createElement(AddressWrap, {localAddress: this.props.localAddress, selectAddress: this.handleSelectAddress}):null;
+        return (
+            React.createElement("div", {className: "AddressList"}, 
+                React.createElement(AddressDropButton, {isClick: this.state.isWrapShow, onClick: this.handleBtnClick}, this.state.nowAddress), 
+                addressWrap
+            )
+        );
+    }
+});
 
+// 下拉按钮
+var AddressDropButton = React.createClass({displayName: "AddressDropButton",
+    getInitialState: function() {
+        return {
+
+        };
+    },
+    getDefaultProps: function() {
+        return {
+
+        };
+    },
+    handleClick: function() {
+        this.props.onClick();
+    },
+    render: function() {
+        return (
+            React.createElement("button", {className: "AddressDropButton", onClick: this.handleClick}, 
+                this.props.children, 
+                React.createElement("span", {className: "triangle "+this.props.isClick})
+            )
+        );
+    }
+});
+
+// 地址操作框容器
+var AddressWrap = React.createClass({displayName: "AddressWrap",
+    getInitialState: function() {
+        return {
+
+        };
+    },
+    getDefaultProps: function() {
+        return {
+
+        };
+    },
+    render: function() {
+        return (
+            React.createElement("div", {className: "AddressWrap"}, 
+                React.createElement(AddressWrapTop, {localAddress: this.props.localAddress, selectAddress: this.props.selectAddress})
+            )
+        );
+    }
+});
+
+// 地址列表头部
+var AddressWrapTop = React.createClass({displayName: "AddressWrapTop",
+    getInitialState: function() {
+        return {
+
+        };
+    },
+    getDefaultProps: function() {
+        return {
+
+        };
+    },
+    render: function() {
+        return (
+            React.createElement("div", {className: "AddressWrapTop"}, 
+                React.createElement(AddressLocation, {localAddress: this.props.localAddress, selectAddress: this.props.selectAddress})
+            )
+        );
+    }
+});
+
+// 定位当前地址
+var AddressLocation = React.createClass({displayName: "AddressLocation",
+    getInitialState: function() {
+        return {
+
+        };
+    },
+    getDefaultProps: function() {
+        return {
+
+        };
+    },
+    handleClick: function() {
+        this.props.selectAddress(this.props.localAddress);
+    },
+    render: function() {
+        return (
+            React.createElement("div", null, 
+                "猜你在：", React.createElement("span", {onClick: this.handleClick}, this.props.localAddress)
+            )
+        );
+    }
+});
+
+// 地址搜索
+var AddressSearch = React.createClass({displayName: "AddressSearch",
+    getInitialState: function() {
+        return {
+
+        };
+    },
+    getDefaultProps: function() {
+        return {
+
+        };
+    },
+    render: function() {
+        return (
+            React.createElement("div", null)
+        );
+    }
+});
+
+// 地址列表容器
+var AddressListWrap = React.createClass({displayName: "AddressListWrap",
+    getInitialState: function() {
+        return {
+
+        };
+    },
+    getDefaultProps: function() {
+        return {
+
+        };
+    },
+    render: function() {
+        return (
+            React.createElement("div", null)
+        );
+    }
+});
+
+// 地址列表行
+var AddressListRow = React.createClass({displayName: "AddressListRow",
+    getInitialState: function() {
+        return {
+
+        };
+    },
+    getDefaultProps: function() {
+        return {
+
+        };
+    },
+    render: function() {
+        return (
+            React.createElement("div", null)
+        );
+    }
+});
+
+// 二级地址列表容器
+var AddressSecondWrap = React.createClass({displayName: "AddressSecondWrap",
+    getInitialState: function() {
+        return {
+
+        };
+    },
+    getDefaultProps: function() {
+        return {
+
+        };
+    },
+    render: function() {
+        return (
+            React.createElement("div", null)
+        );
+    }
+});
+
+// 二级地址列表容器
+var AddressSecondWrap = React.createClass({displayName: "AddressSecondWrap",
+    getInitialState: function() {
+        return {
+
+        };
+    },
+    getDefaultProps: function() {
+        return {
+
+        };
+    },
+    render: function() {
+        return (
+            React.createElement("div", null)
+        );
+    }
+});
+
+// 二级地址列表行
+var AddressSecondRow = React.createClass({displayName: "AddressSecondRow",
+    getInitialState: function() {
+        return {
+
+        };
+    },
+    getDefaultProps: function() {
+        return {
+
+        };
+    },
+    render: function() {
+        return (
+            React.createElement("div", null)
+        );
+    }
+});
+
+// 滚动条组件
+var ScrollBar = React.createClass({displayName: "ScrollBar",
+    getInitialState: function() {
+        return {
+
+        };
+    },
+    getDefaultProps: function() {
+        return {
+
+        };
+    },
+    render: function() {
+        return (
+            React.createElement("div", null)
+        );
+    }
+});
 
 'use strict'
 
