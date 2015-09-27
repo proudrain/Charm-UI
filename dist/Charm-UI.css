@@ -1,3 +1,42 @@
+.cu-progress {
+  z-index: 2000; }
+  .cu-progress .cu-progress-bar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #09c4c7;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    box-shadow: 1px 0 1px #09c4c7; }
+  .cu-progress .cu-spinner {
+    position: fixed;
+    top: 15px;
+    right: 10px;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #09c4c7;
+    border-left-color: transparent;
+    border-radius: 50%;
+    animation: rotateSpinner 0.6s infinite linear;
+    -webkit-animation: rotateSpinner 0.6s infinite linear; }
+
+@keyframes rotateSpinner {
+  from {
+    -webkit-transform: rotateZ(0);
+            transform: rotateZ(0); }
+  to {
+    -webkit-transform: rotateZ(360deg);
+            transform: rotateZ(360deg); } }
+
+@-webkit-keyframes rotateSpinner {
+  from {
+    -webkit-transform: rotateZ(0);
+            transform: rotateZ(0); }
+  to {
+    -webkit-transform: rotateZ(360deg);
+            transform: rotateZ(360deg); } }
+
 .tooltip {
   position: relative; }
 
@@ -61,42 +100,3 @@
 .tooltip.bottom .tip {
   top: 100%;
   margin-top: 16px; }
-
-.cu-progress {
-  z-index: 2000; }
-  .cu-progress .cu-progress-bar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 2px;
-    background-color: #09C4C7;
-    border-top-right-radius: 2px;
-    border-bottom-right-radius: 2px;
-    box-shadow: 1px 0 1px #09C4C7; }
-  .cu-progress .cu-spinner {
-    position: fixed;
-    top: 15px;
-    right: 10px;
-    width: 18px;
-    height: 18px;
-    border: 2px solid #09C4C7;
-    border-left-color: transparent;
-    border-radius: 50%;
-    animation: rotateSpinner 0.6s infinite linear;
-    -webkit-animation: rotateSpinner 0.6s infinite linear; }
-
-@keyframes rotateSpinner {
-  from {
-    -webkit-transform: rotateZ(0);
-            transform: rotateZ(0); }
-  to {
-    -webkit-transform: rotateZ(360deg);
-            transform: rotateZ(360deg); } }
-
-@-webkit-keyframes rotateSpinner {
-  from {
-    -webkit-transform: rotateZ(0);
-            transform: rotateZ(0); }
-  to {
-    -webkit-transform: rotateZ(360deg);
-            transform: rotateZ(360deg); } }
