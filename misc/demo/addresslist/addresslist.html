@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <script src="../lib/react.js"></script>
+    <script src="../lib/JSXTransformer.js"></script>
+    <script src="../../../dist/Charm-UI.js"></script>
+    <link rel="stylesheet" href="../../../dist/Charm-UI.css" />
+    <style>
+    #AddressList {
+        left: 200px;
+        top: 200px;
+        position: absolute
+    }
+    </style>
+</head>
+<body>
+<span id="AddressList"></span>
+<script type="text/jsx">
+React.render(
+    <AddressList localAddress="西安" defaultAddress="西安" />,
+    document.getElementById("AddressList")
+);
+</script>
+</body>
+</html>
