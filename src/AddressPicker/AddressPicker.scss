@@ -1,0 +1,35 @@
+
+//  ==================================================
+//  Component: AddressPicker
+//
+//  Include: AddressList AddressSearch
+//
+//  Description:  Style for AddressPicker
+//
+//  TODO:
+//  ==================================================
+
+/*==================================================
+    Component: AddressPicker
+  ==================================================*/
+
+// variable
+$ns: "" !default;
+
+$address-list-class: AddressList;
+$address-search-class: address-search;
+
+/* AddressPicker */
+.#{$ns}address-picker {
+  overflow: hidden;
+  /* AddressList */
+  .#{$address-list-class} {
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: top;
+  }
+  /* AddressSearch */
+  .#{$address-search-class} {
+    display: inline-block;
+  }
+}

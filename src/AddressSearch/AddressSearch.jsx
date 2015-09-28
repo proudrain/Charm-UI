@@ -7,7 +7,8 @@
 //
 //  Description:  Jsx for AddressSearch
 //
-//  TODO:
+//  TODO: [add] 增加显示搜索结果数目
+//        [update] 改用 Baidu LBS云 接口([condition] 后端上传信息)
 //  ==================================================
 
 /* AddressSearch */

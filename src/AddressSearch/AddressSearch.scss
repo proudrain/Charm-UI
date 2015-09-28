@@ -9,7 +9,11 @@
 //  TODO: [improve] 美化 map-nav 样式
 //  ==================================================
 
-/* variable */
+/*==================================================
+    Component: AddressSearch
+  ==================================================*/
+
+// variable
 $ns: "" !default;
 
 $rose: #E74C3C;
@@ -55,7 +59,6 @@ $map-nav-title-height: 40px;
 /* AddressInput */
 .#{$ns}address-input {
   display: inline-block;
-  margin-bottom: $input-map-margin;
   .#{$ns}input-keyword {
     @extend .input;
     padding: 0 1em;
@@ -85,6 +88,7 @@ $map-nav-title-height: 40px;
 
 /* AddressMap */
 .#{$ns}address-map {
+  margin-top: $input-map-margin;
   position: relative;
   width: $map-width;
   height: $map-height;
@@ -116,9 +120,11 @@ $map-nav-title-height: 40px;
       li {
         padding: 6px !important;
         margin: 0 !important;
-        transition: background-color .2s ease;
-        &:hover {
-          background-color: #EEE;
+        & > div {
+          transition: background-color .2s ease;
+          &:hover {
+            background-color: #F6F6F6;
+          }
         }
         a {
           display: none;
@@ -175,7 +181,7 @@ $map-nav-title-height: 40px;
   }
 }
 
-/* scrollbar */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
   height: 0;

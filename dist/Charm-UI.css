@@ -51,7 +51,24 @@
   top: -8px;
   left: 40px; }
 
-/* variable */
+/*==================================================
+    Component: AddressPicker
+  ==================================================*/
+/* AddressPicker */
+.address-picker {
+  overflow: hidden;
+  /* AddressList */
+  /* AddressSearch */ }
+  .address-picker .AddressList {
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: top; }
+  .address-picker .address-search {
+    display: inline-block; }
+
+/*==================================================
+    Component: AddressSearch
+  ==================================================*/
 /* to be extended */
 .format-border, .input, .address-input .input-keyword, .button, .address-input .input-commit {
   border: none; }
@@ -68,8 +85,7 @@
 /* main */
 /* AddressInput */
 .address-input {
-  display: inline-block;
-  margin-bottom: 10px; }
+  display: inline-block; }
   .address-input .input-keyword {
     padding: 0 1em;
     width: 400px;
@@ -92,6 +108,7 @@
 
 /* AddressMap */
 .address-map {
+  margin-top: 10px;
   position: relative;
   width: 900px;
   height: 420px;
@@ -119,10 +136,11 @@
         border: none !important; }
       .address-map .map-nav .map-items li {
         padding: 6px !important;
-        margin: 0 !important;
-        transition: background-color 0.2s ease; }
-        .address-map .map-nav .map-items li:hover {
-          background-color: #EEE; }
+        margin: 0 !important; }
+        .address-map .map-nav .map-items li > div {
+          transition: background-color 0.2s ease; }
+          .address-map .map-nav .map-items li > div:hover {
+            background-color: #F6F6F6; }
         .address-map .map-nav .map-items li a {
           display: none; }
         .address-map .map-nav .map-items li > div > div:first-child > span {
@@ -159,7 +177,7 @@
   .tangram-suggestion-main .tangram-suggestion td i {
     background: none; }
 
-/* scrollbar */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
   height: 0; }
@@ -172,7 +190,9 @@
   background: #DADADA;
   border-radius: 10px; }
 
-/* variable */
+/*==================================================
+    Component: ProgressBar
+  ==================================================*/
 /* main */
 .cu-progress {
   z-index: 2000; }

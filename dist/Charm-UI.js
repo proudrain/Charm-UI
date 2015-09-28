@@ -259,7 +259,38 @@ var ScrollBar = React.createClass({displayName: "ScrollBar",
     }
 });
 
+'use strict'
 
+//  ==================================================
+//  Component: AddressPicker
+//
+//  Include: AddressList AddressSearch
+//
+//  Description:  Jsx for AddressPicker
+//
+//  TODO:
+//  ==================================================
+
+var AddressPicker = React.createClass({displayName: "AddressPicker",
+  getInitialState: function() {
+    return {
+      city: "西安"
+    };
+  },
+  getDefaultProps: function() {
+    return {
+
+    }
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "address-picker"}, 
+        React.createElement(AddressList, {localAddress: this.state.city}), 
+        React.createElement(AddressSearch, {city: this.state.city})
+      )
+    );
+  }
+});
 
 'use strict'
 
@@ -270,7 +301,8 @@ var ScrollBar = React.createClass({displayName: "ScrollBar",
 //
 //  Description:  Jsx for AddressSearch
 //
-//  TODO:
+//  TODO: [add] 增加显示搜索结果数目
+//        [update] 改用 Baidu LBS云 接口([condition] 后端上传信息)
 //  ==================================================
 
 /* AddressSearch */

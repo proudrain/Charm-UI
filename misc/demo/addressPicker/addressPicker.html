@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Charm UI AddressPicker Component</title>
+		<link rel="stylesheet" href="../../../dist/Charm-UI.css" />
+		<script src="../lib/react.js"></script>
+		<script src="../lib/JSXTransformer.js"></script>
+		<script src="../../../dist/Charm-UI.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=WV2BjP7gyBAmAzbsYzHj5qLZ"></script>
+    <style>
+      body {
+        height: 100vh;
+        margin: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+      }
+
+      #address-picker {
+        position: absolute;
+        top: 50%;
+        margin-top: -50px;
+        left: 50%;
+        margin-left: -317.5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="address-picker"></div>
+
+    <script type="text/jsx">
+      var addressPicker = React.render(
+        <AddressPicker />,
+        document.getElementById('address-picker')
+      );
+
+    </script>
+  </body>
+</html>
