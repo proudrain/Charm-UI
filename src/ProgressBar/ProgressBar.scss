@@ -1,9 +1,25 @@
+
+//  ==================================================
+//  Component: ProgressBar
+//
+//  Include: Spinner
+//
+//  Description: Jsx for ProgressBar
+//
+//  TODO: [improve] 增强发光效果
+//  ==================================================
+
+/* variable */
 $ns: cu- !default;
+
 $teal: #1bbc9b;
 $hulan: #09c4c7;
 $white: #fff;
 $color-first: $hulan;
+
 $progressbar-size: 2px;
+
+/* main */
 .#{$ns}progress {
   z-index: 2000;
   .#{$ns}progress-bar {
@@ -29,6 +45,8 @@ $progressbar-size: 2px;
     -webkit-animation: rotateSpinner 0.6s infinite linear;
   }
 }
+
+/* animation */
 @keyframes rotateSpinner {
   from {
     transform: rotateZ(0);
@@ -37,6 +55,7 @@ $progressbar-size: 2px;
     transform: rotateZ(360deg);
   }
 }
+
 @-webkit-keyframes rotateSpinner {
   from {
     transform: rotateZ(0);

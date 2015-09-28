@@ -1,0 +1,193 @@
+
+//  ==================================================
+//  Component: AddressSearch
+//
+//  Include: AddressInput AddressMap
+//
+//  Description:  Style for AddressSearch
+//
+//  TODO: [improve] 美化 map-nav 样式
+//  ==================================================
+
+/* variable */
+$ns: "" !default;
+
+$rose: #E74C3C;
+$teal: #1bbc9b;
+$hulan: #09c4c7;
+$white: #FFF;
+$milk: #FAFAFA;
+$text-black: #333;
+$color-divide: #EAEAEA;
+$color-first: saturate($rose, 8%);
+
+$search-input-height: 50px;
+$search-keyword-width: 400px;
+$search-commit-width: 120px;
+
+$input-map-margin: 10px;
+$map-width: 900px;
+$map-height: 420px;
+$map-nav-width: 260px;
+$map-nav-title-height: 40px;
+
+/* to be extended */
+.format-border {
+  border: none;
+  &:focus {
+    outline: none;
+  }
+}
+
+.input {
+  @extend .format-border;
+  font-size: 16px;
+  color: $text-black;
+}
+
+.button {
+  @extend .format-border;
+  font-size: 18px;
+}
+
+/* main */
+
+/* AddressInput */
+.#{$ns}address-input {
+  display: inline-block;
+  margin-bottom: $input-map-margin;
+  .#{$ns}input-keyword {
+    @extend .input;
+    padding: 0 1em;
+    width: $search-keyword-width;
+    height: $search-input-height;
+    line-height: $search-input-height;
+    vertical-align: middle;
+    box-sizing: border-box;
+  }
+  .#{$ns}input-commit {
+    @extend .button;
+    display: inline-block;
+    width: $search-commit-width;
+    height: $search-input-height;
+    background-color:  $color-first;
+    color: $milk;
+    transition: background-color .3s ease;
+    vertical-align: middle;
+    &:hover {
+      background-color:  darken($color-first, 2%);
+    }
+    &:active {
+      background-color:  darken($color-first, 10%);
+    }
+  }
+}
+
+/* AddressMap */
+.#{$ns}address-map {
+  position: relative;
+  width: $map-width;
+  height: $map-height;
+  background-color: $white;
+  color: $text-black;
+  .#{$ns}map-nav {
+    float: left;
+    width: $map-nav-width;
+    height: 100%;
+    border-right: 1px solid $color-divide;
+    overflow-y: scroll;
+    .#{$ns}map-nav-title {
+      height: $map-nav-title-height;
+      padding: 0 10px;
+      border-bottom: 1px solid $color-divide;
+      line-height: $map-nav-title-height;
+      font-size: 14px;
+      .#{$ns}map-nav-number {
+        margin: 0 4px;
+        font-weight: bold;
+        color: $color-first;
+      }
+    }
+    .#{$ns}map-items {
+      height: $map-height - $map-nav-title-height;
+      & > div {
+        border: none !important;
+      }
+      li {
+        padding: 6px !important;
+        margin: 0 !important;
+        transition: background-color .2s ease;
+        &:hover {
+          background-color: #EEE;
+        }
+        a {
+          display: none;
+        }
+        & > div {
+          & > div:first-child > span {
+            color: $color-first !important;
+            font-size: 14px;
+          }
+          & > div:not(:first-child) b {
+            color: #666 !important;
+            font-weight: normal !important;
+          }
+          &[style$=");"] {
+            //background-color: #FAFAFA !important;
+          }
+        }
+      }
+      & > div > div:last-child {
+        padding: 6px 0 !important;
+        margin-bottom: 2px;
+        border-top: 1px solid $color-divide;
+        background-color: #FFF !important;
+        text-align: center !important;
+        & > a {
+          display: none;
+        }
+        & > div {
+          float: none !important;
+          margin-right: 0 !important;
+          span {
+            margin: 4px !important;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+  .#{$ns}map-main {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: $map-width - $map-nav-width;
+    height: 100%;
+  }
+}
+
+/* Baidu Map Autocomplete */
+.tangram-suggestion-main .tangram-suggestion td {
+  font-size: 14px;
+  color: $color-first;
+  i {
+    background: none;
+  }
+}
+
+/* scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 0;
+}
+
+::-webkit-scrollbar-track {
+  background: #F0F0F0;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #DADADA;
+  border-radius: 10px;
+  // box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.2);
+}

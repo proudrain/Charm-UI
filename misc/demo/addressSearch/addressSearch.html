@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Charm UI AddressSearch Component</title>
+		<link rel="stylesheet" href="../../../dist/Charm-UI.css" />
+		<script src="../lib/react.js"></script>
+		<script src="../lib/JSXTransformer.js"></script>
+		<script src="../../../dist/Charm-UI.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=WV2BjP7gyBAmAzbsYzHj5qLZ"></script>
+    <style>
+      body {
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+    </style>
+  </head>
+  <body>
+  <div id="address-search">
+
+  </div>
+
+  <script type="text/jsx">
+    var addressSearch = React.render(
+      <AddressSearch />,
+      document.getElementById('address-search')
+    );
+
+  </script>
+  </body>
+</html>

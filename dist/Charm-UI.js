@@ -2,10 +2,165 @@
 
 
 
+'use strict'
+
+//  ==================================================
+//  Component: AddressSearch
+//
+//  Include: AddressInput AddressMap
+//
+//  Description:  Jsx for AddressSearch
+//
+//  TODO:
+//  ==================================================
+
+/* AddressSearch */
+var AddressSearch = React.createClass({displayName: "AddressSearch",
+  getInitialState: function() {
+    return {
+      address: null
+    };
+  },
+  getDefaultProps: function() {
+    return {
+      inputWidth: 400,
+      inputTip: "输入想要搜索的地址",
+      searchBtnText: "搜索",
+      city: "西安"
+    }
+  },
+  setAddress: function(ad) {
+    this.setState({
+      address: ad
+    });
+  },
+  render: function() {
+    var keywordStyle = {
+      width: this.props.searchInput
+    }
+    return (
+      React.createElement("div", {className: "address-search"}, 
+        React.createElement(AddressInput, {city: this.props.city, inputTip: this.props.inputTip, inputWidth: this.props.inputWidth, searchBtnText: this.props.searchBtnText, searchSubmitHandler: this.setAddress}), 
+        this.state.address
+          ? React.createElement(AddressMap, {addressKeyword: this.state.address, city: this.props.city})
+          : null
+      )
+    );
+  }
+});
+
+/* AddressInput */
+var AddressInput = React.createClass({displayName: "AddressInput",
+  getInitialState: function() {
+    return {
+      keyword: null
+    };
+  },
+  getDefaultProps: function() {
+    return {
+      inputWidth: 400,
+      inputTip: "输入想要搜索的地址",
+      searchBtnText: "搜索"
+    }
+  },
+  searchSubmit: function() {
+    this.props
+      .searchSubmitHandler(this.state.keyword);
+  },
+  keywordChange: function(e) {
+    this.setState({
+      keyword: e.target.value
+    });
+  },
+  checkEnter: function(e) {
+    (e.keyCode === 13) && this.searchSubmit();
+  },
+  componentDidMount: function() {
+    var mapAutoComplete = new BMap.Autocomplete({
+      "input": "_addressSearchKeyword",
+      "location": this.props.city
+    });
+  },
+  render: function() {
+    var keywordStyle = {
+      width: this.props.inputWidth
+    };
+    return (
+      React.createElement("div", {className: "address-input"}, 
+        React.createElement("input", {className: "input-keyword", id: "_addressSearchKeyword", onChange: this.keywordChange, onKeyUp: this.checkEnter, placeholder: this.props.inputTip, style: keywordStyle}), 
+        React.createElement("button", {className: "input-commit", onClick: this.searchSubmit}, this.props.searchBtnText)
+      )
+    );
+  }
+});
+
+/* AddressMap */
+var AddressMap = React.createClass({displayName: "AddressMap",
+  getInitialState: function() {
+    return {
+      mapLocalObj: null,
+      itemsNumber: 0
+    };
+  },
+  getDefaultProps: function() {
+    return {}
+  },
+  componentDidMount: function() {
+    var map = new BMap.Map("_addressMapMain");
+    map.centerAndZoom(this.props.city);
+    var mapLocalObj = new BMap.LocalSearch(map, {
+      renderOptions: {
+        map: map,
+        panel: "_addressMapItems"
+      },
+      onSearchComplete: function(e) {
+        // this.setState({
+        //   itemsNumber: e.getNumPois()
+        // });
+        console.log(e.getNumPois());
+      }.bind(this)
+    });
+    this.setState({
+      mapLocalObj: mapLocalObj
+    });
+  },
+  render: function() {
+    this.state.mapLocalObj && this.state
+      .mapLocalObj
+      .search(this.props.addressKeyword);
+    return (
+      React.createElement("div", {className: "address-map"}, 
+        React.createElement("div", {className: "map-nav"}, 
+          React.createElement("div", {className: "map-nav-title"}, 
+            "找到", 
+            React.createElement("span", {className: "map-nav-number"}, 
+              this.state.itemsNumber
+            ), 
+            "家体验店"
+          ), 
+          React.createElement("div", {className: "map-items", id: "_addressMapItems"})
+        ), 
+        React.createElement("div", {className: "map-main", id: "_addressMapMain"})
+      )
+    );
+  }
+});
+
 
 
 'use strict'
 
+//  ==================================================
+//  Component: ProgressBar
+//
+//  Include: Spinner
+//
+//  Description: Jsx for ProgressBar
+//
+//  TODO: [fix] 修正初始时 transition 不生效的问题
+//  ==================================================
+
+/* Spinner */
 var Spinner = React.createClass({displayName: "Spinner",
   render: function() {
     return (
@@ -14,6 +169,7 @@ var Spinner = React.createClass({displayName: "Spinner",
   }
 });
 
+/* ProgressBar */
 var ProgressBar = React.createClass({displayName: "ProgressBar",
   getInitialState: function() {
     return {
@@ -23,16 +179,16 @@ var ProgressBar = React.createClass({displayName: "ProgressBar",
   },
   getDefaultProps: function() {
     return {
-      speed: 0.6,
-      spinner: true,
-      easing: 'ease',
-      maxRate: 0.96,
-      incStep: 0.04,
-      minStep: 0.005,
-      maxStep: 0.03,
-      trickle: true,
-      trickleSpeed: 800,
-      setTrickle: false
+      speed: 0.6,  // 动画速度
+      spinner: true,  // 是否有圈圈
+      easing: 'ease',  // 动画缓动曲线
+      maxRate: 0.96,  // 进度条最大宽度
+      incStep: 0.04,  // inc 增长步幅
+      minStep: 0.005,  // 随机增长的最小步幅
+      maxStep: 0.03,  // 随机增长的最大步幅
+      trickle: true,  // 是否自动增长
+      trickleSpeed: 800,  // 自动增长的间隔时间
+      setTrickle: false  // set 后是否自动增长（未启用）
     };
   },
   start: function() {
@@ -79,12 +235,12 @@ var ProgressBar = React.createClass({displayName: "ProgressBar",
       }.bind(this), this.props.speed * 2 * 1000);
     }.bind(this), this.props.speed * 1000);
   },
-  _format: function(data) {
-    if (typeof data === 'number') {
+  _format: function(data) {  // 格式化为 0-100 的整数
+    if (typeof data === 'number') {  // 0-1 的小数
       return data > 1
         ? this.pros.maxRate * 100
         : data * 100;
-    } else if (typeof data === 'string') {
+    } else if (typeof data === 'string') {  // 百分比
       return parseFloat(data) > 100
         ? this.props.maxRate * 100
         : parseFloat(data);

@@ -1,5 +1,16 @@
 'use strict'
 
+//  ==================================================
+//  Component: ProgressBar
+//
+//  Include: Spinner
+//
+//  Description: Jsx for ProgressBar
+//
+//  TODO: [fix] 修正初始时 transition 不生效的问题
+//  ==================================================
+
+/* Spinner */
 var Spinner = React.createClass({
   render: function() {
     return (
@@ -8,6 +19,7 @@ var Spinner = React.createClass({
   }
 });
 
+/* ProgressBar */
 var ProgressBar = React.createClass({
   getInitialState: function() {
     return {
@@ -17,16 +29,16 @@ var ProgressBar = React.createClass({
   },
   getDefaultProps: function() {
     return {
-      speed: 0.6,
-      spinner: true,
-      easing: 'ease',
-      maxRate: 0.96,
-      incStep: 0.04,
-      minStep: 0.005,
-      maxStep: 0.03,
-      trickle: true,
-      trickleSpeed: 800,
-      setTrickle: false
+      speed: 0.6,  // 动画速度
+      spinner: true,  // 是否有圈圈
+      easing: 'ease',  // 动画缓动曲线
+      maxRate: 0.96,  // 进度条最大宽度
+      incStep: 0.04,  // inc 增长步幅
+      minStep: 0.005,  // 随机增长的最小步幅
+      maxStep: 0.03,  // 随机增长的最大步幅
+      trickle: true,  // 是否自动增长
+      trickleSpeed: 800,  // 自动增长的间隔时间
+      setTrickle: false  // set 后是否自动增长（未启用）
     };
   },
   start: function() {
@@ -73,12 +85,12 @@ var ProgressBar = React.createClass({
       }.bind(this), this.props.speed * 2 * 1000);
     }.bind(this), this.props.speed * 1000);
   },
-  _format: function(data) {
-    if (typeof data === 'number') {
+  _format: function(data) {  // 格式化为 0-100 的整数
+    if (typeof data === 'number') {  // 0-1 的小数
       return data > 1
         ? this.pros.maxRate * 100
         : data * 100;
-    } else if (typeof data === 'string') {
+    } else if (typeof data === 'string') {  // 百分比
       return parseFloat(data) > 100
         ? this.props.maxRate * 100
         : parseFloat(data);
