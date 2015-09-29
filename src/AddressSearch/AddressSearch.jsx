@@ -7,8 +7,7 @@
 //
 //  Description:  Jsx for AddressSearch
 //
-//  TODO: [add] 增加显示搜索结果数目
-//        [update] 改用 Baidu LBS云 接口([condition] 后端上传信息)
+//  TODO:
 //  ==================================================
 
 /* AddressSearch */
@@ -23,7 +22,7 @@ var AddressSearch = React.createClass({
       inputWidth: 400,
       inputTip: "输入想要搜索的地址",
       searchBtnText: "搜索",
-      city: "西安"
+      city: "北京"
     }
   },
   setAddress: function(ad) {
@@ -32,15 +31,10 @@ var AddressSearch = React.createClass({
     });
   },
   render: function() {
-    var keywordStyle = {
-      width: this.props.searchInput
-    }
     return (
       <div className="address-search">
         <AddressInput city={this.props.city} inputTip={this.props.inputTip} inputWidth={this.props.inputWidth} searchBtnText={this.props.searchBtnText} searchSubmitHandler={this.setAddress}/>
-        {this.state.address
-          ? <AddressMap addressKeyword={this.state.address} city={this.props.city}/>
-          : null}
+        <AddressMap addressKeyword={this.state.address} city={this.props.city}/>
       </div>
     );
   }
@@ -58,17 +52,13 @@ var AddressInput = React.createClass({
       inputWidth: 400,
       inputTip: "输入想要搜索的地址",
       searchBtnText: "搜索",
-      city: "西安"
+      city: "北京"
     }
   },
   searchSubmit: function() {
+    var keyword = this.getDOMNode().children[0].value;
     this.props
-      .searchSubmitHandler(this.state.keyword);
-  },
-  keywordChange: function(e) {
-    this.setState({
-      keyword: e.target.value
-    });
+      .searchSubmitHandler(keyword);
   },
   checkEnter: function(e) {
     (e.keyCode === 13) && this.searchSubmit();
@@ -85,7 +75,7 @@ var AddressInput = React.createClass({
     };
     return (
       <div className="address-input">
-        <input className="input-keyword" id="_addressSearchKeyword" onChange={this.keywordChange} onKeyUp={this.checkEnter} placeholder={this.props.inputTip} style={keywordStyle}></input>
+        <input className="input-keyword" id="_addressSearchKeyword" onKeyUp={this.checkEnter} placeholder={this.props.inputTip} style={keywordStyle}></input>
         <button className="input-commit" onClick={this.searchSubmit}>{this.props.searchBtnText}</button>
       </div>
     );
@@ -101,7 +91,11 @@ var AddressMap = React.createClass({
     };
   },
   getDefaultProps: function() {
-    return {}
+    return {
+      mapSearchgeotableId: 121763,
+      mapSearchTags: "",
+      mapSearchFilter: ""
+    }
   },
   componentDidMount: function() {
     var map = new BMap.Map("_addressMapMain");
@@ -112,22 +106,38 @@ var AddressMap = React.createClass({
         panel: "_addressMapItems"
       },
       onSearchComplete: function(e) {
-        // this.setState({
-        //   itemsNumber: e.getNumPois()
-        // });
-        console.log(e.getNumPois());
+        this.setState({
+          itemsNumber: e.getNumPois()
+        });
       }.bind(this)
     });
     this.setState({
       mapLocalObj: mapLocalObj
     });
   },
-  render: function() {
-    this.state.mapLocalObj && this.state
+  componentWillReceiveProps: function(nextProps) {
+    this.getSearch(nextProps.addressKeyword);
+  },
+  getSearch: function(keyword) {
+    var _this = this;
+    keyword && this.state
       .mapLocalObj
-      .search(this.props.addressKeyword);
+      .search(keyword, {
+        forceLocal: true,
+        customData: {
+          geotableId: _this.props.mapSearchgeotableId,
+          tags: _this.props.mapSearchTags,
+          filter: _this.props.mapSearchFilter
+        }
+      });
+  },
+  render: function() {
     return (
-      <div className="address-map">
+      <div className="address-map" style={{
+        display: this.props.addressKeyword
+          ? "block"
+          : "none"
+      }}>
         <div className="map-nav">
           <div className="map-nav-title">
             找到
