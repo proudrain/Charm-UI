@@ -8,8 +8,8 @@
     height: 100%;
     width: 100%;
     text-align: center;
-    color: #fff;
-    background: blue;
+    color: #000;
+    background: pink;
     font-size: 25px;
     display: inline-block;
     vertical-align: inherit;
@@ -35,10 +35,11 @@
 
 .AddressList .AddressWrap {
     position: absolute;
-    background: blue;
+    background: pink;
     width: 700px;
-    height: 500px;
+    max-height: 400px;
     margin-top: 10px;
+    overflow-y: auto;
 }
 .AddressList .AddressWrap::before {
     display: block;
@@ -47,42 +48,53 @@
     width: 0;
     height: 0;
     border-left: 16px solid transparent;
-    border-bottom: 16px solid blue;
+    border-bottom: 16px solid pink;
     border-right: 16px solid transparent;
     top: -8px;
     left: 40px;
 }
 
+.AddressList .AddressWrap .AddressListWrap {
+    padding-left: 10%;
+    position: relative;
+}
+.AddressList .AddressWrap .AddressListWrap .AddressListRow {
+    width: 100%;
+}
+.AddressList .AddressWrap .AddressListWrap .AddressListRow .keyData {
+    position: absolute;
+    left: 5%;
+}
+.AddressList .AddressWrap .AddressListWrap .AddressListRow .dataWrap {
+    width: 100%;
+    display: block;
+}
+.AddressList .AddressWrap .AddressListWrap .AddressListRow .dataWrap>span {
+    display: inline-block;
+    text-align: center;
+    width: 33%;
+}
+.AddressList .AddressWrap .AddressListWrap .AddressListRow .dataWrap>span>span {
+    cursor: pointer;
+}
 
+.AddressList .AddressWrap .AddressSecondWrap {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-a {}
+}
+.AddressList .AddressWrap .AddressSecondWrap .AddressListRow {
+    padding-left: 100px;
+    position: relative;
+}
+.AddressList .AddressWrap .AddressSecondWrap .AddressListRow .keyData {
+    position: absolute;
+    left: 20px;
+}
+.AddressList .AddressWrap .AddressSecondWrap .dataWrap {
+    display: block;
+    width: 100%;
+}
+.AddressList .AddressWrap .AddressSecondWrap .dataWrap>span {
+    display: inline-block;
+    width: 33%;
+    text-align: center;
+}
