@@ -16,12 +16,12 @@
         overflow: hidden;
       }
 
-      #address-picker {
+      .address-picker {
         position: absolute;
-        top: 50%;
-        margin-top: -50px;
+        top: 40%;
         left: 50%;
         margin-left: -317.5px;
+        transition: top .4s ease, left .4s ease;
       }
     </style>
   </head>
@@ -29,8 +29,12 @@
     <div id="address-picker"></div>
 
     <script type="text/jsx">
+      var addressPickerActiveStyle = {
+        top: "10%",
+        left: "40%"
+      };
       var addressPicker = React.render(
-        <AddressPicker />,
+        <AddressPicker addressPickerActiveStyle={addressPickerActiveStyle} />,
         document.getElementById('address-picker')
       );
 

@@ -57,7 +57,8 @@ var AddressInput = React.createClass({
     return {
       inputWidth: 400,
       inputTip: "输入想要搜索的地址",
-      searchBtnText: "搜索"
+      searchBtnText: "搜索",
+      city: "西安"
     }
   },
   searchSubmit: function() {

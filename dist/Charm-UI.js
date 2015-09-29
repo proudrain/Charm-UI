@@ -274,7 +274,8 @@ var ScrollBar = React.createClass({displayName: "ScrollBar",
 var AddressPicker = React.createClass({displayName: "AddressPicker",
   getInitialState: function() {
     return {
-      city: "西安"
+      city: "西安",
+      address: null
     };
   },
   getDefaultProps: function() {
@@ -282,12 +283,27 @@ var AddressPicker = React.createClass({displayName: "AddressPicker",
 
     }
   },
+  setAddress: function(ad) {
+    this.setState({
+      address: ad
+    });
+  },
+  setCity: function(ct) {
+    this.setState({
+      city: ct
+    });
+  },
   render: function() {
+    var addressPickerActiveStyle = this.state.address ? this.props.addressPickerActiveStyle : {};
+    console.log(addressPickerActiveStyle);
     return (
-      React.createElement("div", {className: "address-picker"}, 
+      React.createElement("div", {className: "address-picker", style: addressPickerActiveStyle}, 
         React.createElement(AddressList, {localAddress: this.state.city}), 
-        React.createElement(AddressSearch, {city: this.state.city})
-      )
+        React.createElement(AddressInput, {city: this.state.city, searchSubmitHandler: this.setAddress}), 
+        this.state.address
+          ? React.createElement(AddressMap, {addressKeyword: this.state.address, city: this.props.city})
+          : null
+    )
     );
   }
 });
@@ -351,7 +367,8 @@ var AddressInput = React.createClass({displayName: "AddressInput",
     return {
       inputWidth: 400,
       inputTip: "输入想要搜索的地址",
-      searchBtnText: "搜索"
+      searchBtnText: "搜索",
+      city: "西安"
     }
   },
   searchSubmit: function() {

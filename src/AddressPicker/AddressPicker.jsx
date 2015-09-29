@@ -13,7 +13,8 @@
 var AddressPicker = React.createClass({
   getInitialState: function() {
     return {
-      city: "西安"
+      city: "西安",
+      address: null
     };
   },
   getDefaultProps: function() {
@@ -21,12 +22,27 @@ var AddressPicker = React.createClass({
 
     }
   },
+  setAddress: function(ad) {
+    this.setState({
+      address: ad
+    });
+  },
+  setCity: function(ct) {
+    this.setState({
+      city: ct
+    });
+  },
   render: function() {
+    var addressPickerActiveStyle = this.state.address ? this.props.addressPickerActiveStyle : {};
+    console.log(addressPickerActiveStyle);
     return (
-      <div className="address-picker">
+      <div className="address-picker" style={addressPickerActiveStyle}>
         <AddressList localAddress={this.state.city}/>
-        <AddressSearch city={this.state.city}/>
-      </div>
+        <AddressInput city={this.state.city} searchSubmitHandler={this.setAddress} />
+        {this.state.address
+          ? <AddressMap addressKeyword={this.state.address} city={this.props.city}/>
+          : null}
+    </div>
     );
   }
 });

@@ -120,6 +120,9 @@ $map-nav-title-height: 40px;
       li {
         padding: 6px !important;
         margin: 0 !important;
+        & > span {
+          margin-right: 8px !important;
+        }
         & > div {
           transition: background-color .2s ease;
           &:hover {
