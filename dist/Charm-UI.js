@@ -297,6 +297,8 @@ var ScrollBar = React.createClass({displayName: "ScrollBar",
 //
 //  Include: AddressList AddressSearch
 //
+//  Dependence: reqwest.js
+//
 //  Description:  Jsx for AddressPicker
 //
 //  TODO: [@TongchengQiu] AddressList 更换城市后调用 setCity 设置城市
@@ -312,6 +314,14 @@ var AddressPicker = React.createClass({displayName: "AddressPicker",
   },
   getDefaultProps: function() {
     return {}
+  },
+  componentWillMount: function() {
+    var myCity = new BMap.LocalCity();
+    myCity
+      .get(function(res) {
+        var currentCity = res.name;
+        this.setCity(currentCity);
+      }.bind(this));
   },
   setAddress: function(ad) {
     this.setState({
@@ -344,9 +354,11 @@ var AddressPicker = React.createClass({displayName: "AddressPicker",
 //
 //  Include: AddressInput AddressMap
 //
+//  Dependence: reqwest.js
+//
 //  Description:  Jsx for AddressSearch
 //
-//  TODO:
+//  TODO: [add] 增加各项参数
 //  ==================================================
 
 /* AddressSearch */
@@ -364,9 +376,22 @@ var AddressSearch = React.createClass({displayName: "AddressSearch",
       city: "北京"
     }
   },
+  componentWillMount: function() {
+    var myCity = new BMap.LocalCity();
+    myCity
+      .get(function(res) {
+        var currentCity = res.name;
+        this.setCity(currentCity);
+      }.bind(this));
+  },
   setAddress: function(ad) {
     this.setState({
       address: ad
+    });
+  },
+  setCity: function(ct) {
+    this.setState({
+      city: ct
     });
   },
   render: function() {
@@ -395,7 +420,9 @@ var AddressInput = React.createClass({displayName: "AddressInput",
     }
   },
   searchSubmit: function() {
-    var keyword = this.getDOMNode().children[0].value;
+    var keyword = this.getDOMNode()
+      .children[0]
+      .value;
     this.props
       .searchSubmitHandler(keyword);
   },
@@ -426,7 +453,9 @@ var AddressMap = React.createClass({displayName: "AddressMap",
   getInitialState: function() {
     return {
       mapLocalObj: null,
-      itemsNumber: 0
+      itemsNumber: 0,
+      itemsList: [],
+      itemActive: 0
     };
   },
   getDefaultProps: function() {
@@ -437,40 +466,120 @@ var AddressMap = React.createClass({displayName: "AddressMap",
     }
   },
   componentDidMount: function() {
-    var map = new BMap.Map("_addressMapMain");
-    map.centerAndZoom(this.props.city);
-    var mapLocalObj = new BMap.LocalSearch(map, {
-      renderOptions: {
-        map: map,
-        panel: "_addressMapItems"
-      },
-      onSearchComplete: function(e) {
-        this.setState({
-          itemsNumber: e.getNumPois()
-        });
-      }.bind(this)
+    this.map = new BMap.Map("_addressMapMain", {
+      enableMapClick: false
     });
-    this.setState({
-      mapLocalObj: mapLocalObj
-    });
+    this.map
+      .centerAndZoom(this.props.city, 12);
   },
   componentWillReceiveProps: function(nextProps) {
-    this.getSearch(nextProps.addressKeyword);
+    nextProps.addressKeyword && this.getNearby(nextProps.addressKeyword);
   },
-  getSearch: function(keyword) {
+  getNearby: function(keyword, page) {
+    // 地址解析获取经纬度
+    var myGeo = new BMap.Geocoder();
     var _this = this;
-    keyword && this.state
-      .mapLocalObj
-      .search(keyword, {
-        forceLocal: true,
-        customData: {
-          geotableId: _this.props.mapSearchgeotableId,
-          tags: _this.props.mapSearchTags,
-          filter: _this.props.mapSearchFilter
+    myGeo
+      .getPoint(keyword, function(point) { // 解析成功后的回调 搜索信息
+        if (point) {
+          reqwest({
+            url: 'http://api.map.baidu.com/geosearch/v3/nearby',
+            type: 'jsonp',
+            data: {
+              ak: 'sdp9qCbToS7E23nDRxaAAwbh',
+              geotable_id: 121763,
+              location: point.lng + ',' + point.lat,
+              radius: 10000,
+              page_index: page || 0,
+              page_size: 50
+            },
+            jsonpCallback: 'callback',
+            success: function(res) {
+              _this.setState({
+                itemsNumber: res.total,
+                itemsList: res.contents
+              });
+              _this.showNearby();
+              _this.map
+                .centerAndZoom(_this.props.addressKeyword, 12);
+            }
+          })
+        } else {
+          alert("未找到该区域信息");
         }
+      }.bind(this), this.props.city);
+  },
+  showNearby: function() {
+    var _this = this;
+    for (var k in this.state.itemsList) {
+      var point = new BMap.Point(this.state.itemsList[k].location[0], this.state.itemsList[k].location[1]);
+      var marker = new BMap.Marker(point);
+      var label = new BMap.Label(String.fromCharCode(65 + parseInt(k)), {
+        offset: new BMap.Size(4, 2)
       });
+      label.setStyle({
+        border: 'none',
+        backgroundColor: 'transparent',
+        color: '#FAFAFA'
+      });
+      marker.setLabel(label);
+      marker.setTitle(this.state.itemsList[k].title);
+      marker
+        .addEventListener('click', function(e) {
+          _this.showInfoWindow(this.getLabel().content.charCodeAt(0) - 65);
+        });
+      this.map
+        .addOverlay(marker);
+    }
+    this.state.itemsList.length && this.showInfoWindow(0);
+  },
+  showInfoWindow: function(index) {
+    if (index !== this.state.itemActive || 1) {
+      var point = new BMap.Point(this.state.itemsList[index].location[0], this.state.itemsList[index].location[1]);
+      var itemInfo = this.state.itemsList[index];
+      var title = itemInfo.title;
+      var address = itemInfo.address;
+      var tel = itemInfo.tel;
+      var content = '<p class="map-info-window">地址：' + address + '<button class="map-info-btn">进入体验店</button>' + '</p>';
+      var infoWindow = new BMap.InfoWindow(content, {
+        title: title,
+        width: 290,
+        panel: "panel",
+        enableAutoPan: true,
+        offset: new BMap.Size(0, -25)
+      });
+      this.setState({
+        itemActive: + index
+      });
+      this.map
+        .openInfoWindow(infoWindow, point);
+    }
+  },
+  clickMapItem: function(e) {
+    var ele = e.target;
+    var eleClass = ele.getAttribute('class');
+    var itemIndex = 0;
+    if (eleClass === "map-item") {
+      itemIndex = ele.getAttribute('data-key');
+    } else if (eleClass === "map-item-mark" || eleClass === "map-item-main") {
+      itemIndex = ele.parentNode
+        .getAttribute('data-key');
+    } else if (!eleClass) {
+      itemIndex = ele.parentNode
+        .parentNode
+        .parentNode
+        .getAttribute('data-key');
+    } else {
+      itemIndex = ele.parentNode
+        .parentNode
+        .getAttribute('data-key');
+    }
+    this.showInfoWindow(itemIndex);
   },
   render: function() {
+    var mapItemActieStyle = {
+      backgroundColor: "#F0F0F0"
+    };
     return (
       React.createElement("div", {className: "address-map", style: {
         display: this.props.addressKeyword
@@ -479,13 +588,30 @@ var AddressMap = React.createClass({displayName: "AddressMap",
       }}, 
         React.createElement("div", {className: "map-nav"}, 
           React.createElement("div", {className: "map-nav-title"}, 
-            "找到", 
+            "附近有", 
             React.createElement("span", {className: "map-nav-number"}, 
               this.state.itemsNumber
             ), 
             "家体验店"
           ), 
-          React.createElement("div", {className: "map-items", id: "_addressMapItems"})
+          React.createElement("ul", {className: "map-items", id: "_addressMapItems", onClick: this.clickMapItem}, 
+            this
+              .state
+              .itemsList
+              .map(function (item, i) {
+                return React.createElement("li", {className: "map-item", "data-key": i, key: i, style: (i === this.state.itemActive)
+                    ? mapItemActieStyle
+                    :
+                      {}}, 
+                    React.createElement("span", {className: "map-item-mark", style: (i === this.state.itemActive) ? {backgroundColor: "#1bbc9b"} : {}}, String.fromCharCode(65 + i)), 
+                    React.createElement("div", {className: "map-item-main"}, 
+                      React.createElement("div", {className: "map-item-title"}, item.title), 
+                      React.createElement("div", {className: "map-item-address"}, "地址：", item.address), 
+                      React.createElement("div", {className: "map-item-tel"}, "电话：", item.tel)
+                    )
+                  );
+              }.bind(this))
+          )
         ), 
         React.createElement("div", {className: "map-main", id: "_addressMapMain"})
       )

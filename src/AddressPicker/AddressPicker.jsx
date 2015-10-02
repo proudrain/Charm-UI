@@ -5,6 +5,8 @@
 //
 //  Include: AddressList AddressSearch
 //
+//  Dependence: reqwest.js
+//
 //  Description:  Jsx for AddressPicker
 //
 //  TODO: [@TongchengQiu] AddressList 更换城市后调用 setCity 设置城市
@@ -20,6 +22,14 @@ var AddressPicker = React.createClass({
   },
   getDefaultProps: function() {
     return {}
+  },
+  componentWillMount: function() {
+    var myCity = new BMap.LocalCity();
+    myCity
+      .get(function(res) {
+        var currentCity = res.name;
+        this.setCity(currentCity);
+      }.bind(this));
   },
   setAddress: function(ad) {
     this.setState({

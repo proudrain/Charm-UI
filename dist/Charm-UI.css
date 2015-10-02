@@ -111,16 +111,16 @@
     Component: AddressSearch
   ==================================================*/
 /* to be extended */
-.format-border, .input, .address-input .input-keyword, .button, .address-input .input-commit {
+.format-border, .input, .address-input .input-keyword, .button, .address-input .input-commit, .address-map .map-main .map-info-btn {
   border: none; }
-  .format-border:focus, .input:focus, .address-input .input-keyword:focus, .button:focus, .address-input .input-commit:focus {
+  .format-border:focus, .input:focus, .address-input .input-keyword:focus, .button:focus, .address-input .input-commit:focus, .address-map .map-main .map-info-btn:focus {
     outline: none; }
 
 .input, .address-input .input-keyword {
   font-size: 16px;
   color: #333; }
 
-.button, .address-input .input-commit {
+.button, .address-input .input-commit, .address-map .map-main .map-info-btn {
   font-size: 18px; }
 
 /* main */
@@ -151,13 +151,13 @@
 .address-map {
   margin-top: 10px;
   position: relative;
-  width: 900px;
+  width: 940px;
   height: 420px;
   background-color: #FFF;
   color: #333; }
   .address-map .map-nav {
     float: left;
-    width: 260px;
+    width: 280px;
     height: 100%;
     border-right: 1px solid #EAEAEA;
     overflow-y: scroll; }
@@ -173,45 +173,49 @@
         color: #f04533; }
     .address-map .map-nav .map-items {
       height: 380px; }
-      .address-map .map-nav .map-items > div {
-        border: none !important; }
       .address-map .map-nav .map-items li {
-        padding: 6px !important;
-        margin: 0 !important; }
-        .address-map .map-nav .map-items li > span {
-          margin-right: 8px !important; }
-        .address-map .map-nav .map-items li > div {
-          transition: background-color 0.2s ease; }
-          .address-map .map-nav .map-items li > div:hover {
-            background-color: #F6F6F6; }
-        .address-map .map-nav .map-items li a {
-          display: none; }
-        .address-map .map-nav .map-items li > div > div:first-child > span {
-          color: #f04533 !important;
-          font-size: 14px; }
-        .address-map .map-nav .map-items li > div > div:not(:first-child) b {
-          color: #666 !important;
-          font-weight: normal !important; }
-      .address-map .map-nav .map-items > div > div:last-child {
-        padding: 6px 0 !important;
-        margin-bottom: 2px;
-        border-top: 1px solid #EAEAEA;
-        background-color: #FFF !important;
-        text-align: center !important; }
-        .address-map .map-nav .map-items > div > div:last-child > a {
-          display: none; }
-        .address-map .map-nav .map-items > div > div:last-child > div {
-          float: none !important;
-          margin-right: 0 !important; }
-          .address-map .map-nav .map-items > div > div:last-child > div span {
-            margin: 4px !important;
-            font-size: 14px; }
+        position: relative;
+        padding: 10px 6px;
+        border-bottom: 1px solid #EAEAEA;
+        overflow: hidden;
+        transition: background-color 0.3s ease; }
+        .address-map .map-nav .map-items li:hover {
+          background-color: #F6F6F6; }
+        .address-map .map-nav .map-items li .map-item-mark {
+          position: absolute;
+          top: 14px;
+          left: 10px;
+          padding: .3em;
+          border-radius: 50%;
+          background-color: #f04533;
+          color: #FAFAFA; }
+        .address-map .map-nav .map-items li .map-item-main {
+          margin-left: 34px; }
+          .address-map .map-nav .map-items li .map-item-main .map-item-title {
+            line-height: 26px; }
+          .address-map .map-nav .map-items li .map-item-main .map-item-address, .address-map .map-nav .map-items li .map-item-main .map-item-tel {
+            font-size: 14px;
+            color: #666; }
   .address-map .map-main {
     position: absolute;
     top: 0;
     right: 0;
-    width: 640px;
+    width: 660px;
     height: 100%; }
+    .address-map .map-main .map-info-window {
+      width: 280px;
+      margin: 2px 0;
+      color: #666; }
+    .address-map .map-main .map-info-btn {
+      display: block;
+      margin-top: 14px;
+      padding: 0.4em 0.8em;
+      background-color: #1bbc9b;
+      border-radius: 4px;
+      color: #FAFAFA;
+      font-size: 15px; }
+      .address-map .map-main .map-info-btn:active {
+        background-color: #18a689; }
 
 /* Baidu Map Autocomplete */
 .tangram-suggestion-main .tangram-suggestion td {

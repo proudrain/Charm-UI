@@ -30,9 +30,9 @@ $search-keyword-width: 400px;
 $search-commit-width: 120px;
 
 $input-map-margin: 10px;
-$map-width: 900px;
+$map-width: 940px;
 $map-height: 420px;
-$map-nav-width: 260px;
+$map-nav-width: 280px;
 $map-nav-title-height: 40px;
 
 /* to be extended */
@@ -114,53 +114,32 @@ $map-nav-title-height: 40px;
     }
     .#{$ns}map-items {
       height: $map-height - $map-nav-title-height;
-      & > div {
-        border: none !important;
-      }
       li {
-        padding: 6px !important;
-        margin: 0 !important;
-        & > span {
-          margin-right: 8px !important;
+        position: relative;
+        padding: 10px 6px;
+        border-bottom: 1px solid $color-divide;
+        overflow: hidden;
+        transition: background-color .3s ease;
+        &:hover {
+          background-color: #F6F6F6;
         }
-        & > div {
-          transition: background-color .2s ease;
-          &:hover {
-            background-color: #F6F6F6;
+        .map-item-mark {
+          position: absolute;
+          top: 14px;
+          left: 10px;
+          padding: .3em;
+          border-radius: 50%;
+          background-color: $color-first;
+          color: $milk;
+        }
+        .map-item-main {
+          margin-left: 34px;
+          .map-item-title {
+            line-height: 26px;
           }
-        }
-        a {
-          display: none;
-        }
-        & > div {
-          & > div:first-child > span {
-            color: $color-first !important;
+          .map-item-address, .map-item-tel {
             font-size: 14px;
-          }
-          & > div:not(:first-child) b {
-            color: #666 !important;
-            font-weight: normal !important;
-          }
-          &[style$=");"] {
-            //background-color: #FAFAFA !important;
-          }
-        }
-      }
-      & > div > div:last-child {
-        padding: 6px 0 !important;
-        margin-bottom: 2px;
-        border-top: 1px solid $color-divide;
-        background-color: #FFF !important;
-        text-align: center !important;
-        & > a {
-          display: none;
-        }
-        & > div {
-          float: none !important;
-          margin-right: 0 !important;
-          span {
-            margin: 4px !important;
-            font-size: 14px;
+            color: #666;
           }
         }
       }
@@ -172,6 +151,24 @@ $map-nav-title-height: 40px;
     right: 0;
     width: $map-width - $map-nav-width;
     height: 100%;
+    .map-info-window {
+      width:280px;
+      margin:2px 0;
+      color:#666;
+    }
+    .map-info-btn {
+      @extend .button;
+      display: block;
+      margin-top: 14px;
+      padding: .4em .8em;
+      background-color:  $teal;
+      border-radius: 4px;
+      color: $milk;
+      font-size: 15px;
+      &:active {
+        background-color:  darken($teal, 5%);
+      }
+    }
   }
 }
 

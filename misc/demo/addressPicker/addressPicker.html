@@ -7,6 +7,7 @@
 		<script src="../lib/react.js"></script>
 		<script src="../lib/JSXTransformer.js"></script>
 		<script src="../../../dist/Charm-UI.js"></script>
+    <script src="http://cdn.bootcss.com/reqwest/2.0.4/reqwest.js"></script>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sdp9qCbToS7E23nDRxaAAwbh"></script>
     <style>
       body {
@@ -15,7 +16,13 @@
         background-color: rgba(0, 0, 0, 0.4);
         overflow: hidden;
       }
-
+      body, ul, ol, li {
+        padding: 0;
+        margin: 0;
+      }
+      ul, ol {
+        list-style: none;
+      }
       .address-picker {
         position: absolute;
         top: 40%;
