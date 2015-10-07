@@ -1,10 +1,5 @@
-
 //  ==================================================
-//  Component: AddressSearch
-//
 //  Include: AddressInput AddressMap
-//
-//  Description:  Style for AddressSearch
 //
 //  TODO: [improve] 美化 map-nav 样式
 //  ==================================================
@@ -15,20 +10,22 @@
 
 // variable
 $ns: "" !default;
-
-$rose: #E74C3C;
+$rose: #e74c3c;
 $teal: #1bbc9b;
 $hulan: #09c4c7;
-$white: #FFF;
-$milk: #FAFAFA;
+$white: #fff;
+$milk: #fafafa;
 $text-black: #333;
-$color-divide: #EAEAEA;
+$color-divide: #eaeaea;
 $color-first: saturate($rose, 8%);
 
-$search-input-height: 50px;
-$search-keyword-width: 400px;
-$search-commit-width: 120px;
+$dark-background: #2a201e;
+$dark-divide: rgba($white, .1);
+$dark-text: rgba($white, .5);
 
+$search-input-height: 46px;
+$search-keyword-width: 400px;
+$search-commit-width: 100px;
 $input-map-margin: 10px;
 $map-width: 940px;
 $map-height: 420px;
@@ -42,20 +39,17 @@ $map-nav-title-height: 40px;
     outline: none;
   }
 }
-
 .input {
   @extend .format-border;
   font-size: 16px;
   color: $text-black;
 }
-
 .button {
   @extend .format-border;
   font-size: 18px;
 }
 
 /* main */
-
 /* AddressInput */
 .#{$ns}address-input {
   display: inline-block;
@@ -73,15 +67,33 @@ $map-nav-title-height: 40px;
     display: inline-block;
     width: $search-commit-width;
     height: $search-input-height;
-    background-color:  $color-first;
+    background-color: $color-first;
+    border-left: 1px solid $color-first;
     color: $milk;
-    transition: background-color .3s ease;
+    transition: background-color 0.3s ease;
     vertical-align: middle;
     &:hover {
-      background-color:  darken($color-first, 2%);
+      background-color: darken($color-first, 2%);
     }
     &:active {
-      background-color:  darken($color-first, 10%);
+      background-color: darken($color-first, 10%);
+    }
+  }
+  &.dark {
+    .#{$ns}input-keyword {
+      color: $dark-text;
+      background-color: $dark-background;
+    }
+    .#{$ns}input-commit {
+      color: $dark-text;
+      background-color: $dark-background;
+      border-color: $dark-divide;
+      &:hover {
+        background-color: darken($dark-background, 1%);
+      }
+      &:active {
+        background-color: darken($dark-background, 6%);
+      }
     }
   }
 }
@@ -119,25 +131,28 @@ $map-nav-title-height: 40px;
         padding: 10px 6px;
         border-bottom: 1px solid $color-divide;
         overflow: hidden;
-        transition: background-color .3s ease;
+        transition: background-color 0.3s ease;
         &:hover {
-          background-color: #F6F6F6;
+          background-color: #f6f6f6;
         }
         .map-item-mark {
           position: absolute;
           top: 14px;
           left: 10px;
-          padding: .3em;
-          border-radius: 50%;
-          background-color: $color-first;
+          padding-top: 1px;
+          width: 20px;
+          height: 26px;
+          background: url("http://api0.map.bdimg.com/images/marker_red_sprite.png") no-repeat;
           color: $milk;
+          text-align: center;
         }
         .map-item-main {
           margin-left: 34px;
           .map-item-title {
             line-height: 26px;
           }
-          .map-item-address, .map-item-tel {
+          .map-item-address,
+          .map-item-tel {
             font-size: 14px;
             color: #666;
           }
@@ -151,49 +166,107 @@ $map-nav-title-height: 40px;
     right: 0;
     width: $map-width - $map-nav-width;
     height: 100%;
-    .map-info-window {
-      width:280px;
-      margin:2px 0;
-      color:#666;
+    .#{$ns}map-info-window {
+      width: 280px;
+      margin: 2px 0;
+      color: #666;
     }
-    .map-info-btn {
+    .#{$ns}map-info-btn {
       @extend .button;
       display: block;
       margin-top: 14px;
-      padding: .4em .8em;
-      background-color:  $teal;
+      padding: 0.4em 0.8em;
+      background-color: $teal;
       border-radius: 4px;
       color: $milk;
       font-size: 15px;
       &:active {
-        background-color:  darken($teal, 5%);
+        background-color: darken($teal, 5%);
+      }
+    }
+  }
+  &.dark {
+    .#{$ns}map-nav {
+      background-color: $dark-background;
+      color: $dark-text;
+      .#{$ns}map-nav-title {
+        border-color: $dark-divide;
+      }
+      .#{$ns}map-nav-number {
+        color: $color-first;
+      }
+      .#{$ns}map-items {
+        li {
+          border-color: $dark-divide;
+          &:hover {
+            background-color: darken($dark-background, 2%);
+          }
+          &:active {
+            background-color: darken($dark-background, 6%);
+          }
+        }
+        .#{$ns}map-item-mark {
+          color: rgba($white, .75);
+        }
+      }
+    }
+    .#{$ns}map-main {
+      .#{$ns}map-info-window {
+      }
+      .BMap_bubble_title {
+        color: $dark-background;
+        font-weight: 600;
+      }
+      .#{$ns}map-info-btn {
+        background-color: $dark-background;
+        color: darken($dark-background, 15%);
+        &:active {
+          background-color: darken($dark-background, 5%);
+          color: $dark-text;
+        }
       }
     }
   }
 }
 
 /* Baidu Map Autocomplete */
-.tangram-suggestion-main .tangram-suggestion td {
-  font-size: 14px;
-  color: $color-first;
-  i {
-    background: none;
+.tangram-suggestion-main {
+  .tangram-suggestion {
+    td {
+      font-size: 14px;
+      color: $color-first;
+      i {
+        padding-left: 8px;
+        background: none;
+      }
+    }
+  }
+}
+.tangram-suggestion-main {
+  .tangram-suggestion {
+    border-color: $dark-background;
+    td {
+      background-color: $dark-background;
+      color: #C0C0C0;
+      .tangram-suggestion-grey {
+        color: $dark-text;
+      }
+    }
   }
 }
 
 /* Scrollbar */
-::-webkit-scrollbar {
+ ::-webkit-scrollbar {
   width: 10px;
   height: 0;
 }
-
-::-webkit-scrollbar-track {
-  background: #F0F0F0;
+ ::-webkit-scrollbar-track {
+  background: #f0f0f0;
   box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
 }
-
-::-webkit-scrollbar-thumb {
-  background: #DADADA;
+ ::-webkit-scrollbar-thumb {
+  background: #dadada;
   border-radius: 10px;
+
   // box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.2);
 }

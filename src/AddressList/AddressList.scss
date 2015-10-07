@@ -1,21 +1,20 @@
 .AddressList {
     position: relative;
-    height: 50px;
-    line-height: 50px;
-    width: 110px;
+    height: 40px;
+    width: 120px;
 }
 .AddressList .AddressDropButton {
     height: 100%;
     width: 100%;
     text-align: center;
-    color: #000;
-    background: pink;
-    font-size: 25px;
+    color: #c8c8c8;
+    background: #2a201e;
+    font-size: 18px;
     display: inline-block;
-    vertical-align: inherit;
     cursor: pointer;
     border: none;
     outline: none;
+    padding: 0;
 }
 .AddressList .AddressDropButton .triangle {
     display: block;
@@ -27,19 +26,19 @@
     margin-top: -3px;
 }
 .AddressList .AddressDropButton .triangle.true {
-    border-bottom: 6px solid #fff;
+    border-bottom: 8px solid #c8c8c8;
 }
 .AddressList .AddressDropButton .triangle.false {
-    border-top: 6px solid #fff;
+    border-top: 8px solid #c8c8c8;
 }
 
 .AddressList .AddressWrap {
     position: absolute;
-    background: pink;
-    width: 700px;
-    max-height: 400px;
-    margin-top: 10px;
-    overflow-y: auto;
+    background: #2a201e;
+    width: 586px;
+    max-height: 350px;
+    margin-top: 25px;
+    padding-right: 0;
 }
 .AddressList .AddressWrap::before {
     display: block;
@@ -47,54 +46,126 @@
     content: " ";
     width: 0;
     height: 0;
-    border-left: 16px solid transparent;
-    border-bottom: 16px solid pink;
-    border-right: 16px solid transparent;
-    top: -8px;
-    left: 40px;
+    border-left: 12px solid transparent;
+    border-bottom: 20px solid #2a201e;
+    border-right: 12px solid transparent;
+    top: -12px;
+    left: 50px;
+}
+.AddressList .AddressCont {
+    max-height: inherit;
+}
+
+.AddressList .AddressCont .AddressLocation {
+    width: 35%;
+    display: inline-block;
+    height: 50px;
+    line-height: 50px;
+    color: #c8c8c8;
+    font-size: 18px;
+    padding-left: 28px;
+}
+.AddressList .AddressCont .AddressLocation>span:last-child {
+    cursor: pointer;
+    display: inline-block;
+    padding-left: 1em;
+}
+.AddressList .AddressCont .AddressLocation>span:last-child:hover {
+    color: #fff;
+}
+.AddressList .AddressCont .AddressSearch {
+    width: 60%;
+    height: 50px;
+    line-height: 50px;
+    display: inline-block;
+    position: relative;
+    font-size: 17px;
+    color: #c8c8c8;
+}
+.AddressList .AddressCont .AddressSearch>input {
+    outline: none;
+    margin-left: 30px;
+    width: 180px;
+    border: 2px solid #605b5b;
+    background: #2a201e;
+    vertical-align: baseline;
+    padding: 5px 5px;
+    font-size: 15px;
+    color: #c8c8c8;
+}
+.AddressList .AddressCont .AddressSearch>input::-webkit-input-placeholder {
+    color: #605b5b;
+}
+.AddressList .AddressCont .AddressSearch .AddressSearchResult {
+    position: absolute;
+    list-style: none;
+    background: #2a201e;
+    border: 1px solid #605b5b;
+    z-index: 100;
+    left: 98px;
+    top: 40px;
+    padding: 0;
+    width: 182px;
+    padding-left: 10px;
+}
+.AddressList .AddressCont .AddressSearch .AddressSearchResult li {
+    line-height: 30px;
+    cursor: pointer;
+}
+.AddressList .AddressCont .AddressSearch .AddressSearchResult li:hover {
+    color: #fff;
 }
 
 .AddressList .AddressWrap .AddressListWrap {
-    padding-left: 10%;
+    border-top: 1px solid #000;
     position: relative;
+    z-index: 99;
+    max-height: 300px;
+    overflow: auto;
+}
+.AddressList .AddressWrap .AddressListWrap::-webkit-scrollbar-track {
+    background: #555555;
+}
+.AddressList .AddressWrap .AddressListWrap::-webkit-scrollbar {
+    background: #999999;
 }
 .AddressList .AddressWrap .AddressListWrap .AddressListRow {
     width: 100%;
+    line-height: 35px;
+    padding: 12px 0;
+    border-bottom: 1px dashed #000;
+    padding-left: 80px;
 }
 .AddressList .AddressWrap .AddressListWrap .AddressListRow .keyData {
     position: absolute;
-    left: 5%;
+    left: 20px;
+    background: #170b09;
+    display: inline-block;
+    width: 50px;
+    text-align: center;
+    height: 20px;
+    line-height: 20px;
+    font-size: 18px;
+    color: #c8c8c8;
+    padding: 2px 0;
 }
 .AddressList .AddressWrap .AddressListWrap .AddressListRow .dataWrap {
-    width: 100%;
+    width: 500px;
     display: block;
+    line-height: 20px;
+    padding: 2px 0;
 }
 .AddressList .AddressWrap .AddressListWrap .AddressListRow .dataWrap>span {
     display: inline-block;
     text-align: center;
-    width: 33%;
+    width: 15%;
+    padding-bottom: 5px;
 }
 .AddressList .AddressWrap .AddressListWrap .AddressListRow .dataWrap>span>span {
+    color: #c8c8c8;
+    font-size: 15px;
     cursor: pointer;
 }
-
-.AddressList .AddressWrap .AddressSecondWrap {
-
-}
-.AddressList .AddressWrap .AddressSecondWrap .AddressListRow {
-    padding-left: 100px;
-    position: relative;
-}
-.AddressList .AddressWrap .AddressSecondWrap .AddressListRow .keyData {
-    position: absolute;
-    left: 20px;
-}
-.AddressList .AddressWrap .AddressSecondWrap .dataWrap {
-    display: block;
-    width: 100%;
-}
-.AddressList .AddressWrap .AddressSecondWrap .dataWrap>span {
-    display: inline-block;
-    width: 33%;
-    text-align: center;
+.AddressList .AddressWrap .AddressListWrap .AddressListRow .dataWrap>span>span:hover {
+    color: #fff;
 }

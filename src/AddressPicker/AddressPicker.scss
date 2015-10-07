@@ -21,7 +21,7 @@ $address-search-class: address-search;
 
 /* AddressPicker */
 .#{$ns}address-picker {
-  overflow: hidden;
+  overflow: show;
   /* AddressList */
   .#{$address-list-class} {
     display: inline-block;

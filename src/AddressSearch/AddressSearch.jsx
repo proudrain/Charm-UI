@@ -1,13 +1,7 @@
 'use strict'
 
 //  ==================================================
-//  Component: AddressSearch
-//
 //  Include: AddressInput AddressMap
-//
-//  Dependence: reqwest.js
-//
-//  Description:  Jsx for AddressSearch
 //
 //  TODO: [add] 增加各项参数
 //  ==================================================
@@ -24,7 +18,8 @@ var AddressSearch = React.createClass({
       inputWidth: 400,
       inputTip: "输入想要搜索的地址",
       searchBtnText: "搜索",
-      city: "北京"
+      city: "北京",
+      theme: "dark"
     }
   },
   componentWillMount: function() {
@@ -48,8 +43,8 @@ var AddressSearch = React.createClass({
   render: function() {
     return (
       <div className="address-search">
-        <AddressInput city={this.props.city} inputTip={this.props.inputTip} inputWidth={this.props.inputWidth} searchBtnText={this.props.searchBtnText} searchSubmitHandler={this.setAddress}/>
-        <AddressMap addressKeyword={this.state.address} city={this.props.city}/>
+        <AddressInput {...this.props} searchSubmitHandler={this.setAddress}/>
+        <AddressMap addressKeyword={this.state.address} city={this.props.city} theme={this.props.theme} />
       </div>
     );
   }
@@ -67,7 +62,8 @@ var AddressInput = React.createClass({
       inputWidth: 400,
       inputTip: "输入想要搜索的地址",
       searchBtnText: "搜索",
-      city: "北京"
+      city: "北京",
+      theme: "light"
     }
   },
   searchSubmit: function() {
@@ -90,8 +86,18 @@ var AddressInput = React.createClass({
     var keywordStyle = {
       width: this.props.inputWidth
     };
+    var conClassName = "address-input";
+    switch (this.props.theme) {
+      case 'light':
+        break;
+      case 'dark':
+        conClassName += " dark";
+        break;
+      default:
+
+    }
     return (
-      <div className="address-input">
+      <div className={conClassName}>
         <input className="input-keyword" id="_addressSearchKeyword" onKeyUp={this.checkEnter} placeholder={this.props.inputTip} style={keywordStyle}></input>
         <button className="input-commit" onClick={this.searchSubmit}>{this.props.searchBtnText}</button>
       </div>
@@ -113,7 +119,8 @@ var AddressMap = React.createClass({
     return {
       mapSearchgeotableId: 121763,
       mapSearchTags: "",
-      mapSearchFilter: ""
+      mapSearchFilter: "",
+      theme: "light"
     }
   },
   componentDidMount: function() {
@@ -133,9 +140,10 @@ var AddressMap = React.createClass({
     myGeo
       .getPoint(keyword, function(point) { // 解析成功后的回调 搜索信息
         if (point) {
-          reqwest({
+          $.ajax({
+            type: 'get',
             url: 'http://api.map.baidu.com/geosearch/v3/nearby',
-            type: 'jsonp',
+            dataType : "jsonp",
             data: {
               ak: 'sdp9qCbToS7E23nDRxaAAwbh',
               geotable_id: 121763,
@@ -144,7 +152,7 @@ var AddressMap = React.createClass({
               page_index: page || 0,
               page_size: 50
             },
-            jsonpCallback: 'callback',
+            jsonp: 'callback',
             success: function(res) {
               _this.setState({
                 itemsNumber: res.total,
@@ -191,7 +199,7 @@ var AddressMap = React.createClass({
       var title = itemInfo.title;
       var address = itemInfo.address;
       var tel = itemInfo.tel;
-      var content = '<p class="map-info-window">地址：' + address + '<button class="map-info-btn">进入体验店</button>' + '</p>';
+      var content = '<p class="map-info-window">地址：' + address + '</p>';
       var infoWindow = new BMap.InfoWindow(content, {
         title: title,
         width: 290,
@@ -228,11 +236,21 @@ var AddressMap = React.createClass({
     this.showInfoWindow(itemIndex);
   },
   render: function() {
+    var conClassName = "address-map";
+    switch (this.props.theme) {
+      case 'light':
+        break;
+      case 'dark':
+        conClassName += " dark";
+        break;
+      default:
+
+    }
     var mapItemActieStyle = {
-      backgroundColor: "#F0F0F0"
+      backgroundColor: "#181211"
     };
     return (
-      <div className="address-map" style={{
+      <div className={conClassName} style={{
         display: this.props.addressKeyword
           ? "block"
           : "none"
@@ -254,7 +272,7 @@ var AddressMap = React.createClass({
                     ? mapItemActieStyle
                     :
                       {}}>
-                    <span className="map-item-mark" style={(i === this.state.itemActive) ? {backgroundColor: "#1bbc9b"} : {}}>{String.fromCharCode(65 + i)}</span>
+                    <span className="map-item-mark">{String.fromCharCode(65 + i)}</span>
                     <div className="map-item-main">
                       <div className="map-item-title">{item.title}</div>
                       <div className="map-item-address">地址：{item.address}</div>
