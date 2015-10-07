@@ -164,7 +164,7 @@ var AddressMap = React.createClass({
             }
           })
         } else {
-          alert("未找到该区域信息");
+          console.log("未找到该区域信息");
         }
       }.bind(this), this.props.city);
   },

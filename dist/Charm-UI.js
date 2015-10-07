@@ -239,8 +239,6 @@ var AddressPicker = React.createClass({displayName: "AddressPicker",
   }
 });
 
-
-
 'use strict'
 
 //  ==================================================
@@ -407,7 +405,7 @@ var AddressMap = React.createClass({displayName: "AddressMap",
             }
           })
         } else {
-          alert("未找到该区域信息");
+          console.log("未找到该区域信息");
         }
       }.bind(this), this.props.city);
   },
@@ -530,6 +528,8 @@ var AddressMap = React.createClass({displayName: "AddressMap",
     );
   }
 });
+
+
 
 'use strict'
 
