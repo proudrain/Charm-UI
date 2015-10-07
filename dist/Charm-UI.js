@@ -2,54 +2,27 @@
 var AddressList = React.createClass({displayName: "AddressList",
     getInitialState: function() {
         return {
-            nowAddress: this.props.localAddress,
-            isWrapShow: false,
-            isSecondShow: false
+            nowAddress: null,
+            isWrapShow: false
         };
-    },
-    getDefaultProps: function() {
-        return {
-            localAddress: "西安",
-        };
-    },
-    secondAddressData: {
-
     },
     handleBtnClick: function() {
-        if(!this.state.isWrapShow) {
-            this.setState({isWrapShow: true});
-            this.setState({isSecondShow: false});
-        } else {
-            this.setState({isWrapShow: false});
-        }
+        this.setState({isWrapShow: !this.state.isWrapShow});
     },
-    handleSelectAddress: function(selectAddress , key , name) {
-        this.setState({nowAddress: selectAddress});
-        if(key) {
-            var data = this.props.addressData[key];
-            var secondData = data[name];
-            var jslength=0;
-                for(var js2 in secondData){
-                jslength++;
-            }
-            if(!jslength) {
-                this.setState({isWrapShow: false});
-                return ;
-            }
-            this.setState({isSecondShow: true});
-            this.secondAddressData = secondData;
-            return ;
+    handleSelectAddress: function(selectCt) {
+        this.setState({nowAddress: selectCt,isWrapShow: false});
+        if(this.props.setCity) {
+            this.props.setCity(selectCt);
         }
-        this.setState({isWrapShow: false});
     },
     render: function() {
         return (
             React.createElement("div", {className: "AddressList"}, 
                 React.createElement(AddressDropButton, {triangleState: this.state.isWrapShow, onClick: this.handleBtnClick}, 
-                    this.state.nowAddress
+                    this.state.nowAddress?this.state.nowAddress:this.props.localAddress
                 ), 
                 this.state.isWrapShow?
-                    React.createElement(AddressWrap, {addressData: this.props.addressData, localAddress: this.props.localAddress, handleSelectAddress: this.handleSelectAddress, secondAddressData: this.secondAddressData, isSecondShow: this.state.isSecondShow})
+                    React.createElement(AddressWrap, {addressData: this.props.addressData, localAddress: this.props.localAddress, handleSelectAddress: this.handleSelectAddress})
                     :null
                 
             )
@@ -59,12 +32,6 @@ var AddressList = React.createClass({displayName: "AddressList",
 
 // 下拉按钮
 var AddressDropButton = React.createClass({displayName: "AddressDropButton",
-    getInitialState: function() {
-        return {};
-    },
-    getDefaultProps: function() {
-        return {};
-    },
     handleClick: function() {
         this.props.onClick();
     },
@@ -80,25 +47,14 @@ var AddressDropButton = React.createClass({displayName: "AddressDropButton",
 
 // 地址操作框容器
 var AddressWrap = React.createClass({displayName: "AddressWrap",
-    getInitialState: function() {
-        return {};
-    },
-    getDefaultProps: function() {
-        return {};
-    },
     render: function() {
-        if(this.props.isSecondShow) {
-            return (
-                React.createElement("div", {className: "AddressWrap"}, 
-                    React.createElement(AddressSecondWrap, {secondAddressData: this.props.secondAddressData})
-                )
-            );
-        }
         return (
             React.createElement("div", {className: "AddressWrap"}, 
-                React.createElement(AddressLocation, {localAddress: this.props.localAddress, handleSelectAddress: this.props.handleSelectAddress}), 
-                React.createElement(AddressSearchInput, {handleSelectAddress: this.props.handleSelectAddress}), 
-                React.createElement(AddressListWrap, {addressData: this.props.addressData, handleSelectAddress: this.props.handleSelectAddress})
+                React.createElement("div", {className: "AddressCont"}, 
+                    React.createElement(AddressLocation, {localAddress: this.props.localAddress, handleSelectAddress: this.props.handleSelectAddress}), 
+                    React.createElement(AddressSearchInput, {addressData: this.props.addressData, handleSelectAddress: this.props.handleSelectAddress}), 
+                    React.createElement(AddressListWrap, {addressData: this.props.addressData, handleSelectAddress: this.props.handleSelectAddress})
+                )
             )
         );
     }
@@ -106,23 +62,13 @@ var AddressWrap = React.createClass({displayName: "AddressWrap",
 
 // 定位当前地址
 var AddressLocation = React.createClass({displayName: "AddressLocation",
-    getInitialState: function() {
-        return {
-
-        };
-    },
-    getDefaultProps: function() {
-        return {
-
-        };
-    },
     handleClick: function() {
         this.props.handleSelectAddress(this.props.localAddress);
     },
     render: function() {
         return (
-            React.createElement("div", null, 
-                "猜你在：", React.createElement("span", {onClick: this.handleClick}, this.props.localAddress)
+            React.createElement("div", {className: "AddressLocation"}, 
+                "当前定位：", React.createElement("span", {onClick: this.handleClick}, this.props.localAddress)
             )
         );
     }
@@ -131,20 +77,62 @@ var AddressLocation = React.createClass({displayName: "AddressLocation",
 // 地址搜索
 var AddressSearchInput = React.createClass({displayName: "AddressSearchInput",
     getInitialState: function() {
-        return {};
+        return {
+            result: [],
+        };
     },
-    getDefaultProps: function() {
-        return {};
+    handleResultClick: function(e) {
+        var address = e.target.getAttribute('data');
+        this.props.handleSelectAddress(address);
     },
     handleSearch: function(event) {
         var cont = event.target.value;
-        console.log(cont);
+        var len = cont.length;
+        var addressData = this.props.addressData;
+        // 判断是汉字还是拼音
+        var reg=/^[\u4E00-\u9FA5]+$/;
+        if(reg.test(cont)) {
+            // 是汉字处理
+            var _resultH = [];
+            var j = 0;
+            for(var keyH in addressData) {
+                for(var keyHS in addressData[keyH]) {
+                    if(addressData[keyH][keyHS].city.substring(0,len) == cont) {
+                        _resultH[j]  = addressData[keyH][keyHS].city;
+                        j++;
+                    }
+                }
+            }
+            this.setState({result: _resultH});
+            return ;
+        }
+        // 是拼音
+        var FL = cont.substring(0,1).toLocaleUpperCase();
+        var resultFL = addressData[FL];
+        var _result = [];
+        var i = 0;
+        for(var key in resultFL) {
+            if(key.substring(0,len) == cont.toLocaleLowerCase()) {
+                _result[i]  = resultFL[key].city;
+            }
+            i++;
+        }
+        this.setState({result: _result});
     },
     render: function() {
+        var _handleResultClick = this.handleResultClick;
+        var resultNodes = this.state.result.map(function (result) {
+            return (
+                React.createElement("li", {data: result, onClick: _handleResultClick}, result)
+            );
+        });
         return (
             React.createElement("div", {className: "AddressSearch"}, 
                 "搜索：", 
-                React.createElement("input", {onChange: this.handleSearch})
+                React.createElement("input", {onChange: this.handleSearch}), 
+                React.createElement("ul", {className: "AddressSearchResult"}, 
+                    resultNodes
+                )
             )
         );
     }
@@ -152,12 +140,6 @@ var AddressSearchInput = React.createClass({displayName: "AddressSearchInput",
 
 // 地址列表容器
 var AddressListWrap = React.createClass({displayName: "AddressListWrap",
-    getInitialState: function() {
-        return {};
-    },
-    getDefaultProps: function() {
-        return {};
-    },
     render: function() {
         var addressData = this.props.addressData;
         var handleSelectAddress = this.props.handleSelectAddress;
@@ -165,7 +147,7 @@ var AddressListWrap = React.createClass({displayName: "AddressListWrap",
             var cont = [];
             var i = 0;
             for(var key in data) {
-                cont[i]  = React.createElement(AddressListRow, {keyData: key, data: data[key], handleSelectAddress: handleSelectAddress});
+                cont[i]  = React.createElement(AddressListRow, {key: key, keyData: key, data: data[key], handleSelectAddress: handleSelectAddress});
                 i++;
             }
             return cont;
@@ -180,21 +162,9 @@ var AddressListWrap = React.createClass({displayName: "AddressListWrap",
 
 // 地址列表行
 var AddressListRow = React.createClass({displayName: "AddressListRow",
-    getInitialState: function() {
-        return {
-
-        };
-    },
-    getDefaultProps: function() {
-        return {
-
-        };
-    },
     handleClick: function(e) {
-        var keyData = this.props.keyData;
-        var i = e.target.getAttribute('data');
-        var name = e.target.innerHTML;
-        this.props.handleSelectAddress(name , keyData , i);
+        var address = e.target.getAttribute('data');
+        this.props.handleSelectAddress(address);
     },
     render: function() {
         var handleClick = this.handleClick;
@@ -202,7 +172,7 @@ var AddressListRow = React.createClass({displayName: "AddressListRow",
             var cont = [];
             var i = 0;
             for(var key in data) {
-                cont[i]  = React.createElement("span", null, React.createElement("span", {data: key, key: i, onClick: handleClick}, key));
+                cont[i]  = React.createElement("span", {key: "p"+key}, React.createElement("span", {data: data[key].city, key: i, onClick: handleClick}, data[key].city));
                 i++;
             }
             return cont;
@@ -212,80 +182,6 @@ var AddressListRow = React.createClass({displayName: "AddressListRow",
                 React.createElement("span", {className: "keyData"}, this.props.keyData), 
                 React.createElement("span", {className: "dataWrap"}, dataNodes)
             )
-        );
-    }
-});
-
-// 二级地址列表容器
-var AddressSecondWrap = React.createClass({displayName: "AddressSecondWrap",
-    getInitialState: function() {
-        return {};
-    },
-    getDefaultProps: function() {
-        return {};
-    },
-    render: function() {
-        var secondAddressData = this.props.secondAddressData;
-        // var handleSelectAddress = this.props.handleSelectAddress;
-        var rowNodes = function(data) {
-            var cont = [];
-            var i = 0;
-            for(var key in data) {
-                cont[i]  = React.createElement(AddressSecondRow, {keyData: key, data: data[key]});
-                i++;
-            }
-            return cont;
-        }(secondAddressData);
-        return (
-            React.createElement("div", {className: "AddressSecondWrap"}, 
-                rowNodes
-            )
-        );
-    }
-});
-
-// 二级地址列表行
-var AddressSecondRow = React.createClass({displayName: "AddressSecondRow",
-    getInitialState: function() {
-        return { };
-    },
-    getDefaultProps: function() {
-        return {};
-    },
-    render: function() {
-        var dataNodes = function(data) {
-            var cont = [];
-            var i = 0;
-            for(var key in data) {
-                cont[i]  = React.createElement("span", null, React.createElement("a", {data: key, key: i, href: data[key]}, key));
-                i++;
-            }
-            return cont;
-        }(this.props.data);
-        return (
-            React.createElement("div", {className: "AddressListRow"}, 
-                React.createElement("span", {className: "keyData"}, this.props.keyData), 
-                React.createElement("span", {className: "dataWrap"}, dataNodes)
-            )
-        );
-    }
-});
-
-// 滚动条组件
-var ScrollBar = React.createClass({displayName: "ScrollBar",
-    getInitialState: function() {
-        return {
-
-        };
-    },
-    getDefaultProps: function() {
-        return {
-
-        };
-    },
-    render: function() {
-        return (
-            React.createElement("div", null)
         );
     }
 });
@@ -309,18 +205,21 @@ var AddressPicker = React.createClass({displayName: "AddressPicker",
   getInitialState: function() {
     return {
       city: "北京",
+      currentCity: null,
       address: null
     };
   },
   getDefaultProps: function() {
-    return {}
+    return {};
   },
   componentWillMount: function() {
     var myCity = new BMap.LocalCity();
     myCity
       .get(function(res) {
         var currentCity = res.name;
-        this.setCity(currentCity);
+        this.setState({
+            currentCity: currentCity
+        });
       }.bind(this));
   },
   setAddress: function(ad) {
@@ -339,7 +238,7 @@ var AddressPicker = React.createClass({displayName: "AddressPicker",
       : {};
     return (
       React.createElement("div", {className: "address-picker", style: addressPickerActiveStyle}, 
-        React.createElement(AddressList, {localAddress: this.state.city}), 
+        React.createElement(AddressList, {setCity: this.setCity, localAddress: this.state.currentCity, addressData: this.props.addressData}), 
         React.createElement(AddressInput, {city: this.state.city, searchSubmitHandler: this.setAddress}), 
         React.createElement(AddressMap, {addressKeyword: this.state.address, city: this.props.city})
       )

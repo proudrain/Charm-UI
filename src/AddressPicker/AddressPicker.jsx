@@ -17,18 +17,21 @@ var AddressPicker = React.createClass({
   getInitialState: function() {
     return {
       city: "北京",
+      currentCity: null,
       address: null
     };
   },
   getDefaultProps: function() {
-    return {}
+    return {};
   },
   componentWillMount: function() {
     var myCity = new BMap.LocalCity();
     myCity
       .get(function(res) {
         var currentCity = res.name;
-        this.setCity(currentCity);
+        this.setState({
+            currentCity: currentCity
+        });
       }.bind(this));
   },
   setAddress: function(ad) {
@@ -47,7 +50,7 @@ var AddressPicker = React.createClass({
       : {};
     return (
       <div className="address-picker" style={addressPickerActiveStyle}>
-        <AddressList localAddress={this.state.city}/>
+        <AddressList setCity={this.setCity} localAddress={this.state.currentCity} addressData={this.props.addressData}/>
         <AddressInput city={this.state.city} searchSubmitHandler={this.setAddress}/>
         <AddressMap addressKeyword={this.state.address} city={this.props.city}/>
       </div>
