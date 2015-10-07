@@ -68,7 +68,7 @@ var AddressLocation = React.createClass({displayName: "AddressLocation",
     render: function() {
         return (
             React.createElement("div", {className: "AddressLocation"}, 
-                "当前定位：", React.createElement("span", {onClick: this.handleClick}, this.props.localAddress)
+                "猜你在：", React.createElement("span", {onClick: this.handleClick}, this.props.localAddress)
             )
         );
     }
@@ -128,8 +128,8 @@ var AddressSearchInput = React.createClass({displayName: "AddressSearchInput",
         });
         return (
             React.createElement("div", {className: "AddressSearch"}, 
-                "搜索：", 
-                React.createElement("input", {onChange: this.handleSearch}), 
+                "直接搜索", 
+                React.createElement("input", {onChange: this.handleSearch, placeholder: "请输入城市名"}), 
                 React.createElement("ul", {className: "AddressSearchResult"}, 
                     resultNodes
                 )
