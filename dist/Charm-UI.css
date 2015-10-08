@@ -35,9 +35,9 @@
   position: absolute;
   background: #2a201e;
   width: 586px;
-  max-height: 350px;
   margin-top: 25px;
-  padding-right: 0; }
+  padding-right: 0;
+  z-index: 200; }
 
 .AddressList .AddressWrap::before {
   display: block;
@@ -48,7 +48,7 @@
   border-left: 12px solid transparent;
   border-bottom: 20px solid #2a201e;
   border-right: 12px solid transparent;
-  top: -12px;
+  top: -20px;
   left: 50px; }
 
 .AddressList .AddressCont {
@@ -116,7 +116,6 @@
 .AddressList .AddressWrap .AddressListWrap {
   border-top: 1px solid #000;
   position: relative;
-  z-index: 99;
   max-height: 300px;
   overflow: auto; }
 
@@ -165,21 +164,6 @@
 
 .AddressList .AddressWrap .AddressListWrap .AddressListRow .dataWrap > span > span:hover {
   color: #fff; }
-
-/*==================================================
-    Component: AddressPicker
-  ==================================================*/
-/* AddressPicker */
-.address-picker {
-  overflow: show;
-  /* AddressList */
-  /* AddressSearch */ }
-  .address-picker .AddressList {
-    display: inline-block;
-    margin-right: 5px;
-    vertical-align: top; }
-  .address-picker .address-search {
-    display: inline-block; }
 
 /*==================================================
     Component: AddressSearch
@@ -358,6 +342,21 @@
 ::-webkit-scrollbar-thumb {
   background: #dadada;
   border-radius: 10px; }
+
+/*==================================================
+    Component: AddressPicker
+  ==================================================*/
+/* AddressPicker */
+.address-picker {
+  overflow: show;
+  /* AddressList */
+  /* AddressSearch */ }
+  .address-picker .AddressList {
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: top; }
+  .address-picker .address-search {
+    display: inline-block; }
 
 /*==================================================
     Component: ProgressBar

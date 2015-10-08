@@ -189,59 +189,6 @@ var AddressListRow = React.createClass({displayName: "AddressListRow",
 'use strict'
 
 //  ==================================================
-//  Include: AddressList AddressSearch
-//
-//  TODO:
-//  ==================================================
-
-var AddressPicker = React.createClass({displayName: "AddressPicker",
-  getInitialState: function() {
-    return {
-      city: "北京",
-      currentCity: null,
-      address: null
-    };
-  },
-  getDefaultProps: function() {
-    return {};
-  },
-  componentWillMount: function() {
-    var myCity = new BMap.LocalCity();
-    myCity
-      .get(function(res) {
-        var currentCity = res.name;
-        this.setState({
-            currentCity: currentCity
-        });
-      }.bind(this));
-  },
-  setAddress: function(ad) {
-    this.setState({
-      address: ad
-    });
-  },
-  setCity: function(ct) {
-    this.setState({
-      city: ct
-    });
-  },
-  render: function() {
-    var addressPickerActiveStyle = this.state.address
-      ? this.props.addressPickerActiveStyle
-      : {};
-    return (
-      React.createElement("div", {className: "address-picker", style: addressPickerActiveStyle}, 
-        React.createElement(AddressList, {setCity: this.setCity, localAddress: this.state.currentCity, addressData: this.props.addressData}), 
-        React.createElement(AddressInput, React.__spread({},  this.props, {city: this.state.city, searchSubmitHandler: this.setAddress})), 
-        React.createElement(AddressMap, {addressKeyword: this.state.address, city: this.props.city, theme: this.props.theme})
-      )
-    );
-  }
-});
-
-'use strict'
-
-//  ==================================================
 //  Include: AddressInput AddressMap
 //
 //  TODO: [add] 增加各项参数
@@ -295,7 +242,7 @@ var AddressSearch = React.createClass({displayName: "AddressSearch",
 var AddressInput = React.createClass({displayName: "AddressInput",
   getInitialState: function() {
     return {
-      keyword: null
+      keyword: this.props.keyword
     };
   },
   getDefaultProps: function() {
@@ -313,6 +260,7 @@ var AddressInput = React.createClass({displayName: "AddressInput",
       .value;
     this.props
       .searchSubmitHandler(keyword);
+    setCookie('searchKeyword', keyword, 30);
   },
   checkEnter: function(e) {
     (e.keyCode === 13) && this.searchSubmit();
@@ -329,17 +277,17 @@ var AddressInput = React.createClass({displayName: "AddressInput",
     };
     var conClassName = "address-input";
     switch (this.props.theme) {
-      case 'light':
-        break;
-      case 'dark':
-        conClassName += " dark";
-        break;
-      default:
+    case 'light' :
+      break;
+    case 'dark' :
+      conClassName += " dark";
+      break;
+    default :
 
     }
     return (
       React.createElement("div", {className: conClassName}, 
-        React.createElement("input", {className: "input-keyword", id: "_addressSearchKeyword", onKeyUp: this.checkEnter, placeholder: this.props.inputTip, style: keywordStyle}), 
+        React.createElement("input", {className: "input-keyword", id: "_addressSearchKeyword", onKeyUp: this.checkEnter, placeholder: this.state.keyword || this.props.inputTip, style: keywordStyle}), 
         React.createElement("button", {className: "input-commit", onClick: this.searchSubmit}, this.props.searchBtnText)
       )
     );
@@ -384,7 +332,7 @@ var AddressMap = React.createClass({displayName: "AddressMap",
           $.ajax({
             type: 'get',
             url: 'http://api.map.baidu.com/geosearch/v3/nearby',
-            dataType : "jsonp",
+            dataType: "jsonp",
             data: {
               ak: 'sdp9qCbToS7E23nDRxaAAwbh',
               geotable_id: 121763,
@@ -405,7 +353,7 @@ var AddressMap = React.createClass({displayName: "AddressMap",
             }
           })
         } else {
-          console.log("未找到该区域信息");
+          alert("未找到该区域信息");
         }
       }.bind(this), this.props.city);
   },
@@ -479,12 +427,12 @@ var AddressMap = React.createClass({displayName: "AddressMap",
   render: function() {
     var conClassName = "address-map";
     switch (this.props.theme) {
-      case 'light':
-        break;
-      case 'dark':
-        conClassName += " dark";
-        break;
-      default:
+    case 'light' :
+      break;
+    case 'dark' :
+      conClassName += " dark";
+      break;
+    default :
 
     }
     var mapItemActieStyle = {
@@ -510,20 +458,73 @@ var AddressMap = React.createClass({displayName: "AddressMap",
               .itemsList
               .map(function (item, i) {
                 return React.createElement("li", {className: "map-item", "data-key": i, key: i, style: (i === this.state.itemActive)
-                    ? mapItemActieStyle
-                    :
-                      {}}, 
-                    React.createElement("span", {className: "map-item-mark"}, String.fromCharCode(65 + i)), 
-                    React.createElement("div", {className: "map-item-main"}, 
-                      React.createElement("div", {className: "map-item-title"}, item.title), 
-                      React.createElement("div", {className: "map-item-address"}, "地址：", item.address), 
-                      React.createElement("div", {className: "map-item-tel"}, "电话：", item.tel)
-                    )
-                  );
+                  ? mapItemActieStyle
+                  :
+                    {}}, 
+                  React.createElement("span", {className: "map-item-mark"}, String.fromCharCode(65 + i)), 
+                  React.createElement("div", {className: "map-item-main"}, 
+                    React.createElement("div", {className: "map-item-title"}, item.title), 
+                    React.createElement("div", {className: "map-item-address"}, "地址：", item.address), 
+                    React.createElement("div", {className: "map-item-tel"}, "电话：", item.tel)
+                  )
+                );
               }.bind(this))
           )
         ), 
         React.createElement("div", {className: "map-main", id: "_addressMapMain"})
+      )
+    );
+  }
+});
+
+'use strict'
+
+//  ==================================================
+//  Include: AddressList AddressSearch
+//
+//  TODO:
+//  ==================================================
+
+var AddressPicker = React.createClass({displayName: "AddressPicker",
+  getInitialState: function() {
+    return {
+      city: "北京",
+      currentCity: null,
+      address: this.props.keyword
+    };
+  },
+  getDefaultProps: function() {
+    return {};
+  },
+  componentWillMount: function() {
+    var myCity = new BMap.LocalCity();
+    myCity
+      .get(function(res) {
+        var currentCity = res.name;
+        this.setState({
+            currentCity: currentCity
+        });
+      }.bind(this));
+  },
+  setAddress: function(ad) {
+    this.setState({
+      address: ad
+    });
+  },
+  setCity: function(ct) {
+    this.setState({
+      city: ct
+    });
+  },
+  render: function() {
+    var addressPickerActiveStyle = this.state.address
+      ? this.props.addressPickerActiveStyle
+      : {};
+    return (
+      React.createElement("div", {className: "address-picker", style: addressPickerActiveStyle}, 
+        React.createElement(AddressList, {setCity: this.setCity, localAddress: this.state.currentCity, addressData: this.props.addressData}), 
+        React.createElement(AddressInput, React.__spread({},  this.props, {city: this.state.city, searchSubmitHandler: this.setAddress})), 
+        React.createElement(AddressMap, {addressKeyword: this.state.address, city: this.props.city, theme: this.props.theme})
       )
     );
   }

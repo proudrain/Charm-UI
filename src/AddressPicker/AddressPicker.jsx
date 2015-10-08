@@ -11,7 +11,7 @@ var AddressPicker = React.createClass({
     return {
       city: "北京",
       currentCity: null,
-      address: null
+      address: this.props.keyword
     };
   },
   getDefaultProps: function() {

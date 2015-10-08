@@ -43,7 +43,7 @@ var AddressSearch = React.createClass({
   render: function() {
     return (
       <div className="address-search">
-        <AddressInput {...this.props} searchSubmitHandler={this.setAddress}/>
+        <AddressInput {...this.props} searchSubmitHandler={this.setAddress} />
         <AddressMap addressKeyword={this.state.address} city={this.props.city} theme={this.props.theme} />
       </div>
     );
@@ -54,7 +54,7 @@ var AddressSearch = React.createClass({
 var AddressInput = React.createClass({
   getInitialState: function() {
     return {
-      keyword: null
+      keyword: this.props.keyword
     };
   },
   getDefaultProps: function() {
@@ -72,6 +72,7 @@ var AddressInput = React.createClass({
       .value;
     this.props
       .searchSubmitHandler(keyword);
+    setCookie('searchKeyword', keyword, 30);
   },
   checkEnter: function(e) {
     (e.keyCode === 13) && this.searchSubmit();
@@ -88,17 +89,17 @@ var AddressInput = React.createClass({
     };
     var conClassName = "address-input";
     switch (this.props.theme) {
-      case 'light':
-        break;
-      case 'dark':
-        conClassName += " dark";
-        break;
-      default:
+    case 'light' :
+      break;
+    case 'dark' :
+      conClassName += " dark";
+      break;
+    default :
 
     }
     return (
       <div className={conClassName}>
-        <input className="input-keyword" id="_addressSearchKeyword" onKeyUp={this.checkEnter} placeholder={this.props.inputTip} style={keywordStyle}></input>
+        <input className="input-keyword" id="_addressSearchKeyword" onKeyUp={this.checkEnter} placeholder={this.state.keyword || this.props.inputTip} style={keywordStyle}></input>
         <button className="input-commit" onClick={this.searchSubmit}>{this.props.searchBtnText}</button>
       </div>
     );
@@ -143,7 +144,7 @@ var AddressMap = React.createClass({
           $.ajax({
             type: 'get',
             url: 'http://api.map.baidu.com/geosearch/v3/nearby',
-            dataType : "jsonp",
+            dataType: "jsonp",
             data: {
               ak: 'sdp9qCbToS7E23nDRxaAAwbh',
               geotable_id: 121763,
@@ -164,7 +165,7 @@ var AddressMap = React.createClass({
             }
           })
         } else {
-          console.log("未找到该区域信息");
+          alert("未找到该区域信息");
         }
       }.bind(this), this.props.city);
   },
@@ -238,12 +239,12 @@ var AddressMap = React.createClass({
   render: function() {
     var conClassName = "address-map";
     switch (this.props.theme) {
-      case 'light':
-        break;
-      case 'dark':
-        conClassName += " dark";
-        break;
-      default:
+    case 'light' :
+      break;
+    case 'dark' :
+      conClassName += " dark";
+      break;
+    default :
 
     }
     var mapItemActieStyle = {
@@ -269,16 +270,16 @@ var AddressMap = React.createClass({
               .itemsList
               .map(function (item, i) {
                 return <li className="map-item" data-key={i} key={i} style={(i === this.state.itemActive)
-                    ? mapItemActieStyle
-                    :
-                      {}}>
-                    <span className="map-item-mark">{String.fromCharCode(65 + i)}</span>
-                    <div className="map-item-main">
-                      <div className="map-item-title">{item.title}</div>
-                      <div className="map-item-address">地址：{item.address}</div>
-                      <div className="map-item-tel">电话：{item.tel}</div>
-                    </div>
-                  </li>;
+                  ? mapItemActieStyle
+                  :
+                    {}}>
+                  <span className="map-item-mark">{String.fromCharCode(65 + i)}</span>
+                  <div className="map-item-main">
+                    <div className="map-item-title">{item.title}</div>
+                    <div className="map-item-address">地址：{item.address}</div>
+                    <div className="map-item-tel">电话：{item.tel}</div>
+                  </div>
+                </li>;
               }.bind(this))}
           </ul>
         </div>

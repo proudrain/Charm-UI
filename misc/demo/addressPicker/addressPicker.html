@@ -8,6 +8,7 @@
 		<script src="../lib/JSXTransformer.js"></script>
 		<script src="../../../dist/Charm-UI.js"></script>
     <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sdp9qCbToS7E23nDRxaAAwbh"></script>
     <style>
       body {
@@ -215,14 +216,15 @@
             }
         }
     }
-      var addressPickerActiveStyle = {
-        top: "10%",
-        left: "40%"
-      };
-      var addressPicker = React.render(
-        <AddressPicker addressPickerActiveStyle={addressPickerActiveStyle} addressData={addressData} theme="dark"/>,
-        document.getElementById('address-picker')
-      );
+    var keyword = $.cookie('searchKeyword');
+    var addressPickerActiveStyle = {
+      top: "10%",
+      left: "40%"
+    };
+    var addressPicker = React.render(
+      <AddressPicker addressPickerActiveStyle={addressPickerActiveStyle} keyword={keyword} addressData={addressData} theme="dark"/>,
+      document.getElementById('address-picker')
+    );
 
     </script>
   </body>
