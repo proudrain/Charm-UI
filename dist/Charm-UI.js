@@ -189,6 +189,61 @@ var AddressListRow = React.createClass({displayName: "AddressListRow",
 'use strict'
 
 //  ==================================================
+//  Include: AddressList AddressSearch
+//
+//  TODO:
+//  ==================================================
+
+var AddressPicker = React.createClass({displayName: "AddressPicker",
+  getInitialState: function() {
+    return {
+      city: "北京",
+      currentCity: null,
+      address: this.props.keyword
+    };
+  },
+  getDefaultProps: function() {
+    return {};
+  },
+  componentWillMount: function() {
+    var myCity = new BMap.LocalCity();
+    myCity
+      .get(function(res) {
+        var currentCity = res.name;
+        this.setState({
+            currentCity: currentCity
+        });
+      }.bind(this));
+  },
+  setAddress: function(ad) {
+    this.setState({
+      address: ad
+    });
+  },
+  setCity: function(ct) {
+    this.setState({
+      city: ct
+    });
+  },
+  render: function() {
+    var addressPickerActiveStyle = this.state.address
+      ? this.props.addressPickerActiveStyle
+      : {};
+    return (
+      React.createElement("div", {className: "address-picker", style: addressPickerActiveStyle}, 
+        React.createElement(AddressList, {setCity: this.setCity, localAddress: this.state.currentCity, addressData: this.props.addressData}), 
+        React.createElement(AddressInput, React.__spread({},  this.props, {city: this.state.city, searchSubmitHandler: this.setAddress})), 
+        React.createElement(AddressMap, {addressKeyword: this.state.address, city: this.props.city, theme: this.props.theme})
+      )
+    );
+  }
+});
+
+
+
+'use strict'
+
+//  ==================================================
 //  Include: AddressInput AddressMap
 //
 //  TODO: [add] 增加各项参数
@@ -480,57 +535,151 @@ var AddressMap = React.createClass({displayName: "AddressMap",
 'use strict'
 
 //  ==================================================
-//  Include: AddressList AddressSearch
+//  Component: ProgressBar
+//
+//  Include: PaginationBtn
 //
 //  TODO:
 //  ==================================================
 
-var AddressPicker = React.createClass({displayName: "AddressPicker",
-  getInitialState: function() {
+/* PaginationBtn */
+var PaginationBtn = React.createClass({displayName: "PaginationBtn",
+  getDefaultProps: function() {
     return {
-      city: "北京",
-      currentCity: null,
-      address: this.props.keyword
+      text: 1,
+      type: "num"
     };
   },
-  getDefaultProps: function() {
-    return {};
-  },
-  componentWillMount: function() {
-    var myCity = new BMap.LocalCity();
-    myCity
-      .get(function(res) {
-        var currentCity = res.name;
-        this.setState({
-            currentCity: currentCity
-        });
-      }.bind(this));
-  },
-  setAddress: function(ad) {
-    this.setState({
-      address: ad
-    });
-  },
-  setCity: function(ct) {
-    this.setState({
-      city: ct
-    });
-  },
   render: function() {
-    var addressPickerActiveStyle = this.state.address
-      ? this.props.addressPickerActiveStyle
-      : {};
+    var text = (this.props.type === 'dot') ? '...' : this.props.text;
+    var itemClass = this.props.active
+      ? "item active"
+      : "item";
+    if(this.props.type !== 'num') {
+      itemClass += (" page " + this.props.type);
+    }
+    if(this.props.disabled) {
+      itemClass += ' disabled';
+    }
     return (
-      React.createElement("div", {className: "address-picker", style: addressPickerActiveStyle}, 
-        React.createElement(AddressList, {setCity: this.setCity, localAddress: this.state.currentCity, addressData: this.props.addressData}), 
-        React.createElement(AddressInput, React.__spread({},  this.props, {city: this.state.city, searchSubmitHandler: this.setAddress})), 
-        React.createElement(AddressMap, {addressKeyword: this.state.address, city: this.props.city, theme: this.props.theme})
+      React.createElement("li", {className: itemClass, onClick: this.props.changePage}, 
+        React.createElement("a", null, text)
       )
     );
   }
 });
 
-
+/* Pagination */
+var Pagination = React.createClass({displayName: "Pagination",
+  getInitialState: function() {
+    return {
+      activePage: this.props.activePage || 1,
+      pageItems: this.getPageItems(1)
+    };
+  },
+  getDefaultProps: function() {
+    return {
+      first: null, // 首页 null || string
+      prev: "上一页", // 上一页 null || string
+      basePages: 2, // first prev base ... mid ... next last
+      midPages: 5, // first prev base ... mid ... next last
+      ellipsis: true, // 省略号 boolen
+      next: "下一页", // 下一页 null || string
+      last: "末页", // 末页 null || string
+      theme: "light", // 主题
+      selected: function(page) { // 页码切换时回调
+        console.log(page);
+      }
+    }
+  },
+  handleItemClick: function(type, page) {
+    if (type === "first") {
+      page = 1;
+    } else if (type === "prev") {
+      page = (this.state.activePage === 1) ? 1 : this.state.activePage - 1;
+    } else if (type === "next") {
+      page = (this.state.activePage === this.props.pages) ? this.props.pages : this.state.activePage + 1;
+    } else if (type === "last") {
+      page = this.props.pages;
+    } else {
+      page = page;
+    }
+    var pageItems = this.getPageItems(page);
+    if (page !== this.state.activePage) {
+      this.setState({
+        activePage: page,
+        pageItems: pageItems
+      });
+      this.props.selected(page);
+    }
+  },
+  getPageItems: function(n) {
+    var list = [];
+    var b = this.props.basePages;
+    var m = this.props.midPages;
+    var p = this.props.pages;
+    if(n <= parseInt(m / 2) + 1) { // 1
+      list = this._getSeriesNumber(1, p <= b + m ? p : m);
+    } else if((n <= parseInt(m / 2) + 1 + b) || p <= b + m)  { // 1'
+      list = this._getSeriesNumber(1, p <= b + m ? p : n + 2);
+    } else if((n < p - parseInt(m / 2) - 1)) {  // 2
+      list = this._getSeriesNumber(1, this.props.basePages);
+      list.push('e');
+      list = list.concat(this._getSeriesNumber(n-2, m));
+      if(p > m + b + 2) {
+        list.push('e');
+      }
+    } else if(n === p - parseInt(m / 2) - 1) {  // 3
+      list = this._getSeriesNumber(1, this.props.basePages);
+      list.push('e');
+      list = list.concat(this._getSeriesNumber(p - m, m + 1));
+    } else {  // 4
+      list = this._getSeriesNumber(1, this.props.basePages);
+      list.push('e');
+      list = list.concat(this._getSeriesNumber(p - m + 1, m));
+    }
+    return list;
+  },
+  _getSeriesNumber: function(start, length) {
+    start = start || 1;
+    length = length || 5;
+    var series = [];
+    while(length--) {
+      series.push(start++);
+    }
+    return series;
+  },
+  render: function() {
+    var start = this.getPageItems(this.state.activePage);
+    var startBlock = [];
+    var endBlock = [];
+    if(this.props.first) {
+      startBlock.push(React.createElement(PaginationBtn, {text: this.props.first, disabled: (this.state.activePage === 1) ? true : false, type: "prev", type: "first", changePage: this.handleItemClick.bind(this, 'first')}));
+    }
+    if(this.props.prev) {
+      startBlock.push(React.createElement(PaginationBtn, {text: this.props.prev, disabled: (this.state.activePage === 1) ? true : false, type: "prev", changePage: this.handleItemClick.bind(this, 'prev')}));
+    }
+    if(this.props.next) {
+      endBlock.push(React.createElement(PaginationBtn, {text: this.props.next, type: "next", disabled: (this.state.activePage === this.props.pages) ? true : false, changePage: this.handleItemClick.bind(this, 'next')}));
+    }
+    if(this.props.last) {
+      endBlock.push(React.createElement(PaginationBtn, {text: this.props.last, type: "last", disabled: (this.state.activePage === this.props.pages) ? true : false, changePage: this.handleItemClick.bind(this, 'last')}));
+    }
+    return (
+      React.createElement("ul", {className: "pagination"}, 
+        startBlock, 
+        
+          this.state.pageItems.map(function(item, i) {
+            return (
+              React.createElement(PaginationBtn, {text: item, type: item === 'e' ? 'dot' : 'num', active: (item === this.state.activePage) ? true : false, changePage: item === 'e' ? null : this.handleItemClick.bind(this, 'num', item), key: i})
+            )
+          }.bind(this)), 
+        
+        endBlock
+      )
+    )
+  }
+});
 
 'use strict'
 

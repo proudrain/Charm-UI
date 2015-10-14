@@ -1,0 +1,73 @@
+//  ==================================================
+//  Component: ProgressBar
+//
+//  Include: PaginationBtn
+//
+//  TODO:
+//  ==================================================
+
+$teal: #1BBC9B;
+$coral: #FD605B;
+
+$itemSize: 35px;
+$itemBackground: #FFF;
+$itemBorder: #E2E2E2;
+
+$itemBtnPadding: 8px;
+
+$itemActive: $coral;
+
+/*==================================================
+  Component: ProgressBar
+==================================================*/
+
+.pagination {
+  display: inline-block;
+  .item {
+    display: inline-block;
+    width: $itemSize;
+    height: $itemSize;
+    margin-left: -1px;
+    border: 1px solid $itemBorder;
+    background-color: $itemBackground;
+    line-height: $itemSize;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .1s ease, color .1s ease;
+    &:not(.dot):not(.active):not(.disabled):hover {
+      color: $itemActive;
+      border-color: $itemActive;
+      &:not(.page) + .item:not(.page) {
+        border-left-color: $itemActive;
+      }
+    }
+    &.active {
+      border-color: $itemActive;
+      background-color: $itemActive;
+      color: #FFF;
+      cursor: default;
+    }
+    &.disabled {
+      color: #BBB;
+    }
+    &.page {
+      width: auto;
+      padding: 0 $itemBtnPadding;
+    }
+    &.dot {
+      margin: 0;
+      border: none;
+      cursor: default;
+      & + .page {
+        margin-left: 0;
+      }
+    }
+    &.first, &.prev {
+      margin-left: 0;
+      margin-right: 5px;
+    }
+    &.next, &.last {
+      margin-left: 5px;
+    }
+  }
+}
