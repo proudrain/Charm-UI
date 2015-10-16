@@ -571,6 +571,9 @@ var PaginationBtn = React.createClass({displayName: "PaginationBtn",
 
 /* Pagination */
 var Pagination = React.createClass({displayName: "Pagination",
+  propTypes: {
+    pages: React.PropTypes.number
+  },
   getInitialState: function() {
     return {
       activePage: this.props.activePage || 1,
@@ -585,7 +588,7 @@ var Pagination = React.createClass({displayName: "Pagination",
       midPages: 5, // first prev base ... mid ... next last
       ellipsis: true, // 省略号 boolen
       next: "下一页", // 下一页 null || string
-      last: "末页", // 末页 null || string
+      last: null, // 末页 null || string
       theme: "light", // 主题
       selected: function(page) { // 页码切换时回调
         console.log(page);
@@ -641,8 +644,8 @@ var Pagination = React.createClass({displayName: "Pagination",
     return list;
   },
   _getSeriesNumber: function(start, length) {
-    start = start || 1;
-    length = length || 5;
+    start = start;
+    length = length;
     var series = [];
     while(length--) {
       series.push(start++);
@@ -653,27 +656,30 @@ var Pagination = React.createClass({displayName: "Pagination",
     var start = this.getPageItems(this.state.activePage);
     var startBlock = [];
     var endBlock = [];
-    if(this.props.first) {
-      startBlock.push(React.createElement(PaginationBtn, {text: this.props.first, disabled: (this.state.activePage === 1) ? true : false, type: "prev", type: "first", changePage: this.handleItemClick.bind(this, 'first')}));
+    if(this.props.pages > 0) {
+      if(this.props.first) {
+        startBlock.push(React.createElement(PaginationBtn, {text: this.props.first, disabled: (this.state.activePage === 1) ? true : false, type: "prev", type: "first", changePage: this.handleItemClick.bind(this, 'first')}));
+      }
+      if(this.props.prev) {
+        startBlock.push(React.createElement(PaginationBtn, {text: this.props.prev, disabled: (this.state.activePage === 1) ? true : false, type: "prev", changePage: this.handleItemClick.bind(this, 'prev')}));
+      }
+      if(this.props.next) {
+        endBlock.push(React.createElement(PaginationBtn, {text: this.props.next, type: "next", disabled: (this.state.activePage === this.props.pages) ? true : false, changePage: this.handleItemClick.bind(this, 'next')}));
+      }
+      if(this.props.last) {
+        endBlock.push(React.createElement(PaginationBtn, {text: this.props.last, type: "last", disabled: (this.state.activePage === this.props.pages) ? true : false, changePage: this.handleItemClick.bind(this, 'last')}));
+      }
     }
-    if(this.props.prev) {
-      startBlock.push(React.createElement(PaginationBtn, {text: this.props.prev, disabled: (this.state.activePage === 1) ? true : false, type: "prev", changePage: this.handleItemClick.bind(this, 'prev')}));
-    }
-    if(this.props.next) {
-      endBlock.push(React.createElement(PaginationBtn, {text: this.props.next, type: "next", disabled: (this.state.activePage === this.props.pages) ? true : false, changePage: this.handleItemClick.bind(this, 'next')}));
-    }
-    if(this.props.last) {
-      endBlock.push(React.createElement(PaginationBtn, {text: this.props.last, type: "last", disabled: (this.state.activePage === this.props.pages) ? true : false, changePage: this.handleItemClick.bind(this, 'last')}));
-    }
+    var pagiClass = (this.props.theme === 'light') ? 'pagination' : 'pagination ' + this.props.theme;
     return (
-      React.createElement("ul", {className: "pagination"}, 
+      React.createElement("ul", {className: pagiClass}, 
         startBlock, 
         
-          this.state.pageItems.map(function(item, i) {
-            return (
-              React.createElement(PaginationBtn, {text: item, type: item === 'e' ? 'dot' : 'num', active: (item === this.state.activePage) ? true : false, changePage: item === 'e' ? null : this.handleItemClick.bind(this, 'num', item), key: i})
-            )
-          }.bind(this)), 
+          (this.props.pages > 0) && this.state.pageItems.map(function(item, i) {
+              return (
+                React.createElement(PaginationBtn, {text: item, type: item === 'e' ? 'dot' : 'num', active: (item === this.state.activePage) ? true : false, changePage: item === 'e' ? null : this.handleItemClick.bind(this, 'num', item), key: i})
+              )
+            }.bind(this)), 
         
         endBlock
       )

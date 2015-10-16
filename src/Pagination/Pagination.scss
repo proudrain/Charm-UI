@@ -17,6 +17,11 @@ $itemBtnPadding: 8px;
 
 $itemActive: $coral;
 
+$darkBackground: #231716;
+$darkBorder: #322827;
+$darkActiveBackground: #322827;
+$darkActiveBorder: rgba(#FFF, .2);
+
 /*==================================================
   Component: ProgressBar
 ==================================================*/
@@ -68,6 +73,34 @@ $itemActive: $coral;
     }
     &.next, &.last {
       margin-left: 5px;
+    }
+  }
+  &.dark {
+    .item {
+      color: #FAFAFA;
+      border-color: $darkBorder;
+      background-color: $darkBackground;
+      &:not(.dot):not(.active):not(.disabled):hover {
+        color: #969696;
+        border-color: $darkActiveBorder;
+        background-color: $darkActiveBackground;
+        &:active {
+          background-color: darken($darkActiveBackground, 5%);
+        }
+        &:not(.page) + .item:not(.page) {
+          border-left-color: $darkActiveBorder;
+        }
+      }
+      &.active {
+        background-color: $darkActiveBackground;
+        color: #969696;
+      }
+      &.disabled {
+        color: $darkActiveBorder;
+      }
+      & > a {
+        color: inherit;
+      }
     }
   }
 }

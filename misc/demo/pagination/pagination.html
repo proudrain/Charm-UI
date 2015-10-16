@@ -13,6 +13,7 @@
         margin: 0;
         color: #333;
         overflow: hidden;
+        /*background-color: #231716;*/
       }
       body, ul, ol, li {
         padding: 0;
@@ -27,8 +28,11 @@
     <div id="pagination"></div>
 
     <script type="text/jsx">
+    var a = function a(d){
+      alert(d);
+    }
     var pagination = React.render(
-      <Pagination pages={10} first="首页" />,
+      <Pagination pages={10} first="首页" last="末页" selected={a} />,
       document.getElementById('pagination')
     );
 
