@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Charm UI - FilterGroup</title>
+		<link rel="stylesheet" href="../../../dist/Charm-UI.css" />
+		<script src="../lib/react.js"></script>
+		<script src="../lib/JSXTransformer.js"></script>
+		<script src="../../../dist/Charm-UI.js"></script>
+		<style>
+			body {
+				margin: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<div id="filter-group"></div>
+
+		<script type="text/jsx">
+	      window.onload = function () {
+	        var filterGroup = React.render(
+	          <FilterGroup
+			  	filterDefs={defs}
+				filterValues={values}
+				
+			  />,
+	          document.getElementById('filter-group')
+	        );
+	      };
+  	</script>
+	</body>
+
+</html>
