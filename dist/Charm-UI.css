@@ -359,68 +359,6 @@
   border-radius: 10px; }
 
 /*==================================================
-  Component: ProgressBar
-==================================================*/
-.pagination {
-  display: inline-block; }
-  .pagination .item {
-    display: inline-block;
-    width: 35px;
-    height: 35px;
-    margin-left: -1px;
-    border: 1px solid #E2E2E2;
-    background-color: #FFF;
-    line-height: 35px;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color 0.1s ease, color 0.1s ease; }
-    .pagination .item:not(.dot):not(.active):not(.disabled):hover {
-      color: #FD605B;
-      border-color: #FD605B; }
-      .pagination .item:not(.dot):not(.active):not(.disabled):hover:not(.page) + .item:not(.page) {
-        border-left-color: #FD605B; }
-    .pagination .item.active {
-      border-color: #FD605B;
-      background-color: #FD605B;
-      color: #FFF;
-      cursor: default; }
-    .pagination .item.disabled {
-      color: #BBB; }
-    .pagination .item.page {
-      width: auto;
-      padding: 0 8px; }
-    .pagination .item.dot {
-      margin: 0;
-      border: none;
-      cursor: default; }
-      .pagination .item.dot + .page {
-        margin-left: 0; }
-    .pagination .item.first, .pagination .item.prev {
-      margin-left: 0;
-      margin-right: 5px; }
-    .pagination .item.next, .pagination .item.last {
-      margin-left: 5px; }
-  .pagination.dark .item {
-    color: #FAFAFA;
-    border-color: #322827;
-    background-color: #231716; }
-    .pagination.dark .item:not(.dot):not(.active):not(.disabled):hover {
-      color: #969696;
-      border-color: rgba(255, 255, 255, 0.2);
-      background-color: #322827; }
-      .pagination.dark .item:not(.dot):not(.active):not(.disabled):hover:active {
-        background-color: #241d1c; }
-      .pagination.dark .item:not(.dot):not(.active):not(.disabled):hover:not(.page) + .item:not(.page) {
-        border-left-color: rgba(255, 255, 255, 0.2); }
-    .pagination.dark .item.active {
-      background-color: #322827;
-      color: #969696; }
-    .pagination.dark .item.disabled {
-      color: rgba(255, 255, 255, 0.2); }
-    .pagination.dark .item > a {
-      color: inherit; }
-
-/*==================================================
     Component: ProgressBar
   ==================================================*/
 /* main */
@@ -463,6 +401,120 @@
   to {
     -webkit-transform: rotateZ(360deg);
             transform: rotateZ(360deg); } }
+
+/*==================================================
+  Component: ProgressBar
+==================================================*/
+.pagination {
+  padding-right: 10px; }
+  .pagination, .pagination .pagi-main, .pagination .overview, .pagination .quick-go, .pagination .item {
+    display: inline-block; }
+  .pagination .item {
+    width: 35px;
+    height: 35px;
+    margin-left: -1px;
+    border: 1px solid #E2E2E2;
+    background-color: #FFF;
+    line-height: 35px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.1s ease, color 0.1s ease; }
+    .pagination .item:not(.dot):not(.active):not(.disabled):hover {
+      color: #FD605B;
+      border-color: #FD605B; }
+      .pagination .item:not(.dot):not(.active):not(.disabled):hover:not(.page) + .item:not(.page) {
+        border-left-color: #FD605B; }
+    .pagination .item.active {
+      border-color: #FD605B;
+      background-color: #FD605B;
+      color: #FFF;
+      cursor: default; }
+    .pagination .item.disabled {
+      color: #BBB; }
+    .pagination .item.page {
+      width: auto;
+      padding: 0 8px; }
+    .pagination .item.dot {
+      margin: 0;
+      border: none;
+      cursor: default; }
+      .pagination .item.dot + .page {
+        margin-left: 0; }
+    .pagination .item.first, .pagination .item.prev {
+      margin-left: 0;
+      margin-right: 5px; }
+    .pagination .item.next, .pagination .item.last {
+      margin-left: 5px; }
+  .pagination .overview {
+    margin-left: 15px;
+    color: #A0A0A0;
+    font-size: 14px; }
+    .pagination .overview span {
+      vertical-align: middle; }
+  .pagination .quick-go {
+    color: #A0A0A0;
+    font-size: 14px; }
+    .pagination .quick-go span {
+      vertical-align: middle; }
+    .pagination .quick-go input {
+      padding-left: 3px;
+      margin: 0 5px;
+      width: 30px;
+      border: 1px solid #E2E2E2;
+      border-radius: 2px;
+      background-color: #FFF;
+      color: #A0A0A0;
+      text-align: center;
+      vertical-align: middle; }
+    .pagination .quick-go .go-submit {
+      font-size: 14px;
+      margin-left: 8px;
+      border: 1px solid #E2E2E2;
+      border-radius: 2px;
+      background-color: #FFF;
+      color: #444;
+      vertical-align: middle; }
+      .pagination .quick-go .go-submit:hover {
+        color: #FD605B;
+        border-color: #FD605B;
+        cursor: pointer; }
+      .pagination .quick-go .go-submit:focus {
+        outline: none; }
+  .pagination.dark {
+    background-color: #231716; }
+    .pagination.dark .item {
+      color: #FAFAFA;
+      border-color: #322827;
+      background-color: #231716; }
+      .pagination.dark .item:not(.dot):not(.active):not(.disabled):hover {
+        color: #969696;
+        border-color: rgba(255, 255, 255, 0.2);
+        background-color: #322827; }
+        .pagination.dark .item:not(.dot):not(.active):not(.disabled):hover:active {
+          background-color: #241d1c; }
+        .pagination.dark .item:not(.dot):not(.active):not(.disabled):hover:not(.page) + .item:not(.page) {
+          border-left-color: rgba(255, 255, 255, 0.2); }
+      .pagination.dark .item.active {
+        background-color: #322827;
+        color: #969696; }
+      .pagination.dark .item.disabled {
+        color: rgba(255, 255, 255, 0.2); }
+      .pagination.dark .item > a {
+        color: inherit; }
+    .pagination.dark .quick-go .go-page {
+      border-color: rgba(255, 255, 255, 0.1);
+      background-color: #291b1a; }
+      .pagination.dark .quick-go .go-page:focus {
+        outline: none; }
+    .pagination.dark .quick-go .go-submit {
+      color: #FAFAFA;
+      border-color: #322827;
+      background-color: #231716; }
+      .pagination.dark .quick-go .go-submit:hover {
+        color: #969696;
+        background-color: #322827; }
+      .pagination.dark .quick-go .go-submit:active {
+        background-color: #241d1c; }
 
 .tooltip {
   position: relative; }

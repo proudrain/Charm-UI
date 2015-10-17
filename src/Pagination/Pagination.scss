@@ -22,14 +22,18 @@ $darkBorder: #322827;
 $darkActiveBackground: #322827;
 $darkActiveBorder: rgba(#FFF, .2);
 
+$qickGoColor: #A0A0A0;
+
 /*==================================================
   Component: ProgressBar
 ==================================================*/
 
 .pagination {
-  display: inline-block;
-  .item {
+  padding-right: 10px;
+  &, .pagi-main, .overview, .quick-go, .item {
     display: inline-block;
+  }
+  .item {
     width: $itemSize;
     height: $itemSize;
     margin-left: -1px;
@@ -75,7 +79,54 @@ $darkActiveBorder: rgba(#FFF, .2);
       margin-left: 5px;
     }
   }
+
+  .overview {
+    margin-left: 15px;
+    color: $qickGoColor;
+    font-size: 14px;
+    span {
+      vertical-align: middle;
+    }
+  }
+
+  .quick-go {
+    color: $qickGoColor;
+    font-size: 14px;
+    span {
+      vertical-align: middle;
+    }
+    input {
+      padding-left: 3px;
+      margin: 0 5px;
+      width: 30px;
+      border: 1px solid $itemBorder;
+      border-radius: 2px;
+      background-color: $itemBackground;
+      color: $qickGoColor;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .go-submit {
+      font-size: 14px;
+      margin-left: 8px;
+      border: 1px solid $itemBorder;
+      border-radius: 2px;
+      background-color: $itemBackground;
+      color: #444;
+      vertical-align: middle;
+      &:hover {
+        color: $itemActive;
+        border-color: $itemActive;
+        cursor: pointer;
+      }
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
   &.dark {
+    background-color: $darkBackground;
     .item {
       color: #FAFAFA;
       border-color: $darkBorder;
@@ -100,6 +151,28 @@ $darkActiveBorder: rgba(#FFF, .2);
       }
       & > a {
         color: inherit;
+      }
+    }
+
+    .quick-go {
+      .go-page {
+        border-color: rgba($darkActiveBorder, .1);
+        background-color: lighten($darkBackground, 2%);
+        &:focus {
+          outline: none;
+        }
+      }
+      .go-submit {
+        color: #FAFAFA;
+        border-color: $darkBorder;
+        background-color: $darkBackground;
+        &:hover {
+          color: #969696;
+          background-color: $darkActiveBackground;
+        }
+        &:active {
+          background-color: darken($darkActiveBackground, 5%);
+        }
       }
     }
   }
