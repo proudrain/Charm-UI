@@ -1,3 +1,18 @@
+/*==================================================
+    Component: AddressPicker
+  ==================================================*/
+/* AddressPicker */
+.address-picker {
+  overflow: show;
+  /* AddressList */
+  /* AddressSearch */ }
+  .address-picker .AddressList {
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: top; }
+  .address-picker .address-search {
+    display: inline-block; }
+
 .AddressList {
   position: relative;
   height: 50px;
@@ -51,7 +66,7 @@
   border-bottom: 12px solid #fff;
   border-right: 10px solid transparent;
   top: -12px;
-  left: 40px; }
+  left: 50px; }
 
 .AddressList .AddressCont {
   max-height: inherit;
@@ -100,9 +115,10 @@
 
 .AddressList .AddressWrap .AddressListWrap {
   padding-left: 50px;
-  margin-top: 20px;
+  margin-top: 14px;
   border-top: 1px solid #ccc;
-  position: relative; }
+  position: relative;
+  z-index: 99; }
 
 .AddressList .AddressWrap .AddressListWrap .AddressListRow {
   width: 100%;
@@ -131,20 +147,130 @@
 .AddressList .AddressWrap .AddressListWrap .AddressListRow .dataWrap > span > span:hover {
   color: red; }
 
-/*==================================================
-    Component: AddressPicker
-  ==================================================*/
-/* AddressPicker */
-.address-picker {
-  overflow: show;
-  /* AddressList */
-  /* AddressSearch */ }
-  .address-picker .AddressList {
-    display: inline-block;
-    margin-right: 5px;
-    vertical-align: top; }
-  .address-picker .address-search {
+.clearfix:after, .inline-list:after, .cu-filter-group .filter-group .filter .body .filter-items:after, .cu-filter-group .filter-state:after, .cu-filter-group .filter-group .filter .body .multi-confirm:after {
+  content: '';
+  display: table;
+  clear: both; }
+
+.unstyled-list, .cu-filter-group .filter-group, .cu-filter-group .filter-group .filter .body .filter-items {
+  margin: 0;
+  padding: 0;
+  list-style: none; }
+
+.inline-list li, .cu-filter-group .filter-group .filter .body .filter-items li {
+  float: left; }
+
+.absolute-middle {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translatey(-50%);
+          transform: translatey(-50%); }
+
+.cu-filter-group .filter-state {
+  padding: 10px 0; }
+  .cu-filter-group .filter-state .custom-content {
+    float: left;
+    margin-right: 18px;
+    height: 28px;
+    line-height: 28px; }
+  .cu-filter-group .filter-state .filter-tags {
+    float: left; }
+
+.cu-filter-group .filter-tags .filter-tag {
+  box-sizing: content-box;
+  display: inline-block;
+  margin-right: 10px;
+  padding: 0 5px;
+  height: 26px;
+  line-height: 26px;
+  border: 1px solid #c9c9c9; }
+  .cu-filter-group .filter-tags .filter-tag .tag-name, .cu-filter-group .filter-tags .filter-tag .tag-value, .cu-filter-group .filter-tags .filter-tag .tag-remove {
     display: inline-block; }
+    .cu-filter-group .filter-tags .filter-tag .tag-name a, .cu-filter-group .filter-tags .filter-tag .tag-value a, .cu-filter-group .filter-tags .filter-tag .tag-remove a {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      text-decoration: none; }
+
+.cu-filter-group .filter-group {
+  position: relative;
+  padding: 0 8px;
+  border: 1px solid #c9c9c9; }
+
+.cu-filter-group .filter.expanded .filter-items {
+  height: auto !important;
+  overflow: auto; }
+
+.cu-filter-group .filter-group li:last-child .filter {
+  border-bottom: none; }
+
+.cu-filter-group .filter-group .filter {
+  position: relative;
+  border-bottom: 1px dashed #e4e4e4;
+  background-color: #fff; }
+  .cu-filter-group .filter-group .filter .head {
+    position: absolute;
+    top: 0;
+    left: 2px; }
+    .cu-filter-group .filter-group .filter .head .filter-name {
+      margin: 0;
+      min-width: 75px;
+      height: 50px;
+      font-size: inherit;
+      font-weight: normal;
+      line-height: 50px;
+      color: #868686;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis; }
+  .cu-filter-group .filter-group .filter .body {
+    padding: 0 120px 0 83px; }
+    .cu-filter-group .filter-group .filter .body .filter-items {
+      height: 50px;
+      overflow: hidden; }
+      .cu-filter-group .filter-group .filter .body .filter-items .filter-item {
+        margin-right: 26px;
+        height: 50px;
+        line-height: 50px; }
+        .cu-filter-group .filter-group .filter .body .filter-items .filter-item a, .cu-filter-group .filter-group .filter .body .filter-items .filter-item label {
+          font-size: inherit;
+          color: inherit;
+          text-decoration: none;
+          cursor: pointer; }
+    .cu-filter-group .filter-group .filter .body .multi-confirm {
+      margin: 0 auto 15px;
+      width: 130px; }
+      .cu-filter-group .filter-group .filter .body .multi-confirm .btn-confirm, .cu-filter-group .filter-group .filter .body .multi-confirm .btn-cancel {
+        padding: 2px 10px;
+        border: 1px solid #c9c9c9;
+        border-radius: 2px;
+        background-color: transparent;
+        cursor: pointer; }
+      .cu-filter-group .filter-group .filter .body .multi-confirm .btn-confirm {
+        float: left;
+        border-color: #428bca;
+        background-color: #428bca;
+        color: #fff; }
+        .cu-filter-group .filter-group .filter .body .multi-confirm .btn-confirm:hover {
+          border-color: #3071a9;
+          background-color: #3071a9; }
+      .cu-filter-group .filter-group .filter .body .multi-confirm .btn-cancel {
+        float: right; }
+        .cu-filter-group .filter-group .filter .body .multi-confirm .btn-cancel:hover {
+          color: #428bca;
+          border-color: #428bca; }
+  .cu-filter-group .filter-group .filter .foot {
+    position: absolute;
+    top: 0;
+    right: 2px; }
+    .cu-filter-group .filter-group .filter .foot .filter-action {
+      height: 50px;
+      line-height: 50px; }
+      .cu-filter-group .filter-group .filter .foot .filter-action a {
+        text-decoration: none; }
+      .cu-filter-group .filter-group .filter .foot .filter-action .multi-toggle {
+        margin-right: 20px;
+        padding: 2px 4px;
+        border: 1px solid #c9c9c9;
+        font-size: 0.9em; }
 
 /*==================================================
     Component: AddressSearch
@@ -276,50 +402,6 @@
   background: #DADADA;
   border-radius: 10px; }
 
-/*==================================================
-    Component: ProgressBar
-  ==================================================*/
-/* main */
-.cu-progress {
-  z-index: 2000; }
-  .cu-progress .cu-progress-bar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 2px;
-    background-color: #09c4c7;
-    border-top-right-radius: 2px;
-    border-bottom-right-radius: 2px;
-    box-shadow: 1px 0 1px #09c4c7; }
-  .cu-progress .cu-spinner {
-    position: fixed;
-    top: 15px;
-    right: 10px;
-    width: 18px;
-    height: 18px;
-    border: 2px solid #09c4c7;
-    border-left-color: transparent;
-    border-radius: 50%;
-    animation: rotateSpinner 0.6s infinite linear;
-    -webkit-animation: rotateSpinner 0.6s infinite linear; }
-
-/* animation */
-@keyframes rotateSpinner {
-  from {
-    -webkit-transform: rotateZ(0);
-            transform: rotateZ(0); }
-  to {
-    -webkit-transform: rotateZ(360deg);
-            transform: rotateZ(360deg); } }
-
-@-webkit-keyframes rotateSpinner {
-  from {
-    -webkit-transform: rotateZ(0);
-            transform: rotateZ(0); }
-  to {
-    -webkit-transform: rotateZ(360deg);
-            transform: rotateZ(360deg); } }
-
 .tooltip {
   position: relative; }
 
@@ -383,3 +465,47 @@
 .tooltip.bottom .tip {
   top: 100%;
   margin-top: 16px; }
+
+/*==================================================
+    Component: ProgressBar
+  ==================================================*/
+/* main */
+.cu-progress {
+  z-index: 2000; }
+  .cu-progress .cu-progress-bar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #09c4c7;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    box-shadow: 1px 0 1px #09c4c7; }
+  .cu-progress .cu-spinner {
+    position: fixed;
+    top: 15px;
+    right: 10px;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #09c4c7;
+    border-left-color: transparent;
+    border-radius: 50%;
+    animation: rotateSpinner 0.6s infinite linear;
+    -webkit-animation: rotateSpinner 0.6s infinite linear; }
+
+/* animation */
+@keyframes rotateSpinner {
+  from {
+    -webkit-transform: rotateZ(0);
+            transform: rotateZ(0); }
+  to {
+    -webkit-transform: rotateZ(360deg);
+            transform: rotateZ(360deg); } }
+
+@-webkit-keyframes rotateSpinner {
+  from {
+    -webkit-transform: rotateZ(0);
+            transform: rotateZ(0); }
+  to {
+    -webkit-transform: rotateZ(360deg);
+            transform: rotateZ(360deg); } }

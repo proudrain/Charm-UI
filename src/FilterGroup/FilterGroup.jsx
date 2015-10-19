@@ -1,43 +1,139 @@
+/* FilterGroup */
 
-// FilterGroup
+/* 每条过滤器的每个选项 */
 var FilterOption = React.createClass({
   render: function () {
-    var inputStyle = {
-      display: this.props.isMultiSelect ? 'inline' : 'none'
-    };
     var optionValue = this.props.value;
-    var select = this.props.onSelect.bind(this, optionValue.value);
-    return (
-      <div>
+    var select = this.props.onSelect.bind(null, optionValue);
+    var optionElement;
+    var optionValueElement = <span>{optionValue.value}</span>;
+    if (this.props.isMultiSelect) {
+      optionElement = (
+        <label href="#" htmlFor={optionValue.name}>
+          <input onClick={select} type="checkbox" name={optionValue.name} value={optionValue.value} id={optionValue.value} />
+          {optionValueElement}
+        </label>
+      );
+    }
+    else {
+      optionElement = (
         <a href="#" onClick={select}>
-          <input style={inputStyle} type="checkbox" name={optionValue.name} value={optionValue.value} />
-          <span ng-bind={optionValue.value}></span>
+          {optionValueElement}
         </a>
-      </div>
-    );
+      );
+    }
+    return optionElement;
   }
 });
 
+/* 每条过滤器的额外操作 */
 var FilterAction = React.createClass({
   render: function () {
     return (
       <div className="filter-action">
         <a style={{display: this.props.multiToggleStatus ? 'inline' : 'none'}}
-          ng-click="multiToggle()" href="#" className="multi-toggle">多选</a>
-        <a ng-click="expandToggle()" href="#">
-          { this.props.expandToggleStatus ? '更多' : '收起' }
-          <i className="glyphicon glyphicon-menu-down"></i>
+          onClick={this.props.multiToggle} href="#" className="multi-toggle">多选</a>
+        <a onClick={this.props.expandToggle} href="#">
+          {this.props.expandToggleStatus ? '更多' : '收起'}
         </a>
       </div>
     );
   }
 });
 
+/* 状态标签 */
+var FilterStateTag = React.createClass({
+  render: function () {
+    var tagValueNodes;
+    var currStateValues =  Array.isArray(this.props.value) ?
+                          this.props.value :
+                          [this.props.value];
+    tagValueNodes = currStateValues.map(function (value, index, values) {
+      if (this.props.treeView) {
+        // state 为 treeView
+        return (
+          <span key={index}>
+            {value.value}&nbsp;
+            <span className="tag-remove">
+              <a onClick={this.props.onTagRemove.bind(null, value)} href="#">&times;</a>
+            </span>
+            {
+              index == values.length - 1 ?
+                null :
+                (<span>&gt;</span>)
+            }
+          </span>
+        );
+      }
+      // state 不是 treeView 但可能为多选状态
+      if (index == values.length - 1) {
+        return (
+          <span key={index}>
+            {value.value}&nbsp;
+            <span className="tag-remove">
+              <a onClick={this.props.onTagRemove.bind(null, value)} href="#">&times;</a>
+            </span>
+          </span>
+        );
+      }
+      else {
+        return (
+          <span key={index}>
+            {value.value + ','}&nbsp;
+          </span>
+        );
+      }
+    }.bind(this));
+
+    return (
+      <div className="filter-tag">
+        <div className="tag-name">{this.props.name + ':'}&nbsp;</div>
+        <div className="tag-value">
+          {tagValueNodes}
+        </div>
+      </div>
+    );
+  }
+});
+
+/* 状态标签栏 */
+var FilterStateBar = React.createClass({
+  render: function () {
+    var filterState = this.props.filterState;
+    var stateTagNodes = Object.keys(filterState)
+      .map(function (field, index) {
+        var state = filterState[field];
+        var def = this.props.getFilterDef(field);
+        return (
+          <FilterStateTag
+            key={index}
+            name={def.name}
+            value={state}
+            treeView={def.treeView}
+            onTagRemove={this.props.onStateDelete.bind(null, field)}
+          />
+        );
+      }.bind(this));
+    return (
+      <div className="filter-state">
+        <div className="custom-content">
+          {this.props.children}
+        </div>
+        <div className="filter-tags">
+          {stateTagNodes}
+        </div>
+      </div>
+    );
+  }
+});
+
+/* 单条过滤器 */
 var Filter = React.createClass({
   getInitialState: function () {
     return {
       isMultiSelect: false,
-      isExpanded: false
+      isExpanded: false,
+      multiSelected: {}    // 暂时被多选中的选项
     };
   },
   getDefaultProps: function () {
@@ -47,17 +143,61 @@ var Filter = React.createClass({
       options: [],
     };
   },
+  multiSelectToggle: function () {
+    this.setState({
+      isMultiSelect: !this.state.isMultiSelect,
+      // 若由非多选到多选，则自动展开
+      isExpanded: this.state.isMultiSelect ? false : true
+    });
+  },
+  expandToggle: function () {
+    this.setState({
+      // 若由展开到收起，则取消多选状态
+      isMultiSelect: this.state.isExpanded ? false : this.state.isMultiSelect,
+      isExpanded: !this.state.isExpanded
+    });
+  },
+  // 用于更新暂时被多选中的选项状态
+  updateMultiSelected: function (value) {
+    var multiSelected = this.state.multiSelected;
+    multiSelected[value.value] ?
+      multiSelected[value.value] = null :
+      multiSelected[value.value] = value;
+    this.setState({multiSelected: multiSelected});
+  },
+  // 确认多选的状态
+  confirmMultiSelect: function () {
+    var selectedObj = this.state.multiSelected;
+    var selectedArr = [];
+    for (var key in selectedObj) {
+      if (selectedObj.hasOwnProperty(key) && selectedObj[key]) {
+        selectedArr.push(selectedObj[key]);
+      }
+    }
+    this.props.onSelectOption(selectedArr);
+    // 清空多选暂存
+    this.setState({multiSelected: {}});
+    // 取消多选状态
+    this.multiSelectToggle();
+  },
   render: function () {
-    var optionNodes = this.props.options.map(function (option) {
+    var handleSelect = function (value) {
+      if (!this.state.isMultiSelect) {
+        this.props.onSelectOption(value);
+        return;
+      }
+      this.updateMultiSelected(value);
+    }.bind(this);
+    var optionNodes = this.props.options.map(function (option, index) {
       return (
-        <li className="filter-items">
-          <FilterOption value={option} onSelect={this.props.onSelectOption} isMultiSelect={this.state.isMultiSelect} />
+        <li key={index} className="filter-item">
+          <FilterOption value={option} onSelect={handleSelect} isMultiSelect={this.state.isMultiSelect} />
         </li>
       );
-    });
+    }.bind(this));
 
     return (
-      <div className={"filter" + this.state.isExpanded ? " expanded" : ""}>
+      <div className={"filter" + (this.state.isExpanded ? " expanded" : "")}>
         <div className="head">
           <h4 className="filter-name">{this.props.name}</h4>
         </div>
@@ -66,94 +206,29 @@ var Filter = React.createClass({
           <ul className="filter-items">
             {optionNodes}
           </ul>
+
+          <div style={{display: this.state.isMultiSelect ? 'block' : 'none'}}
+              className="multi-confirm">
+            <button className="btn-confirm" onClick={this.confirmMultiSelect} type="button" name="confirm">确定</button>
+            <button className="btn-cancel" type="button" name="cancel" onClick={this.multiSelectToggle}>取消</button>
+          </div>
         </div>
 
         <div className="foot">
           <FilterAction
-            expandToggleStatus={!this.state.isExpanded}
             multiToggleStatus={this.props.canMultiSelect &&
-              !this.state.isMultiSelect} />
-        </div>
-      </div>
-    );
-  }
-});
-
-var FilterStateTag = React.createClass({
-  render: function () {
-    var tagValueNodes;
-    var currStateValues = this.props.value;
-    tagValueNodes = currStateValues.map(function (value, index, values) {
-      if (this.props.treeView) {
-        // state 为 treeView
-        return (
-          <span>
-            {value.value}
-            <span class="tag-remove">
-              <a ng-click="removeState(tag.field, value)" href="#">&times;</a>
-            </span>
-            {
-              index == values.length - 1 ?
-                (<span>&gt;</span>) :
-                null
-            }
-          </span>
-        );
-      }
-      // state 不是 treeView 但可能为多选状态
-      return (
-        <span>
-          {
-            index == values.length - 1 ?
-              value.value + ',' :
-              value.value
-          }
-          <span class="tag-remove">
-            <a ng-click="removeState(tag.field, value)" href="#">&times;</a>
-          </span>
-        </span>
-      );
-    });
-
-    return (
-      <div class="filter-tag">
-        <div class="tag-name">{this.props.name + ':'}</div>
-        <div class="tag-value">
-          {tagValueNodes}
-        </div>
-      </div>
-    );
-  }
-});
-
-var FilterStateBar = React.createClass({
-  render: function () {
-    var stateTagNodes = Object.keys(this.props.filterState)
-      .map(function (state) {
-        var field = state.field;
-        var def = this.props.getFilterDef(field);
-        return (
-          <FilterStateTag
-            field={field}
-            name={def.name}
-            value={state.value}
-            treeView={def.treeView}
+              !this.state.isMultiSelect}
+            expandToggleStatus={!this.state.isExpanded}
+            multiToggle={this.multiSelectToggle}
+            expandToggle={this.expandToggle}
           />
-        );
-      });
-    return (
-      <div class="filter-state">
-        <div class="custom-content">
-          {this.props.children}
-        </div>
-        <div class="filter-tags">
-          {stateTagNodes}
         </div>
       </div>
     );
   }
 });
 
+/* 过滤器组，最外层组件 */
 /**
  * [props]
  * filterDefs
@@ -162,39 +237,186 @@ var FilterStateBar = React.createClass({
 var FilterGroup = React.createClass({
   getInitialState: function () {
     return {
-      filterValues: this.props.filterValues || {},
+      filterValues: this.props.filterValues,
       filterState: {}
     };
   },
-  _getFilterDef: function (field) {
-    return this.props.filterDefs[field];
+  getDefaultProps: function () {
+    return {
+      filterValues: {},
+      onStateChange: function () {}
+    };
   },
+  componentDidMount: function () {
+    var defs = this.props.filterDefs
+      .reduce(function (defs, filterDef) {
+        defs[filterDef.field] = filterDef;
+        return defs;
+      }, {});
+    this.setState({defIndex: defs});
+  },
+  setFilterState: function (state) {
+    if (!this.isSameState(this.state.filterState, state)) {
+      this.setState({filterState: state});
+    }
+    // this.props.onStateChange(this.state.filterState);
+  },
+  addFilterState: function (field, value) {
+    var that = this;
+    var defs = that.state.defIndex;
+    var state = this.state.filterState;
+    var changed = false;
+    var hasValue = !!state[field];
+
+    if (defs[field].treeView) {
+      var indexOfTree = hasValue ?
+        that.findIndex(state[field], value) :
+        -1;
+      // 判断当前点击的和上一个选项是否是同一个层级
+      var isSameLevel = function () {
+        if (!hasValue) {
+          return false;
+        }
+        var len = state[field].length;
+        var currentState = that.props.filterValues[field] || [];
+        return that.findIndex(currentState, value) > -1 &&
+          that.findIndex(currentState, state[field][len - 1]) > -1;
+      };
+      // 当一开始没有值或点击的不是最后一个层级时，标记状态为改变
+      changed = !hasValue || (indexOfTree != state[field].length - 1);
+      if (changed) {
+        state[field] = state[field] || [];
+        // 如果已有此层级的选项，直接定位到此层级
+        if (indexOfTree >= 0) {
+          state[field] = state[field].slice(0, indexOfTree + 1);
+        }
+        else {
+          // 当下一层级的选项还未加载时可能对同一层级的选项做多次选择
+          // 此时保持同一层级选择的互斥性，总是只能选择一个选项
+          if (isSameLevel()) {
+            state[field].pop();
+          }
+          state[field].push(value);
+        }
+      }
+    }
+    // 非 treeView
+    // 无该 field 下的 state，或 value 值不相等，或 value 数组不相等
+    else if (!hasValue ||
+      value.value !== state[field].value ||
+      (Array.isArray(value) && !that.isSameState(value, state[field]))
+    ) {
+
+      if (Array.isArray(value) && value.length === 0) {
+        that.removeFilterState(field);
+      }
+      else {
+        state[field] = value;
+        changed = true;
+      }
+    }
+
+    // fire
+    if (changed) {
+      that.setState({filterState: state});
+      that.props.onStateChange(this.state.filterState);
+    }
+  },
+  removeFilterState: function (field, value) {
+    var defs = this.state.defIndex;
+    var state = this.state.filterState;
+    var indexOfTree;
+    if (defs[field].treeView) {
+      indexOfTree = this.findIndex(state[field], value);
+      if (indexOfTree === 0) {
+        delete state[field];
+      }
+      else if (indexOfTree > 0) {
+        state[field] = state[field].slice(0, indexOfTree);
+      }
+    }
+    else {
+      delete state[field];
+    }
+
+    // fire
+    this.setState({filterState: state});
+    this.props.onStateChange(this.state.filterState);
+  },
+  getFilterDef: function (field) {
+    return this.state.defIndex[field];
+  },
+
+  // util fn
+  isSameState: function (o, n) {
+    var that = this;
+    if (that.isEmptyObj(o) && !that.isEmptyObj(n) ||
+      !that.isEmptyObj(o) && that.isEmptyObj(n)) {
+      return false;
+    }
+    return that.isEmptyObj(o) && that.isEmptyObj(n) ||
+      Object.keys(o)
+        .filter(function (field) {
+          return that.props.filterDefs.hasOwnProperty(field);
+        })
+        .every(function (field) {
+          if (o[field] === n[field] || o[field].value === n[field].value) {
+              return true;
+          }
+          if (Array.isArray(o[field]) && Array.isArray(n[field])) {
+              return o[field].every(function (oState, index) {
+                return oState === n[field][index] ||
+                  oState.value === n[field][index].value;
+              });
+          }
+          return false;
+        });
+  },
+  isSameValueArray: function (oArr, nArr) {
+    return oArr.every(function (value, index) {
+      return value.value === nArr[index].value;
+    });
+  },
+  isEmptyObj: function (obj) {
+    return Object.keys(obj).length === 0;
+  },
+  // 用于在设置了 treeView 选项的 filter state 中寻找已选状态位置
+  findIndex: function (arr, value) {
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i].value === value.value) {
+        return i;
+      }
+    }
+    return -1;
+  },
+
   render: function () {
-    var filterNodes = this.props.filterDefs.map(function (def) {
+    var filterNodes = this.props.filterDefs.map(function (def, index) {
       var options = this.state.filterValues[def.field] || [];
       return (
-        <li style={{display: options.length > 0 ? 'block' : 'none'}}>
+        <li key={index} style={{display: options.length > 0 ? 'block' : 'none'}}>
           <Filter
             name={def.name}
             field={def.field}
             canMultiSelect={def.canMultiSelect}
             treeView={def.treeView}
             options={options}
-            onSelectOption={this.handleSelect}
+            onSelectOption={this.addFilterState.bind(null, def.field)}
           />
         </li>
       );
-    });
+    }.bind(this));
 
     return (
-      <div>
+      <div className="cu-filter-group">
         <FilterStateBar
           filterState={this.state.filterState}
-          getFilterDef={this._getFilterDef}
+          getFilterDef={this.getFilterDef}
+          onStateDelete={this.removeFilterState}
         >
           {this.props.children}
         </FilterStateBar>
-        <ul class="filter-group">
+        <ul className="filter-group">
           {filterNodes}
         </ul>
       </div>

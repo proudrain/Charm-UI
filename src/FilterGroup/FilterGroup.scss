@@ -80,7 +80,7 @@ $confirm-button-color: #428bca;
   transform: translatey(-50%);
 }
 
-.ui-simba-filter-group {
+.cu-filter-group {
 
   .filter-state {
     @extend .clearfix;
@@ -109,6 +109,10 @@ $confirm-button-color: #428bca;
 
     .tag-name, .tag-value, .tag-remove {
       display: inline-block;
+      a {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        text-decoration: none;
+      }
     }
   }
 
@@ -120,29 +124,10 @@ $confirm-button-color: #428bca;
   }
 
   // for expand
-  .filter-group {
-    .filter-expand-wrapper {
-      position: relative;
-    }
-    .filter-expand-wrapper.expanded {
-      padding-bottom: $filter-items-height + $filter-divede-width;
-
-      .filter {
-        z-index: 100;
-        position: absolute;
-        left: 0;
-        right: 0;
-        border-bottom: $filter-expanded-divide-border;
-        box-shadow: $filter-expanded-box-shadow;
-
-        .filter-items {
-          height: auto;
-          overflow: auto;
-        }
-      }
-    }
-    li:last-child .filter-expand-wrapper.expanded {
-      padding-bottom: $filter-items-height;
+  .filter.expanded {
+    .filter-items {
+      height: auto !important;
+      overflow: auto;
     }
   }
 
@@ -186,9 +171,11 @@ $confirm-button-color: #428bca;
           margin-right: $filter-item-horizontal-spacing;
           height: $filter-item-height;
           line-height: $filter-item-height;
-          a {
+          a, label {
             font-size: $filter-item-link-font-size;
             color: $filter-item-link-color;
+            text-decoration: none;
+            cursor: pointer;
           }
         }
       }
@@ -202,6 +189,7 @@ $confirm-button-color: #428bca;
           border: $filter-group-border;
           border-radius: 2px;
           background-color: transparent;
+          cursor: pointer;
         }
         .btn-confirm {
           float: left;
@@ -230,6 +218,9 @@ $confirm-button-color: #428bca;
       .filter-action {
         height: $filter-action-height;
         line-height: $filter-action-height;
+        a {
+          text-decoration: none;
+        }
         .multi-toggle {
           margin-right: 20px;
           padding: 2px 4px;
