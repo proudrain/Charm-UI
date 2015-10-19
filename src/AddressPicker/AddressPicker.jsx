@@ -1,16 +1,9 @@
 'use strict'
 
 //  ==================================================
-//  Component: AddressPicker
-//
 //  Include: AddressList AddressSearch
 //
-//  Dependence: reqwest.js
-//
-//  Description:  Jsx for AddressPicker
-//
-//  TODO: [@TongchengQiu] AddressList 更换城市后调用 setCity 设置城市
-//          你可以根据 AddressPicker 的 state.address 判断是否已经进行了搜索
+//  TODO:
 //  ==================================================
 
 var AddressPicker = React.createClass({
@@ -18,7 +11,7 @@ var AddressPicker = React.createClass({
     return {
       city: "北京",
       currentCity: null,
-      address: null
+      address: this.props.keyword
     };
   },
   getDefaultProps: function() {
@@ -51,8 +44,8 @@ var AddressPicker = React.createClass({
     return (
       <div className="address-picker" style={addressPickerActiveStyle}>
         <AddressList setCity={this.setCity} localAddress={this.state.currentCity} addressData={this.props.addressData}/>
-        <AddressInput city={this.state.city} searchSubmitHandler={this.setAddress}/>
-        <AddressMap addressKeyword={this.state.address} city={this.props.city}/>
+        <AddressInput {...this.props} city={this.state.city} searchSubmitHandler={this.setAddress}/>
+        <AddressMap addressKeyword={this.state.address} city={this.props.city} theme={this.props.theme} />
       </div>
     );
   }

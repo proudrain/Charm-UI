@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Charm UI AddressPicker Component</title>
+		<link rel="stylesheet" href="../../../dist/Charm-UI.css" />
+		<script src="../lib/react.js"></script>
+		<script src="../lib/JSXTransformer.js"></script>
+		<script src="../../../dist/Charm-UI.js"></script>
+    <style>
+      body {
+        height: 100vh;
+        margin: 0;
+        color: #333;
+        overflow: hidden;
+        background-color: #231716;
+      }
+      body, ul, ol, li {
+        padding: 0;
+        margin: 0;
+      }
+      ul, ol {
+        list-style: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="pagination"></div>
+
+    <script type="text/jsx">
+    var pagination = React.render(
+      <Pagination pages={10} first="首页" last="末页" theme="dark" />,
+      document.getElementById('pagination')
+    );
+
+    </script>
+  </body>
+</html>

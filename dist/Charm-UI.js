@@ -1,16 +1,197 @@
+// 整体组件
+var AddressList = React.createClass({displayName: "AddressList",
+    getInitialState: function() {
+        return {
+            nowAddress: null,
+            isWrapShow: false
+        };
+    },
+    handleBtnClick: function() {
+        this.setState({isWrapShow: !this.state.isWrapShow});
+    },
+    handleSelectAddress: function(selectCt) {
+        this.setState({nowAddress: selectCt,isWrapShow: false});
+        if(this.props.setCity) {
+            this.props.setCity(selectCt);
+        }
+    },
+    render: function() {
+        return (
+            React.createElement("div", {className: "AddressList"}, 
+                React.createElement(AddressDropButton, {triangleState: this.state.isWrapShow, onClick: this.handleBtnClick}, 
+                    this.state.nowAddress?this.state.nowAddress:this.props.localAddress
+                ), 
+                this.state.isWrapShow?
+                    React.createElement(AddressWrap, {addressData: this.props.addressData, localAddress: this.props.localAddress, handleSelectAddress: this.handleSelectAddress})
+                    :null
+                
+            )
+        );
+    }
+});
+
+// 下拉按钮
+var AddressDropButton = React.createClass({displayName: "AddressDropButton",
+    handleClick: function() {
+        this.props.onClick();
+    },
+    render: function() {
+        return (
+            React.createElement("button", {className: "AddressDropButton", onClick: this.handleClick}, 
+                this.props.children, 
+                React.createElement("span", {className: "triangle "+this.props.triangleState})
+            )
+        );
+    }
+});
+
+// 地址操作框容器
+var AddressWrap = React.createClass({displayName: "AddressWrap",
+    render: function() {
+        return (
+            React.createElement("div", {className: "AddressWrap"}, 
+                React.createElement("div", {className: "AddressCont"}, 
+                    React.createElement(AddressLocation, {localAddress: this.props.localAddress, handleSelectAddress: this.props.handleSelectAddress}), 
+                    React.createElement(AddressSearchInput, {addressData: this.props.addressData, handleSelectAddress: this.props.handleSelectAddress}), 
+                    React.createElement(AddressListWrap, {addressData: this.props.addressData, handleSelectAddress: this.props.handleSelectAddress})
+                )
+            )
+        );
+    }
+});
+
+// 定位当前地址
+var AddressLocation = React.createClass({displayName: "AddressLocation",
+    handleClick: function() {
+        this.props.handleSelectAddress(this.props.localAddress);
+    },
+    render: function() {
+        return (
+            React.createElement("div", {className: "AddressLocation"}, 
+                "猜你在：", React.createElement("span", {onClick: this.handleClick}, this.props.localAddress)
+            )
+        );
+    }
+});
+
+// 地址搜索
+var AddressSearchInput = React.createClass({displayName: "AddressSearchInput",
+    getInitialState: function() {
+        return {
+            result: [],
+        };
+    },
+    handleResultClick: function(e) {
+        var address = e.target.getAttribute('data');
+        this.props.handleSelectAddress(address);
+    },
+    handleSearch: function(event) {
+        var cont = event.target.value;
+        var len = cont.length;
+        var addressData = this.props.addressData;
+        // 判断是汉字还是拼音
+        var reg=/^[\u4E00-\u9FA5]+$/;
+        if(reg.test(cont)) {
+            // 是汉字处理
+            var _resultH = [];
+            var j = 0;
+            for(var keyH in addressData) {
+                for(var keyHS in addressData[keyH]) {
+                    if(addressData[keyH][keyHS].city.substring(0,len) == cont) {
+                        _resultH[j]  = addressData[keyH][keyHS].city;
+                        j++;
+                    }
+                }
+            }
+            this.setState({result: _resultH});
+            return ;
+        }
+        // 是拼音
+        var FL = cont.substring(0,1).toLocaleUpperCase();
+        var resultFL = addressData[FL];
+        var _result = [];
+        var i = 0;
+        for(var key in resultFL) {
+            if(key.substring(0,len) == cont.toLocaleLowerCase()) {
+                _result[i]  = resultFL[key].city;
+            }
+            i++;
+        }
+        this.setState({result: _result});
+    },
+    render: function() {
+        var _handleResultClick = this.handleResultClick;
+        var resultNodes = this.state.result.map(function (result) {
+            return (
+                React.createElement("li", {data: result, onClick: _handleResultClick}, result)
+            );
+        });
+        return (
+            React.createElement("div", {className: "AddressSearch"}, 
+                "直接搜索", 
+                React.createElement("input", {onChange: this.handleSearch, placeholder: "请输入城市名"}), 
+                React.createElement("ul", {className: "AddressSearchResult"}, 
+                    resultNodes
+                )
+            )
+        );
+    }
+});
+
+// 地址列表容器
+var AddressListWrap = React.createClass({displayName: "AddressListWrap",
+    render: function() {
+        var addressData = this.props.addressData;
+        var handleSelectAddress = this.props.handleSelectAddress;
+        var rowNodes = function(data) {
+            var cont = [];
+            var i = 0;
+            for(var key in data) {
+                cont[i]  = React.createElement(AddressListRow, {key: key, keyData: key, data: data[key], handleSelectAddress: handleSelectAddress});
+                i++;
+            }
+            return cont;
+        }(addressData);
+        return (
+            React.createElement("div", {className: "AddressListWrap"}, 
+                rowNodes
+            )
+        );
+    }
+});
+
+// 地址列表行
+var AddressListRow = React.createClass({displayName: "AddressListRow",
+    handleClick: function(e) {
+        var address = e.target.getAttribute('data');
+        this.props.handleSelectAddress(address);
+    },
+    render: function() {
+        var handleClick = this.handleClick;
+        var dataNodes = function(data) {
+            var cont = [];
+            var i = 0;
+            for(var key in data) {
+                cont[i]  = React.createElement("span", {key: "p"+key}, React.createElement("span", {data: data[key].city, key: i, onClick: handleClick}, data[key].city));
+                i++;
+            }
+            return cont;
+        }(this.props.data);
+        return (
+            React.createElement("div", {className: "AddressListRow"}, 
+                React.createElement("span", {className: "keyData"}, this.props.keyData), 
+                React.createElement("span", {className: "dataWrap"}, dataNodes)
+            )
+        );
+    }
+});
+
 'use strict'
 
 //  ==================================================
-//  Component: AddressPicker
-//
 //  Include: AddressList AddressSearch
 //
-//  Dependence: reqwest.js
-//
-//  Description:  Jsx for AddressPicker
-//
-//  TODO: [@TongchengQiu] AddressList 更换城市后调用 setCity 设置城市
-//          你可以根据 AddressPicker 的 state.address 判断是否已经进行了搜索
+//  TODO:
 //  ==================================================
 
 var AddressPicker = React.createClass({displayName: "AddressPicker",
@@ -18,7 +199,7 @@ var AddressPicker = React.createClass({displayName: "AddressPicker",
     return {
       city: "北京",
       currentCity: null,
-      address: null
+      address: this.props.keyword
     };
   },
   getDefaultProps: function() {
@@ -51,12 +232,304 @@ var AddressPicker = React.createClass({displayName: "AddressPicker",
     return (
       React.createElement("div", {className: "address-picker", style: addressPickerActiveStyle}, 
         React.createElement(AddressList, {setCity: this.setCity, localAddress: this.state.currentCity, addressData: this.props.addressData}), 
-        React.createElement(AddressInput, {city: this.state.city, searchSubmitHandler: this.setAddress}), 
-        React.createElement(AddressMap, {addressKeyword: this.state.address, city: this.props.city})
+        React.createElement(AddressInput, React.__spread({},  this.props, {city: this.state.city, searchSubmitHandler: this.setAddress})), 
+        React.createElement(AddressMap, {addressKeyword: this.state.address, city: this.props.city, theme: this.props.theme})
       )
     );
   }
 });
+
+'use strict'
+
+//  ==================================================
+//  Include: AddressInput AddressMap
+//
+//  TODO: [add] 增加各项参数
+//  ==================================================
+
+/* AddressSearch */
+var AddressSearch = React.createClass({displayName: "AddressSearch",
+  getInitialState: function() {
+    return {
+      address: null
+    };
+  },
+  getDefaultProps: function() {
+    return {
+      inputWidth: 400,
+      inputTip: "输入想要搜索的地址",
+      searchBtnText: "搜索",
+      city: "北京",
+      theme: "dark"
+    }
+  },
+  componentWillMount: function() {
+    var myCity = new BMap.LocalCity();
+    myCity
+      .get(function(res) {
+        var currentCity = res.name;
+        this.setCity(currentCity);
+      }.bind(this));
+  },
+  setAddress: function(ad) {
+    this.setState({
+      address: ad
+    });
+  },
+  setCity: function(ct) {
+    this.setState({
+      city: ct
+    });
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "address-search"}, 
+        React.createElement(AddressInput, React.__spread({},  this.props, {searchSubmitHandler: this.setAddress})), 
+        React.createElement(AddressMap, {addressKeyword: this.state.address, city: this.props.city, theme: this.props.theme})
+      )
+    );
+  }
+});
+
+/* AddressInput */
+var AddressInput = React.createClass({displayName: "AddressInput",
+  getInitialState: function() {
+    return {
+      keyword: this.props.keyword
+    };
+  },
+  getDefaultProps: function() {
+    return {
+      inputWidth: 400,
+      inputTip: "输入想要搜索的地址",
+      searchBtnText: "搜索",
+      city: "北京",
+      theme: "light"
+    }
+  },
+  searchSubmit: function() {
+    var keyword = this.getDOMNode()
+      .children[0]
+      .value;
+    this.props
+      .searchSubmitHandler(keyword);
+    setCookie('searchKeyword', keyword, 30);
+  },
+  checkEnter: function(e) {
+    (e.keyCode === 13) && this.searchSubmit();
+  },
+  componentDidMount: function() {
+    var mapAutoComplete = new BMap.Autocomplete({
+      "input": "_addressSearchKeyword",
+      "location": this.props.city
+    });
+  },
+  render: function() {
+    var keywordStyle = {
+      width: this.props.inputWidth
+    };
+    var conClassName = "address-input";
+    switch (this.props.theme) {
+    case 'light' :
+      break;
+    case 'dark' :
+      conClassName += " dark";
+      break;
+    default :
+
+    }
+    return (
+      React.createElement("div", {className: conClassName}, 
+        React.createElement("input", {className: "input-keyword", id: "_addressSearchKeyword", onKeyUp: this.checkEnter, placeholder: this.state.keyword || this.props.inputTip, style: keywordStyle}), 
+        React.createElement("button", {className: "input-commit", onClick: this.searchSubmit}, this.props.searchBtnText)
+      )
+    );
+  }
+});
+
+/* AddressMap */
+var AddressMap = React.createClass({displayName: "AddressMap",
+  getInitialState: function() {
+    return {
+      mapLocalObj: null,
+      itemsNumber: 0,
+      itemsList: [],
+      itemActive: 0
+    };
+  },
+  getDefaultProps: function() {
+    return {
+      mapSearchgeotableId: 121763,
+      mapSearchTags: "",
+      mapSearchFilter: "",
+      theme: "light"
+    }
+  },
+  componentDidMount: function() {
+    this.map = new BMap.Map("_addressMapMain", {
+      enableMapClick: false
+    });
+    this.map
+      .centerAndZoom(this.props.city, 12);
+  },
+  componentWillReceiveProps: function(nextProps) {
+    nextProps.addressKeyword && this.getNearby(nextProps.addressKeyword);
+  },
+  getNearby: function(keyword, page) {
+    // 地址解析获取经纬度
+    var myGeo = new BMap.Geocoder();
+    var _this = this;
+    myGeo
+      .getPoint(keyword, function(point) { // 解析成功后的回调 搜索信息
+        if (point) {
+          $.ajax({
+            type: 'get',
+            url: 'http://api.map.baidu.com/geosearch/v3/nearby',
+            dataType: "jsonp",
+            data: {
+              ak: 'sdp9qCbToS7E23nDRxaAAwbh',
+              geotable_id: 121763,
+              location: point.lng + ',' + point.lat,
+              radius: 10000,
+              page_index: page || 0,
+              page_size: 50
+            },
+            jsonp: 'callback',
+            success: function(res) {
+              _this.setState({
+                itemsNumber: res.total,
+                itemsList: res.contents
+              });
+              _this.showNearby();
+              _this.map
+                .centerAndZoom(_this.props.addressKeyword, 12);
+            }
+          })
+        } else {
+          alert("未找到该区域信息");
+        }
+      }.bind(this), this.props.city);
+  },
+  showNearby: function() {
+    var _this = this;
+    for (var k in this.state.itemsList) {
+      var point = new BMap.Point(this.state.itemsList[k].location[0], this.state.itemsList[k].location[1]);
+      var marker = new BMap.Marker(point);
+      var label = new BMap.Label(String.fromCharCode(65 + parseInt(k)), {
+        offset: new BMap.Size(4, 2)
+      });
+      label.setStyle({
+        border: 'none',
+        backgroundColor: 'transparent',
+        color: '#FAFAFA'
+      });
+      marker.setLabel(label);
+      marker.setTitle(this.state.itemsList[k].title);
+      marker
+        .addEventListener('click', function(e) {
+          _this.showInfoWindow(this.getLabel().content.charCodeAt(0) - 65);
+        });
+      this.map
+        .addOverlay(marker);
+    }
+    this.state.itemsList.length && this.showInfoWindow(0);
+  },
+  showInfoWindow: function(index) {
+    if (index !== this.state.itemActive || 1) {
+      var point = new BMap.Point(this.state.itemsList[index].location[0], this.state.itemsList[index].location[1]);
+      var itemInfo = this.state.itemsList[index];
+      var title = itemInfo.title;
+      var address = itemInfo.address;
+      var tel = itemInfo.tel;
+      var content = '<p class="map-info-window">地址：' + address + '</p>';
+      var infoWindow = new BMap.InfoWindow(content, {
+        title: title,
+        width: 290,
+        panel: "panel",
+        enableAutoPan: true,
+        offset: new BMap.Size(0, -25)
+      });
+      this.setState({
+        itemActive: + index
+      });
+      this.map
+        .openInfoWindow(infoWindow, point);
+    }
+  },
+  clickMapItem: function(e) {
+    var ele = e.target;
+    var eleClass = ele.getAttribute('class');
+    var itemIndex = 0;
+    if (eleClass === "map-item") {
+      itemIndex = ele.getAttribute('data-key');
+    } else if (eleClass === "map-item-mark" || eleClass === "map-item-main") {
+      itemIndex = ele.parentNode
+        .getAttribute('data-key');
+    } else if (!eleClass) {
+      itemIndex = ele.parentNode
+        .parentNode
+        .parentNode
+        .getAttribute('data-key');
+    } else {
+      itemIndex = ele.parentNode
+        .parentNode
+        .getAttribute('data-key');
+    }
+    this.showInfoWindow(itemIndex);
+  },
+  render: function() {
+    var conClassName = "address-map";
+    switch (this.props.theme) {
+    case 'light' :
+      break;
+    case 'dark' :
+      conClassName += " dark";
+      break;
+    default :
+
+    }
+    var mapItemActieStyle = {
+      backgroundColor: "#181211"
+    };
+    return (
+      React.createElement("div", {className: conClassName, style: {
+        display: this.props.addressKeyword
+          ? "block"
+          : "none"
+      }}, 
+        React.createElement("div", {className: "map-nav"}, 
+          React.createElement("div", {className: "map-nav-title"}, 
+            "附近有", 
+            React.createElement("span", {className: "map-nav-number"}, 
+              this.state.itemsNumber
+            ), 
+            "家体验店"
+          ), 
+          React.createElement("ul", {className: "map-items", id: "_addressMapItems", onClick: this.clickMapItem}, 
+            this
+              .state
+              .itemsList
+              .map(function (item, i) {
+                return React.createElement("li", {className: "map-item", "data-key": i, key: i, style: (i === this.state.itemActive)
+                  ? mapItemActieStyle
+                  :
+                    {}}, 
+                  React.createElement("span", {className: "map-item-mark"}, String.fromCharCode(65 + i)), 
+                  React.createElement("div", {className: "map-item-main"}, 
+                    React.createElement("div", {className: "map-item-title"}, item.title), 
+                    React.createElement("div", {className: "map-item-address"}, "地址：", item.address), 
+                    React.createElement("div", {className: "map-item-tel"}, "电话：", item.tel)
+                  )
+                );
+              }.bind(this))
+          )
+        ), 
+        React.createElement("div", {className: "map-main", id: "_addressMapMain"})
+      )
+    );
+  }
+});
+
 
 /* FilterGroup */
 
@@ -489,6 +962,229 @@ var FilterGroup = React.createClass({displayName: "FilterGroup",
 //  ==================================================
 //  Component: ProgressBar
 //
+//  Include: PaginationBtn
+//
+//  TODO:
+//  ==================================================
+
+/* PaginationBtn */
+var PaginationBtn = React.createClass({displayName: "PaginationBtn",
+  getDefaultProps: function() {
+    return {
+      text: 1,
+      type: "num"
+    };
+  },
+  render: function() {
+    var text = (this.props.type === 'dot') ? '...' : this.props.text;
+    var itemClass = this.props.active
+      ? "item active"
+      : "item";
+    if(this.props.type !== 'num') {
+      itemClass += (" page " + this.props.type);
+    }
+    if(this.props.disabled) {
+      itemClass += ' disabled';
+    }
+    return (
+      React.createElement("li", {className: itemClass, onClick: this.props.changePage}, 
+        React.createElement("a", null, text)
+      )
+    );
+  }
+});
+
+/* Pagination Overview */
+var PagiOverview = React.createClass({displayName: "PagiOverview",
+  render: function() {
+    return (
+      React.createElement("div", {className: "overview"}, "共 ", this.props.pages, " 页，")
+    );
+  }
+});
+
+/* Pagination QuickGo */
+var PagiQuickGo = React.createClass({displayName: "PagiQuickGo",
+  getInitialState: function() {
+    return {
+      pageInput: null
+    };
+  },
+  inputChange: function(e) {
+    this.setState({
+      pageInput: e.target.value
+    });
+  },
+  quickGo: function() {
+    if(this.state.pageInput) {
+      var nextPage = +this.state.pageInput;
+      nextPage = nextPage < 1 ? 1 : nextPage;
+      nextPage = nextPage > this.props.pages ? this.props.pages : nextPage;
+      this.props.setActivePage(nextPage)
+    }
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "quick-go"}, 
+        React.createElement("span", null, "到第"), 
+        React.createElement("input", {className: "go-page", type: "number", min: "1", max: this.props.pages, onChange: this.inputChange}), 
+        React.createElement("span", null, "页"), 
+        React.createElement("button", {className: "go-submit", onClick: this.quickGo}, "确认")
+      )
+    );
+  }
+});
+
+/* Pagination Main */
+var PagiMain = React.createClass({displayName: "PagiMain",
+  getInitialState: function() {
+    return {
+      pageItems: this.getPageItems(this.props.activePage)
+    };
+  },
+  componentWillReceiveProps: function(nextProps) {
+    if(nextProps.activePage !== this.props.activePage) {
+      var pageItems = this.getPageItems(nextProps.activePage);
+      this.setState({
+        pageItems: pageItems
+      });
+      this.props.selected(nextProps.activePage);
+    }
+  },
+  handleItemClick: function(type, page) {
+    if (type === "first") {
+      page = 1;
+    } else if (type === "prev") {
+      page = (this.props.activePage === 1) ? 1 : this.props.activePage - 1;
+    } else if (type === "next") {
+      page = (this.props.activePage === this.props.pages) ? this.props.pages : this.props.activePage + 1;
+    } else if (type === "last") {
+      page = this.props.pages;
+    } else {
+      page = page;
+    }
+    if (page !== this.props.activePage) {
+      this.props.setActivePage(page);
+    }
+  },
+  getPageItems: function(n) {
+    var list = [];
+    var b = this.props.basePages;
+    var m = this.props.midPages;
+    var p = this.props.pages;
+    if(n <= parseInt(m / 2) + 1) { // 1
+      list = this._getSeriesNumber(1, p <= b + m ? p : m);
+    } else if((n <= parseInt(m / 2) + 1 + b) || p <= b + m)  { // 1'
+      list = this._getSeriesNumber(1, p <= b + m ? p : n + 2);
+    } else if((n < p - parseInt(m / 2) - 1)) {  // 2
+      list = this._getSeriesNumber(1, this.props.basePages);
+      list.push(0);
+      list = list.concat(this._getSeriesNumber(n-2, m));
+      if(p > m + b + 2) {
+        list.push(0);
+      }
+    } else if(n === p - parseInt(m / 2) - 1) {  // 3
+      list = this._getSeriesNumber(1, this.props.basePages);
+      list.push(0);
+      list = list.concat(this._getSeriesNumber(p - m, m + 1));
+    } else {  // 4
+      list = this._getSeriesNumber(1, this.props.basePages);
+      list.push(0);
+      list = list.concat(this._getSeriesNumber(p - m + 1, m));
+    }
+    return list;
+  },
+  _getSeriesNumber: function(start, length) {
+    start = start;
+    length = length;
+    var series = [];
+    while(length--) {
+      series.push(start++);
+    }
+    return series;
+  },
+  render: function() {
+    var startBlock = [];
+    var endBlock = [];
+    if(this.props.pages > 0) {
+      if(this.props.first) {
+        startBlock.push(React.createElement(PaginationBtn, {key: "first", text: this.props.first, disabled: (this.props.activePage === 1) ? true : false, type: "prev", type: "first", changePage: this.handleItemClick.bind(this, 'first')}));
+      }
+      if(this.props.prev) {
+        startBlock.push(React.createElement(PaginationBtn, {key: "prev", text: this.props.prev, disabled: (this.props.activePage === 1) ? true : false, type: "prev", changePage: this.handleItemClick.bind(this, 'prev')}));
+      }
+      if(this.props.next) {
+        endBlock.push(React.createElement(PaginationBtn, {key: "next", text: this.props.next, type: "next", disabled: (this.props.activePage === this.props.pages) ? true : false, changePage: this.handleItemClick.bind(this, 'next')}));
+      }
+      if(this.props.last) {
+        endBlock.push(React.createElement(PaginationBtn, {key: "last", text: this.props.last, type: "last", disabled: (this.props.activePage === this.props.pages) ? true : false, changePage: this.handleItemClick.bind(this, 'last')}));
+      }
+    }
+    return (
+      React.createElement("ul", {className: "pagi-main"}, 
+        startBlock, 
+        
+          (this.props.pages > 0) && this.state.pageItems.map(function(item, i) {
+              return (
+                React.createElement(PaginationBtn, {key: i, text: item, type: item ? 'num' : 'dot', active: (item === this.props.activePage) ? true : false, changePage: item ? this.handleItemClick.bind(this, 'num', item) : null})
+              )
+            }.bind(this)), 
+        
+        endBlock
+      )
+    )
+  }
+});
+
+/* Pagination */
+var Pagination = React.createClass({displayName: "Pagination",
+  propTypes: {
+    pages: React.PropTypes.number
+  },
+  getInitialState: function() {
+    return {
+      activePage: this.props.activePage
+    };
+  },
+  getDefaultProps: function() {
+    return {
+      activePage: 1, // 激活页初始值
+      first: null, // 首页 null || string
+      prev: "上一页", // 上一页 null || string
+      basePages: 2, // first prev base ... mid ... next last
+      midPages: 5, // first prev base ... mid ... next last
+      ellipsis: true, // 省略号 boolen
+      next: "下一页", // 下一页 null || string
+      last: null, // 末页 null || string
+      theme: "light", // 主题
+      quickGo: false, // 概览和快速切换 boolen
+      selected: function(page) { // 页码切换时回调
+        console.log(page);
+      }
+    }
+  },
+  setActivePage: function(page) {
+    this.setState({
+      activePage: page
+    });
+  },
+  render: function() {
+    var pagiClass = (this.props.theme === 'light') ? 'pagination' : 'pagination ' + this.props.theme;
+    return (
+      React.createElement("div", {className: pagiClass}, 
+        React.createElement(PagiMain, React.__spread({},  this.props, {activePage: this.state.activePage, setActivePage: this.setActivePage})), 
+        this.props.quickGo ? React.createElement(PagiOverview, {pages: this.props.pages}) : null, 
+        this.props.quickGo ? React.createElement(PagiQuickGo, {pages: this.props.pages, setActivePage: this.setActivePage}) : null
+      )
+  )
+  }
+});
+
+'use strict'
+
+//  ==================================================
+//  Component: ProgressBar
+//
 //  Include: Spinner
 //
 //  Description: Jsx for ProgressBar
@@ -638,278 +1334,6 @@ var ProgressBar = React.createClass({displayName: "ProgressBar",
         )
       )
       : null;
-  }
-});
-
-'use strict'
-
-//  ==================================================
-//  Component: AddressSearch
-//
-//  Include: AddressInput AddressMap
-//
-//  Dependence: reqwest.js
-//
-//  Description:  Jsx for AddressSearch
-//
-//  TODO: [add] 增加各项参数
-//  ==================================================
-
-/* AddressSearch */
-var AddressSearch = React.createClass({displayName: "AddressSearch",
-  getInitialState: function() {
-    return {
-      address: null
-    };
-  },
-  getDefaultProps: function() {
-    return {
-      inputWidth: 400,
-      inputTip: "输入想要搜索的地址",
-      searchBtnText: "搜索",
-      city: "北京"
-    }
-  },
-  componentWillMount: function() {
-    var myCity = new BMap.LocalCity();
-    myCity
-      .get(function(res) {
-        var currentCity = res.name;
-        this.setCity(currentCity);
-      }.bind(this));
-  },
-  setAddress: function(ad) {
-    this.setState({
-      address: ad
-    });
-  },
-  setCity: function(ct) {
-    this.setState({
-      city: ct
-    });
-  },
-  render: function() {
-    return (
-      React.createElement("div", {className: "address-search"}, 
-        React.createElement(AddressInput, {city: this.props.city, inputTip: this.props.inputTip, inputWidth: this.props.inputWidth, searchBtnText: this.props.searchBtnText, searchSubmitHandler: this.setAddress}), 
-        React.createElement(AddressMap, {addressKeyword: this.state.address, city: this.props.city})
-      )
-    );
-  }
-});
-
-/* AddressInput */
-var AddressInput = React.createClass({displayName: "AddressInput",
-  getInitialState: function() {
-    return {
-      keyword: null
-    };
-  },
-  getDefaultProps: function() {
-    return {
-      inputWidth: 400,
-      inputTip: "输入想要搜索的地址",
-      searchBtnText: "搜索",
-      city: "北京"
-    }
-  },
-  searchSubmit: function() {
-    var keyword = this.getDOMNode()
-      .children[0]
-      .value;
-    this.props
-      .searchSubmitHandler(keyword);
-  },
-  checkEnter: function(e) {
-    (e.keyCode === 13) && this.searchSubmit();
-  },
-  componentDidMount: function() {
-    var mapAutoComplete = new BMap.Autocomplete({
-      "input": "_addressSearchKeyword",
-      "location": this.props.city
-    });
-  },
-  render: function() {
-    var keywordStyle = {
-      width: this.props.inputWidth
-    };
-    return (
-      React.createElement("div", {className: "address-input"}, 
-        React.createElement("input", {className: "input-keyword", id: "_addressSearchKeyword", onKeyUp: this.checkEnter, placeholder: this.props.inputTip, style: keywordStyle}), 
-        React.createElement("button", {className: "input-commit", onClick: this.searchSubmit}, this.props.searchBtnText)
-      )
-    );
-  }
-});
-
-/* AddressMap */
-var AddressMap = React.createClass({displayName: "AddressMap",
-  getInitialState: function() {
-    return {
-      mapLocalObj: null,
-      itemsNumber: 0,
-      itemsList: [],
-      itemActive: 0
-    };
-  },
-  getDefaultProps: function() {
-    return {
-      mapSearchgeotableId: 121763,
-      mapSearchTags: "",
-      mapSearchFilter: ""
-    }
-  },
-  componentDidMount: function() {
-    this.map = new BMap.Map("_addressMapMain", {
-      enableMapClick: false
-    });
-    this.map
-      .centerAndZoom(this.props.city, 12);
-  },
-  componentWillReceiveProps: function(nextProps) {
-    nextProps.addressKeyword && this.getNearby(nextProps.addressKeyword);
-  },
-  getNearby: function(keyword, page) {
-    // 地址解析获取经纬度
-    var myGeo = new BMap.Geocoder();
-    var _this = this;
-    myGeo
-      .getPoint(keyword, function(point) { // 解析成功后的回调 搜索信息
-        if (point) {
-          reqwest({
-            url: 'http://api.map.baidu.com/geosearch/v3/nearby',
-            type: 'jsonp',
-            data: {
-              ak: 'sdp9qCbToS7E23nDRxaAAwbh',
-              geotable_id: 121763,
-              location: point.lng + ',' + point.lat,
-              radius: 10000,
-              page_index: page || 0,
-              page_size: 50
-            },
-            jsonpCallback: 'callback',
-            success: function(res) {
-              _this.setState({
-                itemsNumber: res.total,
-                itemsList: res.contents
-              });
-              _this.showNearby();
-              _this.map
-                .centerAndZoom(_this.props.addressKeyword, 12);
-            }
-          })
-        } else {
-          alert("未找到该区域信息");
-        }
-      }.bind(this), this.props.city);
-  },
-  showNearby: function() {
-    var _this = this;
-    for (var k in this.state.itemsList) {
-      var point = new BMap.Point(this.state.itemsList[k].location[0], this.state.itemsList[k].location[1]);
-      var marker = new BMap.Marker(point);
-      var label = new BMap.Label(String.fromCharCode(65 + parseInt(k)), {
-        offset: new BMap.Size(4, 2)
-      });
-      label.setStyle({
-        border: 'none',
-        backgroundColor: 'transparent',
-        color: '#FAFAFA'
-      });
-      marker.setLabel(label);
-      marker.setTitle(this.state.itemsList[k].title);
-      marker
-        .addEventListener('click', function(e) {
-          _this.showInfoWindow(this.getLabel().content.charCodeAt(0) - 65);
-        });
-      this.map
-        .addOverlay(marker);
-    }
-    this.state.itemsList.length && this.showInfoWindow(0);
-  },
-  showInfoWindow: function(index) {
-    if (index !== this.state.itemActive || 1) {
-      var point = new BMap.Point(this.state.itemsList[index].location[0], this.state.itemsList[index].location[1]);
-      var itemInfo = this.state.itemsList[index];
-      var title = itemInfo.title;
-      var address = itemInfo.address;
-      var tel = itemInfo.tel;
-      var content = '<p class="map-info-window">地址：' + address + '<button class="map-info-btn">进入体验店</button>' + '</p>';
-      var infoWindow = new BMap.InfoWindow(content, {
-        title: title,
-        width: 290,
-        panel: "panel",
-        enableAutoPan: true,
-        offset: new BMap.Size(0, -25)
-      });
-      this.setState({
-        itemActive: + index
-      });
-      this.map
-        .openInfoWindow(infoWindow, point);
-    }
-  },
-  clickMapItem: function(e) {
-    var ele = e.target;
-    var eleClass = ele.getAttribute('class');
-    var itemIndex = 0;
-    if (eleClass === "map-item") {
-      itemIndex = ele.getAttribute('data-key');
-    } else if (eleClass === "map-item-mark" || eleClass === "map-item-main") {
-      itemIndex = ele.parentNode
-        .getAttribute('data-key');
-    } else if (!eleClass) {
-      itemIndex = ele.parentNode
-        .parentNode
-        .parentNode
-        .getAttribute('data-key');
-    } else {
-      itemIndex = ele.parentNode
-        .parentNode
-        .getAttribute('data-key');
-    }
-    this.showInfoWindow(itemIndex);
-  },
-  render: function() {
-    var mapItemActieStyle = {
-      backgroundColor: "#F0F0F0"
-    };
-    return (
-      React.createElement("div", {className: "address-map", style: {
-        display: this.props.addressKeyword
-          ? "block"
-          : "none"
-      }}, 
-        React.createElement("div", {className: "map-nav"}, 
-          React.createElement("div", {className: "map-nav-title"}, 
-            "附近有", 
-            React.createElement("span", {className: "map-nav-number"}, 
-              this.state.itemsNumber
-            ), 
-            "家体验店"
-          ), 
-          React.createElement("ul", {className: "map-items", id: "_addressMapItems", onClick: this.clickMapItem}, 
-            this
-              .state
-              .itemsList
-              .map(function (item, i) {
-                return React.createElement("li", {className: "map-item", "data-key": i, key: i, style: (i === this.state.itemActive)
-                    ? mapItemActieStyle
-                    :
-                      {}}, 
-                    React.createElement("span", {className: "map-item-mark", style: (i === this.state.itemActive) ? {backgroundColor: "#1bbc9b"} : {}}, String.fromCharCode(65 + i)), 
-                    React.createElement("div", {className: "map-item-main"}, 
-                      React.createElement("div", {className: "map-item-title"}, item.title), 
-                      React.createElement("div", {className: "map-item-address"}, "地址：", item.address), 
-                      React.createElement("div", {className: "map-item-tel"}, "电话：", item.tel)
-                    )
-                  );
-              }.bind(this))
-          )
-        ), 
-        React.createElement("div", {className: "map-main", id: "_addressMapMain"})
-      )
-    );
   }
 });
 
@@ -1067,193 +1491,5 @@ var ToolTip = React.createClass({displayName: "ToolTip",
                 )
             );
         }
-    }
-});
-
-// 整体组件
-var AddressList = React.createClass({displayName: "AddressList",
-    getInitialState: function() {
-        return {
-            nowAddress: null,
-            isWrapShow: false
-        };
-    },
-    handleBtnClick: function() {
-        this.setState({isWrapShow: !this.state.isWrapShow});
-    },
-    handleSelectAddress: function(selectCt) {
-        this.setState({nowAddress: selectCt,isWrapShow: false});
-        if(this.props.setCity) {
-            this.props.setCity(selectCt);
-        }
-    },
-    render: function() {
-        return (
-            React.createElement("div", {className: "AddressList"}, 
-                React.createElement(AddressDropButton, {triangleState: this.state.isWrapShow, onClick: this.handleBtnClick}, 
-                    this.state.nowAddress?this.state.nowAddress:this.props.localAddress
-                ), 
-                this.state.isWrapShow?
-                    React.createElement(AddressWrap, {addressData: this.props.addressData, localAddress: this.props.localAddress, handleSelectAddress: this.handleSelectAddress})
-                    :null
-                
-            )
-        );
-    }
-});
-
-// 下拉按钮
-var AddressDropButton = React.createClass({displayName: "AddressDropButton",
-    handleClick: function() {
-        this.props.onClick();
-    },
-    render: function() {
-        return (
-            React.createElement("button", {className: "AddressDropButton", onClick: this.handleClick}, 
-                this.props.children, 
-                React.createElement("span", {className: "triangle "+this.props.triangleState})
-            )
-        );
-    }
-});
-
-// 地址操作框容器
-var AddressWrap = React.createClass({displayName: "AddressWrap",
-    render: function() {
-        return (
-            React.createElement("div", {className: "AddressWrap"}, 
-                React.createElement("div", {className: "AddressCont"}, 
-                    React.createElement(AddressLocation, {localAddress: this.props.localAddress, handleSelectAddress: this.props.handleSelectAddress}), 
-                    React.createElement(AddressSearchInput, {addressData: this.props.addressData, handleSelectAddress: this.props.handleSelectAddress}), 
-                    React.createElement(AddressListWrap, {addressData: this.props.addressData, handleSelectAddress: this.props.handleSelectAddress})
-                )
-            )
-        );
-    }
-});
-
-// 定位当前地址
-var AddressLocation = React.createClass({displayName: "AddressLocation",
-    handleClick: function() {
-        this.props.handleSelectAddress(this.props.localAddress);
-    },
-    render: function() {
-        return (
-            React.createElement("div", {className: "AddressLocation"}, 
-                "当前定位：", React.createElement("span", {onClick: this.handleClick}, this.props.localAddress)
-            )
-        );
-    }
-});
-
-// 地址搜索
-var AddressSearchInput = React.createClass({displayName: "AddressSearchInput",
-    getInitialState: function() {
-        return {
-            result: [],
-        };
-    },
-    handleResultClick: function(e) {
-        var address = e.target.getAttribute('data');
-        this.props.handleSelectAddress(address);
-    },
-    handleSearch: function(event) {
-        var cont = event.target.value;
-        var len = cont.length;
-        var addressData = this.props.addressData;
-        // 判断是汉字还是拼音
-        var reg=/^[\u4E00-\u9FA5]+$/;
-        if(reg.test(cont)) {
-            // 是汉字处理
-            var _resultH = [];
-            var j = 0;
-            for(var keyH in addressData) {
-                for(var keyHS in addressData[keyH]) {
-                    if(addressData[keyH][keyHS].city.substring(0,len) == cont) {
-                        _resultH[j]  = addressData[keyH][keyHS].city;
-                        j++;
-                    }
-                }
-            }
-            this.setState({result: _resultH});
-            return ;
-        }
-        // 是拼音
-        var FL = cont.substring(0,1).toLocaleUpperCase();
-        var resultFL = addressData[FL];
-        var _result = [];
-        var i = 0;
-        for(var key in resultFL) {
-            if(key.substring(0,len) == cont.toLocaleLowerCase()) {
-                _result[i]  = resultFL[key].city;
-            }
-            i++;
-        }
-        this.setState({result: _result});
-    },
-    render: function() {
-        var _handleResultClick = this.handleResultClick;
-        var resultNodes = this.state.result.map(function (result) {
-            return (
-                React.createElement("li", {data: result, onClick: _handleResultClick}, result)
-            );
-        });
-        return (
-            React.createElement("div", {className: "AddressSearch"}, 
-                "搜索：", 
-                React.createElement("input", {onChange: this.handleSearch}), 
-                React.createElement("ul", {className: "AddressSearchResult"}, 
-                    resultNodes
-                )
-            )
-        );
-    }
-});
-
-// 地址列表容器
-var AddressListWrap = React.createClass({displayName: "AddressListWrap",
-    render: function() {
-        var addressData = this.props.addressData;
-        var handleSelectAddress = this.props.handleSelectAddress;
-        var rowNodes = function(data) {
-            var cont = [];
-            var i = 0;
-            for(var key in data) {
-                cont[i]  = React.createElement(AddressListRow, {key: key, keyData: key, data: data[key], handleSelectAddress: handleSelectAddress});
-                i++;
-            }
-            return cont;
-        }(addressData);
-        return (
-            React.createElement("div", {className: "AddressListWrap"}, 
-                rowNodes
-            )
-        );
-    }
-});
-
-// 地址列表行
-var AddressListRow = React.createClass({displayName: "AddressListRow",
-    handleClick: function(e) {
-        var address = e.target.getAttribute('data');
-        this.props.handleSelectAddress(address);
-    },
-    render: function() {
-        var handleClick = this.handleClick;
-        var dataNodes = function(data) {
-            var cont = [];
-            var i = 0;
-            for(var key in data) {
-                cont[i]  = React.createElement("span", {key: "p"+key}, React.createElement("span", {data: data[key].city, key: i, onClick: handleClick}, data[key].city));
-                i++;
-            }
-            return cont;
-        }(this.props.data);
-        return (
-            React.createElement("div", {className: "AddressListRow"}, 
-                React.createElement("span", {className: "keyData"}, this.props.keyData), 
-                React.createElement("span", {className: "dataWrap"}, dataNodes)
-            )
-        );
     }
 });

@@ -68,7 +68,7 @@ var AddressLocation = React.createClass({
     render: function() {
         return (
             <div className="AddressLocation">
-                当前定位：<span onClick={this.handleClick}>{this.props.localAddress}</span>
+                猜你在：<span onClick={this.handleClick}>{this.props.localAddress}</span>
             </div>
         );
     }
@@ -128,8 +128,8 @@ var AddressSearchInput = React.createClass({
         });
         return (
             <div className="AddressSearch">
-                搜索：
-                <input onChange={this.handleSearch} />
+                直接搜索
+                <input onChange={this.handleSearch} placeholder="请输入城市名" />
                 <ul className="AddressSearchResult">
                     {resultNodes}
                 </ul>
