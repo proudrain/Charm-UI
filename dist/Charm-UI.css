@@ -81,6 +81,8 @@
   color: #c8c8c8; }
 
 .AddressList .AddressCont .AddressSearch > input {
+  line-height: 28px;
+  height: 18px;
   outline: none;
   margin-left: 30px;
   width: 180px;
@@ -561,41 +563,39 @@
         cursor: pointer; }
       .pagination .quick-go .go-submit:focus {
         outline: none; }
-  .pagination.dark {
+  .pagination.dark .item {
+    color: #FAFAFA;
+    border-color: #322827;
     background-color: #231716; }
-    .pagination.dark .item {
-      color: #FAFAFA;
-      border-color: #322827;
-      background-color: #231716; }
-      .pagination.dark .item:not(.dot):not(.active):not(.disabled):hover {
-        color: #969696;
-        border-color: rgba(255, 255, 255, 0.2);
-        background-color: #322827; }
-        .pagination.dark .item:not(.dot):not(.active):not(.disabled):hover:active {
-          background-color: #241d1c; }
-        .pagination.dark .item:not(.dot):not(.active):not(.disabled):hover:not(.page) + .item:not(.page) {
-          border-left-color: rgba(255, 255, 255, 0.2); }
-      .pagination.dark .item.active {
-        background-color: #322827;
-        color: #969696; }
-      .pagination.dark .item.disabled {
-        color: rgba(255, 255, 255, 0.2); }
-      .pagination.dark .item > a {
-        color: inherit; }
-    .pagination.dark .quick-go .go-page {
-      border-color: rgba(255, 255, 255, 0.1);
-      background-color: #291b1a; }
-      .pagination.dark .quick-go .go-page:focus {
-        outline: none; }
-    .pagination.dark .quick-go .go-submit {
-      color: #FAFAFA;
-      border-color: #322827;
-      background-color: #231716; }
-      .pagination.dark .quick-go .go-submit:hover {
-        color: #969696;
-        background-color: #322827; }
-      .pagination.dark .quick-go .go-submit:active {
+    .pagination.dark .item:not(.dot):not(.active):not(.disabled):hover {
+      color: #969696;
+      border-color: rgba(255, 255, 255, 0.2);
+      background-color: #322827; }
+      .pagination.dark .item:not(.dot):not(.active):not(.disabled):hover:active {
         background-color: #241d1c; }
+      .pagination.dark .item:not(.dot):not(.active):not(.disabled):hover:not(.page) + .item:not(.page) {
+        border-left-color: rgba(255, 255, 255, 0.2); }
+    .pagination.dark .item.active {
+      background-color: #322827;
+      color: #969696; }
+    .pagination.dark .item.disabled {
+      color: rgba(255, 255, 255, 0.2); }
+    .pagination.dark .item > a {
+      color: inherit; }
+  .pagination.dark .quick-go .go-page {
+    border-color: rgba(255, 255, 255, 0.1);
+    background-color: #291b1a; }
+    .pagination.dark .quick-go .go-page:focus {
+      outline: none; }
+  .pagination.dark .quick-go .go-submit {
+    color: #FAFAFA;
+    border-color: #322827;
+    background-color: #231716; }
+    .pagination.dark .quick-go .go-submit:hover {
+      color: #969696;
+      background-color: #322827; }
+    .pagination.dark .quick-go .go-submit:active {
+      background-color: #241d1c; }
 
 /*==================================================
     Component: ProgressBar

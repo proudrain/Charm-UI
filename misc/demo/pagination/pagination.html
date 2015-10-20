@@ -13,7 +13,7 @@
         margin: 0;
         color: #333;
         overflow: hidden;
-        background-color: #231716;
+        /*background-color: #231716;*/
       }
       body, ul, ol, li {
         padding: 0;
@@ -32,6 +32,15 @@
       <Pagination pages={10} first="首页" last="末页" theme="dark" />,
       document.getElementById('pagination')
     );
+
+    setTimeout(function() {
+      var pagination = React.render(
+        <Pagination pages={20} first="哈哈" last="末页" theme="dark" />,
+        document.getElementById('pagination')
+      );
+      console.log(1);
+    }, 2000);
+
 
     </script>
   </body>
