@@ -394,7 +394,7 @@
   padding: 0 5px;
   height: 26px;
   line-height: 26px;
-  border: 1px solid #c9c9c9; }
+  border: 1px solid #323232; }
   .cu-filter-group .filter-tags .filter-tag .tag-name, .cu-filter-group .filter-tags .filter-tag .tag-value, .cu-filter-group .filter-tags .filter-tag .tag-remove {
     display: inline-block; }
     .cu-filter-group .filter-tags .filter-tag .tag-name a, .cu-filter-group .filter-tags .filter-tag .tag-value a, .cu-filter-group .filter-tags .filter-tag .tag-remove a {
@@ -404,7 +404,7 @@
 .cu-filter-group .filter-group {
   position: relative;
   padding: 0 8px;
-  border: 1px solid #c9c9c9; }
+  border: 1px solid #323232; }
 
 .cu-filter-group .filter.expanded .filter-items {
   height: auto !important;
@@ -415,8 +415,7 @@
 
 .cu-filter-group .filter-group .filter {
   position: relative;
-  border-bottom: 1px dashed #e4e4e4;
-  background-color: #fff; }
+  border-bottom: 1px dashed #323232; }
   .cu-filter-group .filter-group .filter .head {
     position: absolute;
     top: 0;
@@ -428,7 +427,7 @@
       font-size: inherit;
       font-weight: normal;
       line-height: 50px;
-      color: #868686;
+      color: #fff;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis; }
@@ -443,31 +442,32 @@
         line-height: 50px; }
         .cu-filter-group .filter-group .filter .body .filter-items .filter-item a, .cu-filter-group .filter-group .filter .body .filter-items .filter-item label {
           font-size: inherit;
-          color: inherit;
+          color: #c8c8c8;
           text-decoration: none;
           cursor: pointer; }
+        .cu-filter-group .filter-group .filter .body .filter-items .filter-item input {
+          margin-right: 4px; }
     .cu-filter-group .filter-group .filter .body .multi-confirm {
       margin: 0 auto 15px;
       width: 130px; }
       .cu-filter-group .filter-group .filter .body .multi-confirm .btn-confirm, .cu-filter-group .filter-group .filter .body .multi-confirm .btn-cancel {
         padding: 2px 10px;
-        border: 1px solid #c9c9c9;
+        border: 1px solid #323232;
         border-radius: 2px;
         background-color: transparent;
         cursor: pointer; }
       .cu-filter-group .filter-group .filter .body .multi-confirm .btn-confirm {
         float: left;
-        border-color: #428bca;
-        background-color: #428bca;
+        border-color: #221715;
+        background-color: #221715;
         color: #fff; }
         .cu-filter-group .filter-group .filter .body .multi-confirm .btn-confirm:hover {
-          border-color: #3071a9;
-          background-color: #3071a9; }
+          border-color: #422c28;
+          background-color: #422c28; }
       .cu-filter-group .filter-group .filter .body .multi-confirm .btn-cancel {
         float: right; }
         .cu-filter-group .filter-group .filter .body .multi-confirm .btn-cancel:hover {
-          color: #428bca;
-          border-color: #428bca; }
+          border-color: #221715; }
   .cu-filter-group .filter-group .filter .foot {
     position: absolute;
     top: 0;
@@ -476,11 +476,12 @@
       height: 50px;
       line-height: 50px; }
       .cu-filter-group .filter-group .filter .foot .filter-action a {
-        text-decoration: none; }
+        text-decoration: none;
+        color: #929292; }
       .cu-filter-group .filter-group .filter .foot .filter-action .multi-toggle {
         margin-right: 20px;
         padding: 2px 4px;
-        border: 1px solid #c9c9c9;
+        border: 1px solid #323232;
         font-size: 0.9em; }
 
 /*==================================================

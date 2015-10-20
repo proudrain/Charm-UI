@@ -189,6 +189,59 @@ var AddressListRow = React.createClass({displayName: "AddressListRow",
 'use strict'
 
 //  ==================================================
+//  Include: AddressList AddressSearch
+//
+//  TODO:
+//  ==================================================
+
+var AddressPicker = React.createClass({displayName: "AddressPicker",
+  getInitialState: function() {
+    return {
+      city: "北京",
+      currentCity: null,
+      address: this.props.keyword
+    };
+  },
+  getDefaultProps: function() {
+    return {};
+  },
+  componentWillMount: function() {
+    var myCity = new BMap.LocalCity();
+    myCity
+      .get(function(res) {
+        var currentCity = res.name;
+        this.setState({
+            currentCity: currentCity
+        });
+      }.bind(this));
+  },
+  setAddress: function(ad) {
+    this.setState({
+      address: ad
+    });
+  },
+  setCity: function(ct) {
+    this.setState({
+      city: ct
+    });
+  },
+  render: function() {
+    var addressPickerActiveStyle = this.state.address
+      ? this.props.addressPickerActiveStyle
+      : {};
+    return (
+      React.createElement("div", {className: "address-picker", style: addressPickerActiveStyle}, 
+        React.createElement(AddressList, {setCity: this.setCity, localAddress: this.state.currentCity, addressData: this.props.addressData}), 
+        React.createElement(AddressInput, React.__spread({},  this.props, {city: this.state.city, searchSubmitHandler: this.setAddress})), 
+        React.createElement(AddressMap, {addressKeyword: this.state.address, city: this.props.city, theme: this.props.theme})
+      )
+    );
+  }
+});
+
+'use strict'
+
+//  ==================================================
 //  Include: AddressInput AddressMap
 //
 //  TODO: [add] 增加各项参数
@@ -478,13 +531,23 @@ var AddressMap = React.createClass({displayName: "AddressMap",
 });
 
 
-/* FilterGroup */
+//  ==================================================
+//  Component: FilterGroup
+//
+//  Include: Filter FilterOption FilterAction FilterStateBar FilterStateTag
+//
+//  TODO:
+//  ==================================================
 
 /* 每条过滤器的每个选项 */
 var FilterOption = React.createClass({displayName: "FilterOption",
   render: function () {
     var optionValue = this.props.value;
-    var select = this.props.onSelect.bind(null, optionValue);
+    // var select = this.props.onSelect.bind(null, optionValue);
+    var select = function (event) {
+      !this.props.isMultiSelect && event && event.preventDefault();
+      this.props.onSelect(optionValue);
+    }.bind(this);
     var optionElement;
     var optionValueElement = React.createElement("span", null, optionValue.value);
     if (this.props.isMultiSelect) {
@@ -525,6 +588,10 @@ var FilterAction = React.createClass({displayName: "FilterAction",
 var FilterStateTag = React.createClass({displayName: "FilterStateTag",
   render: function () {
     var tagValueNodes;
+    var removeTag = function (value, event) {
+      event && event.preventDefault();
+      this.props.onTagRemove(value);
+    }.bind(this);
     var currStateValues =  Array.isArray(this.props.value) ?
                           this.props.value :
                           [this.props.value];
@@ -535,7 +602,7 @@ var FilterStateTag = React.createClass({displayName: "FilterStateTag",
           React.createElement("span", {key: index}, 
             value.value, " ", 
             React.createElement("span", {className: "tag-remove"}, 
-              React.createElement("a", {onClick: this.props.onTagRemove.bind(null, value), href: "#"}, "×")
+              React.createElement("a", {onClick: removeTag.bind(this, value), href: "#"}, "×")
             ), 
             
               index == values.length - 1 ?
@@ -551,7 +618,7 @@ var FilterStateTag = React.createClass({displayName: "FilterStateTag",
           React.createElement("span", {key: index}, 
             value.value, " ", 
             React.createElement("span", {className: "tag-remove"}, 
-              React.createElement("a", {onClick: this.props.onTagRemove.bind(null, value), href: "#"}, "×")
+              React.createElement("a", {onClick: removeTag.bind(this, value), href: "#"}, "×")
             )
           )
         );
@@ -623,14 +690,16 @@ var Filter = React.createClass({displayName: "Filter",
       options: [],
     };
   },
-  multiSelectToggle: function () {
+  multiSelectToggle: function (event) {
+    event && event.preventDefault();
     this.setState({
       isMultiSelect: !this.state.isMultiSelect,
       // 若由非多选到多选，则自动展开
       isExpanded: this.state.isMultiSelect ? false : true
     });
   },
-  expandToggle: function () {
+  expandToggle: function (event) {
+    event && event.preventDefault();
     this.setState({
       // 若由展开到收起，则取消多选状态
       isMultiSelect: this.state.isExpanded ? false : this.state.isMultiSelect,
@@ -646,7 +715,8 @@ var Filter = React.createClass({displayName: "Filter",
     this.setState({multiSelected: multiSelected});
   },
   // 确认多选的状态
-  confirmMultiSelect: function () {
+  confirmMultiSelect: function (event) {
+    event && event.preventDefault();
     var selectedObj = this.state.multiSelected;
     var selectedArr = [];
     for (var key in selectedObj) {
@@ -677,7 +747,7 @@ var Filter = React.createClass({displayName: "Filter",
     }.bind(this));
 
     return (
-      React.createElement("div", {className: "filter" + (this.state.isExpanded ? " expanded" : "")}, 
+      React.createElement("div", {className: "filter" + (this.state.isExpanded ? " expanded" : ""), style: {display: this.props.options.length > 0 ? 'block' : 'none'}}, 
         React.createElement("div", {className: "head"}, 
           React.createElement("h4", {className: "filter-name"}, this.props.name)
         ), 
@@ -711,8 +781,9 @@ var Filter = React.createClass({displayName: "Filter",
 /* 过滤器组，最外层组件 */
 /**
  * [props]
- * filterDefs
- * filterValues
+ * {object} filterDefs
+ * {object} filterValues
+ * {function} onStateChange
  */
 var FilterGroup = React.createClass({displayName: "FilterGroup",
   getInitialState: function () {
@@ -735,11 +806,13 @@ var FilterGroup = React.createClass({displayName: "FilterGroup",
       }, {});
     this.setState({defIndex: defs});
   },
+  updateFilterValue: function (values) {
+    this.setState({filterValues: values});
+  },
   setFilterState: function (state) {
-    if (!this.isSameState(this.state.filterState, state)) {
-      this.setState({filterState: state});
-    }
-    // this.props.onStateChange(this.state.filterState);
+    // if (!this.isSameState(this.state.filterState, state)) {
+    this.setState({filterState: state});
+    // }
   },
   addFilterState: function (field, value) {
     var that = this;
@@ -799,7 +872,7 @@ var FilterGroup = React.createClass({displayName: "FilterGroup",
     // fire
     if (changed) {
       that.setState({filterState: state});
-      that.props.onStateChange(this.state.filterState);
+      that.props.onStateChange(this.state.filterState, that);
     }
   },
   removeFilterState: function (field, value) {
@@ -821,7 +894,7 @@ var FilterGroup = React.createClass({displayName: "FilterGroup",
 
     // fire
     this.setState({filterState: state});
-    this.props.onStateChange(this.state.filterState);
+    this.props.onStateChange(this.state.filterState, this);
   },
   getFilterDef: function (field) {
     return this.state.defIndex[field];
@@ -899,59 +972,6 @@ var FilterGroup = React.createClass({displayName: "FilterGroup",
         React.createElement("ul", {className: "filter-group"}, 
           filterNodes
         )
-      )
-    );
-  }
-});
-
-'use strict'
-
-//  ==================================================
-//  Include: AddressList AddressSearch
-//
-//  TODO:
-//  ==================================================
-
-var AddressPicker = React.createClass({displayName: "AddressPicker",
-  getInitialState: function() {
-    return {
-      city: "北京",
-      currentCity: null,
-      address: this.props.keyword
-    };
-  },
-  getDefaultProps: function() {
-    return {};
-  },
-  componentWillMount: function() {
-    var myCity = new BMap.LocalCity();
-    myCity
-      .get(function(res) {
-        var currentCity = res.name;
-        this.setState({
-            currentCity: currentCity
-        });
-      }.bind(this));
-  },
-  setAddress: function(ad) {
-    this.setState({
-      address: ad
-    });
-  },
-  setCity: function(ct) {
-    this.setState({
-      city: ct
-    });
-  },
-  render: function() {
-    var addressPickerActiveStyle = this.state.address
-      ? this.props.addressPickerActiveStyle
-      : {};
-    return (
-      React.createElement("div", {className: "address-picker", style: addressPickerActiveStyle}, 
-        React.createElement(AddressList, {setCity: this.setCity, localAddress: this.state.currentCity, addressData: this.props.addressData}), 
-        React.createElement(AddressInput, React.__spread({},  this.props, {city: this.state.city, searchSubmitHandler: this.setAddress})), 
-        React.createElement(AddressMap, {addressKeyword: this.state.address, city: this.props.city, theme: this.props.theme})
       )
     );
   }
