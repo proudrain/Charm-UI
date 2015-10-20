@@ -189,59 +189,6 @@ var AddressListRow = React.createClass({displayName: "AddressListRow",
 'use strict'
 
 //  ==================================================
-//  Include: AddressList AddressSearch
-//
-//  TODO:
-//  ==================================================
-
-var AddressPicker = React.createClass({displayName: "AddressPicker",
-  getInitialState: function() {
-    return {
-      city: "北京",
-      currentCity: null,
-      address: this.props.keyword
-    };
-  },
-  getDefaultProps: function() {
-    return {};
-  },
-  componentWillMount: function() {
-    var myCity = new BMap.LocalCity();
-    myCity
-      .get(function(res) {
-        var currentCity = res.name;
-        this.setState({
-            currentCity: currentCity
-        });
-      }.bind(this));
-  },
-  setAddress: function(ad) {
-    this.setState({
-      address: ad
-    });
-  },
-  setCity: function(ct) {
-    this.setState({
-      city: ct
-    });
-  },
-  render: function() {
-    var addressPickerActiveStyle = this.state.address
-      ? this.props.addressPickerActiveStyle
-      : {};
-    return (
-      React.createElement("div", {className: "address-picker", style: addressPickerActiveStyle}, 
-        React.createElement(AddressList, {setCity: this.setCity, localAddress: this.state.currentCity, addressData: this.props.addressData}), 
-        React.createElement(AddressInput, React.__spread({},  this.props, {city: this.state.city, searchSubmitHandler: this.setAddress})), 
-        React.createElement(AddressMap, {addressKeyword: this.state.address, city: this.props.city, theme: this.props.theme})
-      )
-    );
-  }
-});
-
-'use strict'
-
-//  ==================================================
 //  Include: AddressInput AddressMap
 //
 //  TODO: [add] 增加各项参数
@@ -960,6 +907,59 @@ var FilterGroup = React.createClass({displayName: "FilterGroup",
 'use strict'
 
 //  ==================================================
+//  Include: AddressList AddressSearch
+//
+//  TODO:
+//  ==================================================
+
+var AddressPicker = React.createClass({displayName: "AddressPicker",
+  getInitialState: function() {
+    return {
+      city: "北京",
+      currentCity: null,
+      address: this.props.keyword
+    };
+  },
+  getDefaultProps: function() {
+    return {};
+  },
+  componentWillMount: function() {
+    var myCity = new BMap.LocalCity();
+    myCity
+      .get(function(res) {
+        var currentCity = res.name;
+        this.setState({
+            currentCity: currentCity
+        });
+      }.bind(this));
+  },
+  setAddress: function(ad) {
+    this.setState({
+      address: ad
+    });
+  },
+  setCity: function(ct) {
+    this.setState({
+      city: ct
+    });
+  },
+  render: function() {
+    var addressPickerActiveStyle = this.state.address
+      ? this.props.addressPickerActiveStyle
+      : {};
+    return (
+      React.createElement("div", {className: "address-picker", style: addressPickerActiveStyle}, 
+        React.createElement(AddressList, {setCity: this.setCity, localAddress: this.state.currentCity, addressData: this.props.addressData}), 
+        React.createElement(AddressInput, React.__spread({},  this.props, {city: this.state.city, searchSubmitHandler: this.setAddress})), 
+        React.createElement(AddressMap, {addressKeyword: this.state.address, city: this.props.city, theme: this.props.theme})
+      )
+    );
+  }
+});
+
+'use strict'
+
+//  ==================================================
 //  Component: ProgressBar
 //
 //  Include: PaginationBtn
@@ -1061,7 +1061,7 @@ var PagiMain = React.createClass({displayName: "PagiMain",
     } else if (type === "last") {
       page = this.props.pages;
     } else {
-      page = page;
+      page = page > this.props.pages ? this.props.pages : page;
     }
     if (page !== this.props.activePage) {
       this.props.setActivePage(page);
@@ -1161,6 +1161,11 @@ var Pagination = React.createClass({displayName: "Pagination",
       selected: function(page) { // 页码切换时回调
         console.log(page);
       }
+    }
+  },
+  componentWillReceiveProps: function(nextProps) {
+    if(nextProps.activePage !== this.props.activePage) {
+      this.setActivePage(nextProps.activePage);
     }
   },
   setActivePage: function(page) {
