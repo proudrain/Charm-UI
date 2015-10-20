@@ -608,10 +608,8 @@
     top: 0;
     width: 100%;
     height: 2px;
-    background-color: #09c4c7;
     border-top-right-radius: 2px;
-    border-bottom-right-radius: 2px;
-    box-shadow: 1px 0 1px #09c4c7; }
+    border-bottom-right-radius: 2px; }
   .cu-progress .cu-spinner {
     position: fixed;
     top: 15px;

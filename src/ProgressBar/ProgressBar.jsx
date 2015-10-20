@@ -14,7 +14,7 @@
 var Spinner = React.createClass({
   render: function() {
     return (
-      <div className="cu-spinner"></div>
+      <div className="cu-spinner" style={{borderColor: this.props.color,borderLeftColor: 'transparent'}}></div>
     );
   }
 });
@@ -38,6 +38,7 @@ var ProgressBar = React.createClass({
       maxStep: 0.03,  // 随机增长的最大步幅
       trickle: true,  // 是否自动增长
       trickleSpeed: 800,  // 自动增长的间隔时间
+      color: '#09c4c7',
       setTrickle: false  // set 后是否自动增长（未启用）
     };
   },
@@ -134,20 +135,22 @@ var ProgressBar = React.createClass({
       opacity: this.state.done
         ? 0
         : 1,
-      transition: 'opacity ' + this.props.speed * 2 + 's ' + this.props.easing
+      transition: 'opacity ' + this.props.speed + 's ' + this.props.easing
     };
     var barStyle = {
       width: !this.state.rate
         ? 0
         : this.state.rate + '%',
-      transition: 'width ' + this.props.speed + 's ' + this.props.easing
+      transition: 'width ' + this.props.speed + 's ' + this.props.easing,
+      backgroundColor: this.props.color,
+      boxShadowColor: this.props.color
     };
     return this.state.rate
       ? (
         <div className="cu-progress" style={progressStyle}>
           <div className="cu-progress-bar" style={barStyle}></div>
           {this.props.spinner
-            ? <Spinner/>
+            ? <Spinner color={this.props.color} />
             : null}
         </div>
       )

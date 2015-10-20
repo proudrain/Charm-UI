@@ -31,10 +31,8 @@ $progressbar-size: 2px;
     top: 0;
     width: 100%;
     height: $progressbar-size;
-    background-color: $color-first;
     border-top-right-radius: $progressbar-size;
     border-bottom-right-radius: $progressbar-size;
-    box-shadow: 1px 0 1px $color-first;
   }
   .#{$ns}spinner {
     position: fixed;
