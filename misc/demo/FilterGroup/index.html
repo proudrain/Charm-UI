@@ -21,64 +21,64 @@
 
 		<script type="text/jsx">
 	      window.onload = function () {
-			var defs = [
-  	            {name: '所属BU', field: 'biz_line', canMultiSelect: true},
-  	            {name: '数据类目', field: 'category', treeView: true},
-  	            {name: '所属应用', field: 'app_guid'},
-  	            {name: '责任人', field: 'owner_name'},
-  	        ];
-			var values = {
-	            biz_line: [
-	                {value: '1688事业部'},
-	                {value: 'CTO'},
-	                {value: 'OS事业群'},
-	                {value: '共享业务事业部'},
-					{value: '1688事业部1'},
-	                {value: 'CTO1'},
-	                {value: 'OS事业群1'},
-	                {value: '共享业务事业部1'},
-					{value: '1688事业部2'},
-	                {value: 'CTO2'},
-	                {value: 'OS事业群2'},
-	                {value: '共享业务事业部2'}
-	            ],
-	            category: [
-	                {value: '公共中间层'},
-	                {value: '天猫'},
-	                {value: '蚂蚁金服'},
-	                {value: '其他'}
-	            ],
-	            app_guid: [
-	                {value: 'odps.abif'},
-	                {value: 'odps.ad_boss_sas'},
-	                {value: 'odps.ad_effect'},
-	                {value: 'odps.ad_nz_dw'},
-	                {value: 'odps.ad_p4p_dw'}
-	            ],
-	            owner_name: [
-	                {value: '谨书'},
-	                {value: '三要'},
-	                {value: '刘顺'}
-	            ],
-	        };
-			var onStateChange = function (state) {
-				console.log('State changed:', state);
-			};
+				var defs = [
+	  	            {name: '所属BU', field: 'biz_line', canMultiSelect: true},
+	  	            {name: '数据类目', field: 'category', treeView: true},
+	  	            {name: '所属应用', field: 'app_guid'},
+	  	            {name: '责任人', field: 'owner_name'},
+	  	        ];
+				var values = {
+		            biz_line: [
+		                {value: '1688事业部'},
+		                {value: 'CTO'},
+		                {value: 'OS事业群'},
+		                {value: '共享业务事业部'},
+										{value: '1688事业部1'},
+		                {value: 'CTO1'},
+		                {value: 'OS事业群1'},
+		                {value: '共享业务事业部1'},
+										{value: '1688事业部2'},
+		                {value: 'CTO2'},
+		                {value: 'OS事业群2'},
+		                {value: '共享业务事业部2'}
+		            ],
+		            category: [
+		                {value: '公共中间层'},
+		                {value: '天猫'},
+		                {value: '蚂蚁金服'},
+		                {value: '其他'}
+		            ],
+		            app_guid: [
+		                {value: 'odps.abif'},
+		                {value: 'odps.ad_boss_sas'},
+		                {value: 'odps.ad_effect'},
+		                {value: 'odps.ad_nz_dw'},
+		                {value: 'odps.ad_p4p_dw'}
+		            ],
+		            owner_name: [
+		                {value: '谨书'},
+		                {value: '三要'},
+		                {value: '刘顺'}
+		            ],
+		        };
+				var onStateChange = function (state) {
+					console.log('State changed:', state);
+				};
 
-	        var filterGroup = React.render(
-	          <FilterGroup
+	      var filterGroup = React.render(
+	        <FilterGroup
 			  	filterDefs={defs}
-				filterValues={values}
-				onStateChange={onStateChange}
-			  />,
-	          document.getElementById('filter-group')
-	        );
+					filterValues={values}
+					onStateChange={onStateChange}
+			  	/>,
+	        document.getElementById('filter-group')
+	      );
 
-			filterGroup.setFilterState({
-				'biz_line': [{value: '1688事业部'}, {value: 'CTO'}],
-				'category': {value: '蚂蚁金服'}
-			})
-	      };
+				filterGroup.setFilterState({
+					'biz_line': [{value: '1688事业部'}, {value: 'CTO'}],
+					'category': [{value: '蚂蚁金服'}]
+				})
+			};
   	</script>
 	</body>
 

@@ -14,13 +14,13 @@ $filter-tag-horizontal-padding: 5px;
 
 // filter group
 $filter-group-border-width: 1px;
-$filter-group-border: $filter-group-border-width solid #c9c9c9;
+$filter-group-border: $filter-group-border-width solid #323232;
 $filter-group-vertical-padding: 0;
 $filter-group-horizontal-padding: 8px;
 
 // filter
 $filter-divede-width: 1px;
-$filter-divide-border: $filter-divede-width dashed #e4e4e4;
+$filter-divide-border: $filter-divede-width dashed #323232;
 $filter-expanded-divide-border: $filter-divede-width solid #e4e4e4;
 $filter-horizontal-padding: 0;
 $filter-expanded-box-shadow: 0 6px 5px -2px rgba(0, 0, 0, 0.2);
@@ -29,7 +29,7 @@ $filter-expanded-box-shadow: 0 6px 5px -2px rgba(0, 0, 0, 0.2);
 $filter-name-min-width: 75px;
 $filter-name-height: 50px;
 $filter-name-font-size: inherit;
-$filter-name-color: #868686;
+$filter-name-color: #fff;
 $filter-name-line-height: inherit;
 
 // filter head and foot
@@ -47,14 +47,15 @@ $filter-items-height: $filter-name-height;
 $filter-item-height: $filter-items-height;
 $filter-item-horizontal-spacing: 26px;
 $filter-item-link-font-size: $filter-name-line-height;
-$filter-item-link-color: inherit;
+$filter-item-link-color: #c8c8c8;
 
 // filter action
 $filter-action-height: $filter-name-height;
+$filter-action-font-color: #929292;
 
 // multi-confirm
 $multi-confirm-width: 130px;
-$confirm-button-color: #428bca;
+$confirm-button-color: #221715;
 
 .clearfix {
   &:after {
@@ -137,7 +138,6 @@ $confirm-button-color: #428bca;
   .filter-group .filter {
     position: relative;
     border-bottom: $filter-divide-border;
-    background-color: #fff;
 
     .head {
       position: absolute;
@@ -177,6 +177,9 @@ $confirm-button-color: #428bca;
             text-decoration: none;
             cursor: pointer;
           }
+          input {
+            margin-right: 4px;
+          }
         }
       }
 
@@ -197,14 +200,13 @@ $confirm-button-color: #428bca;
           background-color: $confirm-button-color;
           color: #fff;
           &:hover {
-            border-color: darken($confirm-button-color, 10);
-            background-color: darken($confirm-button-color, 10);
+            border-color: lighten($confirm-button-color, 10);
+            background-color: lighten($confirm-button-color, 10);
           }
         }
         .btn-cancel {
           float: right;
           &:hover {
-            color: $confirm-button-color;
             border-color: $confirm-button-color;
           }
         }
@@ -220,6 +222,7 @@ $confirm-button-color: #428bca;
         line-height: $filter-action-height;
         a {
           text-decoration: none;
+          color: $filter-action-font-color;
         }
         .multi-toggle {
           margin-right: 20px;

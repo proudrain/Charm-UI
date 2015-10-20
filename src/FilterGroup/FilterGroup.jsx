@@ -1,11 +1,21 @@
 
-/* FilterGroup */
+//  ==================================================
+//  Component: FilterGroup
+//
+//  Include: Filter FilterOption FilterAction FilterStateBar FilterStateTag
+//
+//  TODO:
+//  ==================================================
 
 /* 每条过滤器的每个选项 */
 var FilterOption = React.createClass({
   render: function () {
     var optionValue = this.props.value;
-    var select = this.props.onSelect.bind(null, optionValue);
+    // var select = this.props.onSelect.bind(null, optionValue);
+    var select = function (event) {
+      !this.props.isMultiSelect && event && event.preventDefault();
+      this.props.onSelect(optionValue);
+    }.bind(this);
     var optionElement;
     var optionValueElement = <span>{optionValue.value}</span>;
     if (this.props.isMultiSelect) {
@@ -46,6 +56,10 @@ var FilterAction = React.createClass({
 var FilterStateTag = React.createClass({
   render: function () {
     var tagValueNodes;
+    var removeTag = function (value, event) {
+      event && event.preventDefault();
+      this.props.onTagRemove(value);
+    }.bind(this);
     var currStateValues =  Array.isArray(this.props.value) ?
                           this.props.value :
                           [this.props.value];
@@ -56,7 +70,7 @@ var FilterStateTag = React.createClass({
           <span key={index}>
             {value.value}&nbsp;
             <span className="tag-remove">
-              <a onClick={this.props.onTagRemove.bind(null, value)} href="#">&times;</a>
+              <a onClick={removeTag.bind(this, value)} href="#">&times;</a>
             </span>
             {
               index == values.length - 1 ?
@@ -72,7 +86,7 @@ var FilterStateTag = React.createClass({
           <span key={index}>
             {value.value}&nbsp;
             <span className="tag-remove">
-              <a onClick={this.props.onTagRemove.bind(null, value)} href="#">&times;</a>
+              <a onClick={removeTag.bind(this, value)} href="#">&times;</a>
             </span>
           </span>
         );
@@ -144,14 +158,16 @@ var Filter = React.createClass({
       options: [],
     };
   },
-  multiSelectToggle: function () {
+  multiSelectToggle: function (event) {
+    event && event.preventDefault();
     this.setState({
       isMultiSelect: !this.state.isMultiSelect,
       // 若由非多选到多选，则自动展开
       isExpanded: this.state.isMultiSelect ? false : true
     });
   },
-  expandToggle: function () {
+  expandToggle: function (event) {
+    event && event.preventDefault();
     this.setState({
       // 若由展开到收起，则取消多选状态
       isMultiSelect: this.state.isExpanded ? false : this.state.isMultiSelect,
@@ -167,7 +183,8 @@ var Filter = React.createClass({
     this.setState({multiSelected: multiSelected});
   },
   // 确认多选的状态
-  confirmMultiSelect: function () {
+  confirmMultiSelect: function (event) {
+    event && event.preventDefault();
     var selectedObj = this.state.multiSelected;
     var selectedArr = [];
     for (var key in selectedObj) {
@@ -198,7 +215,7 @@ var Filter = React.createClass({
     }.bind(this));
 
     return (
-      <div className={"filter" + (this.state.isExpanded ? " expanded" : "")}>
+      <div className={"filter" + (this.state.isExpanded ? " expanded" : "")} style={{display: this.props.options.length > 0 ? 'block' : 'none'}}>
         <div className="head">
           <h4 className="filter-name">{this.props.name}</h4>
         </div>
@@ -232,8 +249,9 @@ var Filter = React.createClass({
 /* 过滤器组，最外层组件 */
 /**
  * [props]
- * filterDefs
- * filterValues
+ * {object} filterDefs
+ * {object} filterValues
+ * {function} onStateChange
  */
 var FilterGroup = React.createClass({
   getInitialState: function () {
@@ -256,11 +274,13 @@ var FilterGroup = React.createClass({
       }, {});
     this.setState({defIndex: defs});
   },
+  updateFilterValue: function (values) {
+    this.setState({filterValues: values});
+  },
   setFilterState: function (state) {
-    if (!this.isSameState(this.state.filterState, state)) {
-      this.setState({filterState: state});
-    }
-    // this.props.onStateChange(this.state.filterState);
+    // if (!this.isSameState(this.state.filterState, state)) {
+    this.setState({filterState: state});
+    // }
   },
   addFilterState: function (field, value) {
     var that = this;
@@ -320,7 +340,7 @@ var FilterGroup = React.createClass({
     // fire
     if (changed) {
       that.setState({filterState: state});
-      that.props.onStateChange(this.state.filterState);
+      that.props.onStateChange(this.state.filterState, that);
     }
   },
   removeFilterState: function (field, value) {
@@ -342,7 +362,7 @@ var FilterGroup = React.createClass({
 
     // fire
     this.setState({filterState: state});
-    this.props.onStateChange(this.state.filterState);
+    this.props.onStateChange(this.state.filterState, this);
   },
   getFilterDef: function (field) {
     return this.state.defIndex[field];
