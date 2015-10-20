@@ -84,7 +84,7 @@ var PagiMain = React.createClass({
     };
   },
   componentWillReceiveProps: function(nextProps) {
-    if(nextProps.activePage !== this.props.activePage) {
+    if(nextProps.activePage !== this.props.activePage || nextProps.pages !== this.props.pages) {
       var pageItems = this.getPageItems(nextProps.activePage);
       this.setState({
         pageItems: pageItems
