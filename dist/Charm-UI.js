@@ -1063,12 +1063,14 @@ var PagiMain = React.createClass({displayName: "PagiMain",
     };
   },
   componentWillReceiveProps: function(nextProps) {
-    if(nextProps.activePage !== this.props.activePage) {
-      var pageItems = this.getPageItems(nextProps.activePage);
+    if(nextProps.activePage !== this.props.activePage || nextProps.pages !== this.props.pages) {
+      var pageItems = this.getPageItems(nextProps.activePage, nextProps.pages);
       this.setState({
         pageItems: pageItems
       });
-      this.props.selected(nextProps.activePage);
+      if(nextProps.activePage !== this.props.activePage) {
+        this.props.selected(nextProps.activePage);
+      }
     }
   },
   handleItemClick: function(type, page) {
@@ -1087,11 +1089,11 @@ var PagiMain = React.createClass({displayName: "PagiMain",
       this.props.setActivePage(page);
     }
   },
-  getPageItems: function(n) {
+  getPageItems: function(n, pages) {
     var list = [];
     var b = this.props.basePages;
     var m = this.props.midPages;
-    var p = this.props.pages;
+    var p = pages || this.props.pages;
     if(n <= parseInt(m / 2) + 1) { // 1
       list = this._getSeriesNumber(1, p <= b + m ? p : m);
     } else if((n <= parseInt(m / 2) + 1 + b) || p <= b + m)  { // 1'
