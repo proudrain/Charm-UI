@@ -126,6 +126,10 @@ $map-nav-title-height: 40px;
     }
     .#{$ns}map-items {
       height: $map-height - $map-nav-title-height;
+      .no-items {
+        padding: 30px 15px;
+        font-size: 16px;
+      }
       li {
         position: relative;
         padding: 10px 6px;
@@ -200,7 +204,7 @@ $map-nav-title-height: 40px;
     border-radius: 10px;
     box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
   }
-  
+
   &.dark {
     .#{$ns}map-nav {
       background-color: $dark-background;
