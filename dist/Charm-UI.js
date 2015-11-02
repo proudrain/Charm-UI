@@ -240,7 +240,7 @@ var AddressPicker = React.createClass({displayName: "AddressPicker",
   }
 });
 
-'use strict'
+'use strict';
 
 //  ==================================================
 //  Include: AddressInput AddressMap
@@ -985,6 +985,294 @@ var FilterGroup = React.createClass({displayName: "FilterGroup",
         ), 
         React.createElement("ul", {className: "filter-group"}, 
           filterNodes
+        )
+      )
+    );
+  }
+});
+
+'use strict';
+
+//  ==================================================
+//  Component: Items
+//
+//  Props:  items theme guide
+//
+//  Include: ItemGroup Items Item ItemBadge ItemImg ItemInfo ItemTip
+//
+//  Use: index.html search.html
+//
+//  TODO: 厂商页　bug
+//  ==================================================
+
+var ItemBadge = React.createClass({displayName: "ItemBadge",
+  getDefaultProps: function() {
+    return {
+      text: '新品',
+      color: '#ed4300'
+    }
+  },
+  render: function() {
+    var badgeStyle = {
+      backgroundColor: this.props.color
+    }
+    return (
+      React.createElement("span", {className: "item-badge", style: badgeStyle}, 
+        this.props.text
+      )
+    );
+  }
+});
+
+var ItemImg = React.createClass({displayName: "ItemImg",
+  render: function() {
+    return (
+      React.createElement("a", {href: "/item/" + this.props.id, className: "item-img"}, 
+        React.createElement("img", {src: this.props.imgUrl, alt: this.props.item})
+      )
+    );
+  }
+});
+
+var ItemInfo = React.createClass({displayName: "ItemInfo",
+  formatPrice: function(price) {
+    if(price / 10000 >= 1) {
+      return (price / 10000).toFixed(2) + '万';
+    } else if(price / 1000 >= 1) {
+      return (price / 1000).toFixed(2) + '千';
+    } else {
+      return price.toFixed(2);
+    }
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "item-info"}, 
+        React.createElement("h5", null, 
+          React.createElement("a", {href: '/item/' + this.props.id}, 
+            this.props.item
+          )
+        ), 
+        React.createElement("p", {className: "price"}, 
+          this.formatPrice(this.props.price)
+        )
+      )
+    );
+  }
+});
+
+var ItemTip = React.createClass({displayName: "ItemTip",
+  render: function() {
+    return (
+      React.createElement("div", {className: "item-tip"}, 
+        React.createElement("span", {className: "go-expe"}, 
+          React.createElement("a", {href: '/item/' + this.props.id + '?open'}, "去体验馆")
+        ), 
+        React.createElement("span", {className: "go-comp"}, 
+          React.createElement("a", {href: "#"}, "对比")
+        )
+      )
+    );
+  }
+});
+
+var Item = React.createClass({displayName: "Item",
+  render: function() {
+    return (
+      React.createElement("div", {className: "item"}, 
+        
+          // <ItemBadge  />
+        
+        React.createElement(ItemImg, {
+          id: this.props.item.id, 
+          imgUrl: this.props.item.image_url, 
+          item: this.props.item.item}
+        ), 
+        React.createElement(ItemInfo, {
+          id: this.props.item.id, 
+          item: this.props.item.item, 
+          price: this.props.item.price}
+        ), 
+        
+          this.props.theme === 'normal' ?
+          React.createElement(ItemTip, {id: this.props.item.id}) :
+          null
+        
+      )
+    );
+  }
+});
+
+var Items = React.createClass({displayName: "Items",
+  getDefaultProps: function() {
+    return {
+      theme: 'normal'
+    }
+  },
+  render: function() {
+    var flagStyle = {
+      bakcgroundColor: this.props.color
+    };
+    return (
+      React.createElement("div", {className: 'items ' + this.props.theme}, 
+        
+          this.props.theme === 'tight' ?
+          React.createElement("div", {className: "items-flag", style: flagStyle}) :
+          null, 
+        
+        this.props.items.map(function(item, i) {
+          return React.createElement(Item, {item: item, key: i, theme: this.props.theme});
+        }.bind(this))
+      )
+    );
+  }
+});
+
+var GroupGuide = React.createClass({displayName: "GroupGuide",
+  render: function() {
+    var titleStyle = {
+      bakcgroundColor: this.props.guide.color
+    };
+    return (
+      React.createElement("div", {className: "group-guide"}, 
+        React.createElement("div", {className: "guide-title", style: titleStyle}, 
+          React.createElement("a", {href: this.props.guide.url}, 
+            this.props.guide.title
+          )
+        ), 
+        React.createElement("img", {
+          src: this.props.guide.img, 
+          alt: this.props.guide.title, 
+          className: "guide-img"}
+        )
+      )
+    );
+  }
+});
+
+var ItemGroup = React.createClass({displayName: "ItemGroup",
+  getDefaultProps: function() {
+    return {
+      theme: 'normal'
+    }
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "item-group"}, 
+        React.createElement(GroupGuide, {guide: this.props.guide}), 
+        React.createElement(Items, {
+          items: this.props.items, 
+          color: this.props.guide.color, 
+          theme: "tight"}
+        )
+      )
+    );
+  }
+});
+
+'use strict';
+
+//  ==================================================
+//  Component: Nav
+//
+//  Props:  items
+//
+//  Include: Nav
+//
+//  Use: index.html
+//
+//  TODO:
+//  ==================================================
+
+var CategoryItem = React.createClass({displayName: "CategoryItem",
+  render: function() {
+    return (
+      React.createElement("li", {className: "category-item"}, 
+        React.createElement("img", {src: this.props.item.img, alt: this.props.item.title}), 
+        React.createElement("span", {className: "item-title"}, this.props.item.title), 
+        React.createElement("span", {className: "item-btn"}, "查看")
+      )
+    );
+  }
+});
+
+var CategoryItemGroup = React.createClass({displayName: "CategoryItemGroup",
+  render: function() {
+    return (
+      React.createElement("ul", {className: "category-items"}, 
+        this.props.items.map(function(item, i) {
+          return React.createElement(CategoryItem, {item: item, key: i});
+        }.bind(this))
+      )
+    );
+  }
+});
+
+var CategoryItems = React.createClass({displayName: "CategoryItems",
+  render: function() {
+    var itemsGroups;
+    if(this.props.items.length > 6) {
+      itemsGroups = [
+        React.createElement(CategoryItemGroup, {items: this.props.items.slice(0, 3), key: 0}),
+        React.createElement(CategoryItemGroup, {items: this.props.items.slice(3, 6), key: 1}),
+        React.createElement(CategoryItemGroup, {items: this.props.items.slice(6, 9), key: 2})
+      ];
+    } else if (this.props.items.length > 3) {
+      itemsGroups = [
+        React.createElement(CategoryItemGroup, {items: this.props.items.slice(0, 3), key: 0}),
+        React.createElement(CategoryItemGroup, {items: this.props.items.slice(3, 6), key: 1})
+      ];
+    } else {
+      itemsGroups = [
+        React.createElement(CategoryItemGroup, {items: this.props.items.slice(0, 3), key: 0})
+      ];
+    }
+    return (
+      React.createElement("div", {className: "category-subpart"}, 
+        itemsGroups
+      )
+    );
+  }
+});
+
+var Category = React.createClass({displayName: "Category",
+  render: function() {
+    return (
+      React.createElement("li", {className: "category"}, 
+        React.createElement("a", {href: "#"}, this.props.category.title), 
+        React.createElement(CategoryItems, {items: this.props.category.subpart})
+      )
+    );
+  }
+});
+
+var NavTitle = React.createClass({displayName: "NavTitle",
+  render: function() {
+    var titleStyle = {
+      backgroundColor: this.props.color
+    };
+    return (
+      React.createElement("div", {className: "nav-title", style: titleStyle}, 
+        this.props.title
+      )
+    );
+  }
+});
+
+var Nav = React.createClass({displayName: "Nav",
+  getDefaultProps: function() {
+    return {
+      title: '全部商品分类',
+      color: '#411e00'
+    }
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "nav"}, 
+        React.createElement(NavTitle, {title: this.props.title, color: this.props.color}), 
+        React.createElement("ul", {className: "category_list"}, 
+          this.props.items.map(function(category, i) {
+            return React.createElement(Category, {category: category, key: i});
+          }.bind(this))
         )
       )
     );

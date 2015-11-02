@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>Item Component</title>
+		<link rel='stylesheet' href='../../../dist/Charm-UI.css' />
+		<script src='../lib/react.js'></script>
+		<script src='../lib/JSXTransformer.js'></script>
+		<script src='../../../dist/Charm-UI.js'></script>
+    <style>
+      body {
+        min-height: 100vh;
+        margin: 0;
+        color: #333;
+        /*background-color: #231716;*/
+      }
+
+      body, ul, ol, li {
+        padding: 0;
+        margin: 0;
+      }
+
+      ul, ol {
+        list-style: none;
+      }
+
+      #root {
+        margin: 20px auto;
+        width: 1200px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id='root'>
+      <div id='item-group'></div>
+      <div id='items'></div>
+      <div id='items-1'></div>
+    </div>
+
+    <script type='text/jsx'>
+      var MOCK_ITEMS = [
+        {
+          id: 13826,
+          image_url: 'http://static.wanmujia.com/images/item/26/a48932eefa2b4dad3993371075ce494a/df749d2f7c4e6e569c89e84d39a27a70.jpg',
+          item: '二闷橱',
+          price: 168000
+        }, {
+          id: 13851,
+          image_url: 'http://static.wanmujia.com/images/item/51/8fd2b6a905998718475dc7247ef2b9bc/e46a0c76b5b4067acbf2361fba71daeb.jpg',
+          item: '小叶檀梅花条案',
+          price: 368000
+        }, {
+          id: 13892,
+          image_url: 'http://static.wanmujia.com/images/item/92/ea1dc35074d70be99f0cc54198b6bf74/3de87dd30c03d45d33175ffdb52ca458.jpg',
+          item: '书架书架书架书架书架书架书架书架',
+          price: 600000
+        }, {
+          id: 13892,
+          image_url: 'http://static.wanmujia.com/images/item/92/ea1dc35074d70be99f0cc54198b6bf74/3de87dd30c03d45d33175ffdb52ca458.jpg',
+          item: '书架书架书架书架书架书架书架书架',
+          price: 6000
+        }, {
+          id: 13851,
+          image_url: 'http://static.wanmujia.com/images/item/51/8fd2b6a905998718475dc7247ef2b9bc/e46a0c76b5b4067acbf2361fba71daeb.jpg',
+          item: '小叶檀梅花条案',
+          price: 368000
+        }, {
+          id: 13892,
+          image_url: 'http://static.wanmujia.com/images/item/92/ea1dc35074d70be99f0cc54198b6bf74/3de87dd30c03d45d33175ffdb52ca458.jpg',
+          item: '书架书架书架书架书架书架书架书架',
+          price: 6000
+        }, {
+          id: 13851,
+          image_url: 'http://static.wanmujia.com/images/item/51/8fd2b6a905998718475dc7247ef2b9bc/e46a0c76b5b4067acbf2361fba71daeb.jpg',
+          item: '小叶檀梅花条案',
+          price: 368000
+        }, {
+          id: 13851,
+          image_url: 'http://static.wanmujia.com/images/item/51/8fd2b6a905998718475dc7247ef2b9bc/e46a0c76b5b4067acbf2361fba71daeb.jpg',
+          item: '小叶檀梅花条案',
+          price: 368000
+        }
+      ];
+
+      var MOCK_GUIDE = {
+        title: '客厅系列',
+        img: '',
+        url: '/item/?scene=5',
+        color: '#6e3800'
+      };
+
+      var itemGoup = React.render(
+        <ItemGroup items={MOCK_ITEMS} guide={MOCK_GUIDE} />,
+        document.getElementById('item-group')
+      );
+
+      var itemGoup = React.render(
+        <Items items={MOCK_ITEMS} />,
+        document.getElementById('items')
+      );
+
+      var itemGoup = React.render(
+        <Items items={MOCK_ITEMS} theme='tight' />,
+        document.getElementById('items-1')
+      );
+    </script>
+  </body>
+</html>

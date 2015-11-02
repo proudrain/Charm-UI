@@ -361,6 +361,177 @@
     .tangram-suggestion-main .tangram-suggestion td .tangram-suggestion-grey {
       color: rgba(255, 255, 255, 0.5); }
 
+.overflow {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden; }
+
+.paragraph, .items .item .item-info > h5, .items .item .item-info .price {
+  padding: 0;
+  margin: 0; }
+
+.item-group {
+  width: 1200px;
+  height: 560px;
+  border: 2px solid #f5f5f5;
+  border-right: none;
+  box-sizing: border-box; }
+
+.group-guide {
+  float: left;
+  margin-top: -2px;
+  margin-left: -2px;
+  width: 248px;
+  height: 560px;
+  border: 2px solid #f5f5f5;
+  box-sizing: border-box; }
+  .group-guide .guide-title {
+    padding-left: 20px;
+    margin-top: -2px;
+    height: 50px;
+    background-color: #6e3800;
+    line-height: 48px;
+    font-size: 20px; }
+    .group-guide .guide-title > a {
+      color: #fff;
+      text-decoration: none; }
+  .group-guide .guide-img {
+    width: 100%;
+    height: 510px;
+    background-color: #aaa; }
+
+.items {
+  position: relative;
+  width: 1200px; }
+  .items:after {
+    content: "";
+    display: block;
+    clear: both; }
+  .items.normal .item:hover > .item-tip {
+    -webkit-transform: translateY(0);
+            transform: translateY(0); }
+  .items.normal .item:hover > .item-img {
+    -webkit-transform: translateY(-10px);
+            transform: translateY(-10px); }
+  .items.normal .item:hover > .item-info > h5 {
+    -webkit-transform: translateY(-6px);
+            transform: translateY(-6px); }
+  .items.normal .item:nth-child(5n+1) {
+    margin-left: 0; }
+  .items.tight {
+    float: left;
+    margin-left: 0;
+    width: 952px; }
+    .items.tight .items-flag {
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      width: 100%;
+      height: 2px;
+      background-color: #6e3800;
+      z-index: 100; }
+    .items.tight .item {
+      margin-top: -2px;
+      margin-left: -2px;
+      width: 160px;
+      height: 229px;
+      box-sizing: content-box; }
+      .items.tight .item:hover {
+        border-color: #cf0a0a;
+        z-index: 10; }
+      .items.tight .item .item-img {
+        width: 164px;
+        height: 148px;
+        line-height: 148px; }
+      .items.tight .item .item-info > h5 {
+        line-height: 1.4; }
+      .items.tight .item .item-info .price {
+        width: 164px; }
+  .items .item {
+    position: relative;
+    float: left;
+    margin-top: 25px;
+    margin-left: 25px;
+    width: 220px;
+    height: 270px;
+    padding: 24px 38px;
+    border: 2px solid #f5f5f5;
+    box-sizing: border-box;
+    text-align: center;
+    overflow: hidden; }
+    .items .item .item-badge {
+      position: absolute;
+      display: block;
+      top: 0;
+      left: 0;
+      padding: 0 8px;
+      height: 22px;
+      color: #fff;
+      text-align: center;
+      font-size: 14px; }
+    .items .item .item-img {
+      display: block;
+      width: 144px;
+      height: 148px;
+      line-height: 148px;
+      font-size: 0;
+      -webkit-transform: translateY(0);
+              transform: translateY(0);
+      transition: -webkit-transform 0.3s ease;
+      transition: transform 0.3s ease; }
+      .items .item .item-img > img {
+        max-width: 100%;
+        max-height: 100%;
+        vertical-align: middle; }
+    .items .item .item-info > h5 {
+      margin-top: 20px;
+      font-size: 14px;
+      line-height: 1.2;
+      -webkit-transform: translateY(0);
+              transform: translateY(0);
+      transition: -webkit-transform 0.3s ease;
+      transition: transform 0.3s ease; }
+      .items .item .item-info > h5 > a {
+        color: #777;
+        text-decoration: none; }
+    .items .item .item-info .price {
+      position: absolute;
+      width: 144px;
+      bottom: 20px;
+      color: #cf0a0a;
+      font-size: 18px; }
+    .items .item .item-tip {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      -webkit-transform: translateY(42px);
+              transform: translateY(42px);
+      transition: -webkit-transform 0.3s ease;
+      transition: transform 0.3s ease; }
+      .items .item .item-tip .go-expe {
+        border-right: 1px solid #eee; }
+      .items .item .item-tip .go-comp {
+        border-left: 1px solid #eee; }
+      .items .item .item-tip > span {
+        display: inline-block;
+        width: 50%;
+        height: 42px;
+        border-top: 2px solid #eee;
+        box-sizing: border-box; }
+        .items .item .item-tip > span > a {
+          display: inline-block;
+          width: 100%;
+          height: 100%;
+          background-color: #f5f5f5;
+          font-size: 14px;
+          line-height: 42px;
+          color: #333;
+          text-decoration: none; }
+          .items .item .item-tip > span > a:hover {
+            color: #fafafa;
+            background-color: #88582d; }
+
 .clearfix:after, .inline-list:after, .cu-filter-group .filter-group .filter .body .filter-items:after, .cu-filter-group .filter-state:after, .cu-filter-group .filter-group .filter .body .multi-confirm:after {
   content: '';
   display: table;
@@ -487,6 +658,46 @@
         border: 1px solid #323232;
         font-size: 0.9em; }
 
+.overflow {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden; }
+
+.paragraph {
+  padding: 0;
+  margin: 0; }
+
+.nav {
+  width: 220px;
+  height: 350px;
+  text-align: center; }
+  .nav .nav-title {
+    height: 50px;
+    color: #fafafa;
+    line-height: 50px; }
+  .nav .category {
+    position: relative;
+    height: 60px;
+    background-color: rgba(110, 56, 0, 0.95);
+    line-height: 60px;
+    color: #fff; }
+    .nav .category:hover {
+      background-color: #fff;
+      color: #6e3800; }
+    .nav .category:after {
+      content: ">";
+      position: absolute;
+      top: 0;
+      right: 18px; }
+    .nav .category > a {
+      display: block;
+      color: inherit;
+      text-decoration: none; }
+    .nav .category .category-subpart {
+      position: absolute;
+      top: 0;
+      left: 220px; }
+
 /*==================================================
   Component: ProgressBar
 ==================================================*/
@@ -503,7 +714,7 @@
     line-height: 35px;
     text-align: center;
     cursor: pointer;
-    transition: border-color 0.1s ease, color 0.1s ease; }
+    transition: border-color .1s ease, color .1s ease; }
     .pagination .item:not(.dot):not(.active):not(.disabled):hover {
       color: #FD605B;
       border-color: #FD605B; }
