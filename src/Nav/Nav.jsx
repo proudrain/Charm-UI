@@ -16,8 +16,10 @@ var CategoryItem = React.createClass({
   render: function() {
     return (
       <li className="category-item">
-        <img src={this.props.item.img} alt={this.props.item.title} />
-        <span className="item-title">{this.props.item.title}</span>
+        <img src={this.props.item.img} alt={this.props.item.title} title={this.props.item.title} />
+        <span className="item-title" title={this.props.item.title}>
+          {this.props.item.title}
+        </span>
         <span className="item-btn">查看</span>
       </li>
     );
@@ -39,6 +41,9 @@ var CategoryItemGroup = React.createClass({
 var CategoryItems = React.createClass({
   render: function() {
     var itemsGroups;
+    var subpartStyle = {
+      width: 980
+    };
     if(this.props.items.length > 6) {
       itemsGroups = [
         <CategoryItemGroup items={this.props.items.slice(0, 3)} key={0} />,
@@ -50,14 +55,19 @@ var CategoryItems = React.createClass({
         <CategoryItemGroup items={this.props.items.slice(0, 3)} key={0} />,
         <CategoryItemGroup items={this.props.items.slice(3, 6)} key={1} />
       ];
+      subpartStyle.width -= 270;
     } else {
       itemsGroups = [
         <CategoryItemGroup items={this.props.items.slice(0, 3)} key={0} />
       ];
+      subpartStyle.width -= 270 * 2;
     }
     return (
-      <div className="category-subpart">
+      <div className="category-subpart" style={subpartStyle}>
         {itemsGroups}
+        <div className="category-more">
+          <a href="#">查看更多</a>
+        </div>
       </div>
     );
   }
@@ -100,7 +110,7 @@ var Nav = React.createClass({
         <NavTitle title={this.props.title} color={this.props.color} />
         <ul className="category_list">
           {this.props.items.map(function(category, i) {
-            return <Category category={category} key={i} />;
+            return <Category category={category} key={i} index={i} />;
           }.bind(this))}
         </ul>
       </div>

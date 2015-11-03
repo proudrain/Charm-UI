@@ -1,4 +1,6 @@
 
+$pageWidth: 1200px;
+
 $navTitleHeight: 50px;
 $navCateHeight: 60px;
 
@@ -9,8 +11,9 @@ $navCateBackColor: #6e3800;
 
 $navItemGroupWidth: 270px;
 
-$navItemHeight: $navHeight / 3;
-$navItemImgSize: $navHeight / 3;
+$navItemHeight: $navCateHeight * 5 / 3;
+$navItemWidth: 270px;
+$navItemImgSize: $navCateHeight * 5 / 3 - 20;
 
 @mixin link($color: #333) {
   color: $color;
@@ -29,6 +32,7 @@ $navItemImgSize: $navHeight / 3;
 }
 
 .nav {
+  position: relative;
   width: $navWidth;
   height: $navHeight;
   text-align: center;
@@ -40,9 +44,8 @@ $navItemImgSize: $navHeight / 3;
   }
 
   .category {
-    position: relative;
     height: $navCateHeight;
-    background-color: rgba($navCateBackColor, 0.95);
+    background-color: rgba($navCateBackColor, 0.9);
     line-height: $navCateHeight;
     color: #fff;
     // transition: background-color .4s ease, color .4s ease;
@@ -52,23 +55,106 @@ $navItemImgSize: $navHeight / 3;
       color: $navCateBackColor;
     }
 
-    &:after {
-      content: ">";
-      position: absolute;
-      top: 0;
-      right: 18px;
+    &:hover > .category-subpart {
+      display: block;
     }
 
     & > a {
+      position: relative;
       display: block;
 
       @include link(inherit);
+
+      &:after {
+        content: ">";
+        position: absolute;
+        top: 0;
+        right: 18px;
+      }
     }
 
     .category-subpart {
       position: absolute;
-      top: 0;
+      display: none;
+      top: $navTitleHeight;
       left: $navWidth;
+      width: $pageWidth - $navWidth;
+      height: $navCateHeight * 5;
+      background-color: #fff;
+      text-align: left;
+      // outline: 1px solid red;
+
+      .category-more {
+        position: absolute;
+        right: 60px;
+        bottom: 18px;
+        color: #aaa;
+        font-size: 14px;
+
+        & > a {
+          @include link(inherit);
+        }
+      }
+    }
+
+    .category-items {
+      float: left;
+
+      .category-item {
+        padding: 10px 20px;
+        width: $navItemWidth;
+        height: $navItemHeight;
+        box-sizing: border-box;
+        cursor: pointer;
+        // outline: 1px solid green;
+
+        & > img {
+          width: $navItemImgSize;
+          height: $navItemImgSize;
+          vertical-align: middle;
+
+          &:hover + .item-title {
+            color: darken($navCateBackColor, 4);
+          }
+        }
+
+        .item-title {
+          display: inline-block;
+          padding: 0 10px;
+          margin: 0;
+          width: 96px;
+          color: #333;
+          line-height: 24px;
+          text-align: center;
+          vertical-align: middle;
+
+          @extend .overflow;
+
+          &:hover {
+            color: darken($navCateBackColor, 4);
+          }
+        }
+
+        .item-btn {
+          float: right;
+          padding: 0 4px;
+          margin-top: 32px;
+          line-height: 16px;
+          color: $navCateBackColor;
+          font-size: 12px;
+          border: 1px solid $navCateBackColor;
+          border-radius: 2px;
+
+          &:hover {
+            color: #fff;
+            background-color: $navCateBackColor;
+          }
+
+          &:active {
+            background-color: darken($navCateBackColor, 4);
+          }
+        }
+      }
     }
   }
 }

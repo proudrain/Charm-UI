@@ -1187,8 +1187,10 @@ var CategoryItem = React.createClass({displayName: "CategoryItem",
   render: function() {
     return (
       React.createElement("li", {className: "category-item"}, 
-        React.createElement("img", {src: this.props.item.img, alt: this.props.item.title}), 
-        React.createElement("span", {className: "item-title"}, this.props.item.title), 
+        React.createElement("img", {src: this.props.item.img, alt: this.props.item.title, title: this.props.item.title}), 
+        React.createElement("span", {className: "item-title", title: this.props.item.title}, 
+          this.props.item.title
+        ), 
         React.createElement("span", {className: "item-btn"}, "查看")
       )
     );
@@ -1210,6 +1212,9 @@ var CategoryItemGroup = React.createClass({displayName: "CategoryItemGroup",
 var CategoryItems = React.createClass({displayName: "CategoryItems",
   render: function() {
     var itemsGroups;
+    var subpartStyle = {
+      width: 980
+    };
     if(this.props.items.length > 6) {
       itemsGroups = [
         React.createElement(CategoryItemGroup, {items: this.props.items.slice(0, 3), key: 0}),
@@ -1221,14 +1226,19 @@ var CategoryItems = React.createClass({displayName: "CategoryItems",
         React.createElement(CategoryItemGroup, {items: this.props.items.slice(0, 3), key: 0}),
         React.createElement(CategoryItemGroup, {items: this.props.items.slice(3, 6), key: 1})
       ];
+      subpartStyle.width -= 270;
     } else {
       itemsGroups = [
         React.createElement(CategoryItemGroup, {items: this.props.items.slice(0, 3), key: 0})
       ];
+      subpartStyle.width -= 270 * 2;
     }
     return (
-      React.createElement("div", {className: "category-subpart"}, 
-        itemsGroups
+      React.createElement("div", {className: "category-subpart", style: subpartStyle}, 
+        itemsGroups, 
+        React.createElement("div", {className: "category-more"}, 
+          React.createElement("a", {href: "#"}, "查看更多")
+        )
       )
     );
   }
@@ -1271,7 +1281,7 @@ var Nav = React.createClass({displayName: "Nav",
         React.createElement(NavTitle, {title: this.props.title, color: this.props.color}), 
         React.createElement("ul", {className: "category_list"}, 
           this.props.items.map(function(category, i) {
-            return React.createElement(Category, {category: category, key: i});
+            return React.createElement(Category, {category: category, key: i, index: i});
           }.bind(this))
         )
       )
