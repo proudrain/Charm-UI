@@ -42,7 +42,7 @@ var CategoryItems = React.createClass({
   render: function() {
     var itemsGroups;
     var subpartStyle = {
-      width: 980
+      width: 961
     };
     if(this.props.items.length > 6) {
       itemsGroups = [

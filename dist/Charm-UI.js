@@ -1065,7 +1065,7 @@ var NavMain = React.createClass({displayName: "NavMain",
           active: true
         }, {
           id: 1,
-          title: '家具大全',
+          title: '家具城',
           link: '/overview'
         }, {
           id: 2,
@@ -1109,7 +1109,8 @@ var Banner = React.createClass({displayName: "Banner",
           )
         ), 
         React.createElement("div", {className: "qrcode"}, 
-          React.createElement("img", {src: "qrcode.png", title: "扫一扫关注我们"})
+          React.createElement("img", {src: "qrcode.png", title: "扫一扫关注我们"}), 
+          React.createElement("div", null, "万木家官方微信平台")
         )
       )
     );
@@ -1292,7 +1293,8 @@ var GroupGuide = React.createClass({displayName: "GroupGuide",
         React.createElement("div", {className: "guide-title", style: titleStyle}, 
           React.createElement("a", {href: this.props.guide.url}, 
             this.props.guide.title
-          )
+          ), 
+          React.createElement("a", {href: "/more", className: "more am-icon-angle-right"}, "更多")
         ), 
         React.createElement("img", {
           src: this.props.guide.img, 
@@ -1368,7 +1370,7 @@ var CategoryItems = React.createClass({displayName: "CategoryItems",
   render: function() {
     var itemsGroups;
     var subpartStyle = {
-      width: 980
+      width: 961
     };
     if(this.props.items.length > 6) {
       itemsGroups = [

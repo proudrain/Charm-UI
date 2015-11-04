@@ -4,7 +4,7 @@ $pageWidth: 1200px;
 $navTitleHeight: 50px;
 $navCateHeight: 60px;
 
-$navWidth: 220px;
+$navWidth: 239px;
 $navHeight: $navTitleHeight + $navCateHeight * 5;
 
 $navCateBackColor: #6e3800;
@@ -51,7 +51,7 @@ $navItemImgSize: $navCateHeight * 5 / 3 - 20;
 
   .category {
     height: $navCateHeight;
-    background-color: rgba($navCateBackColor, 0.9);
+    background-color: rgba($navCateBackColor, 0.95);
     line-height: $navCateHeight;
     color: #fff;
     // transition: background-color .4s ease, color .4s ease;

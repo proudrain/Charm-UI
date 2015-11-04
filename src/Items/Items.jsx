@@ -145,6 +145,7 @@ var GroupGuide = React.createClass({
           <a href={this.props.guide.url}>
             {this.props.guide.title}
           </a>
+          <a href="/more" className="more am-icon-angle-right">更多</a>
         </div>
         <img
           src={this.props.guide.img}

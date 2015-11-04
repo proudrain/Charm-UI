@@ -72,7 +72,7 @@ var NavMain = React.createClass({
           active: true
         }, {
           id: 1,
-          title: '家具大全',
+          title: '家具城',
           link: '/overview'
         }, {
           id: 2,
@@ -117,6 +117,7 @@ var Banner = React.createClass({
         </div>
         <div className="qrcode">
           <img src="qrcode.png" title="扫一扫关注我们" />
+          <div>万木家官方微信平台</div>
         </div>
       </div>
     );

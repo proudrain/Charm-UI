@@ -1,7 +1,7 @@
 
 $pageWidth: 1200px;
 
-$itemWidthTg: 240px;
+$itemWidthTg: 241px;
 $itemHeightTg: 280px;
 
 $itemWidth: 220px;
@@ -24,15 +24,15 @@ $titleFontSize: 14px;
 $priceColor: #cf0a0a;
 $priceFontSize: 18px;
 
-$divideColor: #f5f5f5;
-$divideWidth: 2px;
+$divideColor: #ccc;
+$divideWidth: 1px;
 $divideBorder: $divideWidth solid $divideColor;
 
 $itemsWidthTg: $itemWidthTg * 4 - $divideWidth * 4;
 
 $itemsWidth: $pageWidth;
 
-$guideWidth: $itemWidthTg + $divideWidth * 4;
+$guideWidth: $pageWidth - $itemsWidthTg;
 $guideTitleHeight: 50px;
 
 $itemTipHeight: 42px;
@@ -67,14 +67,13 @@ $activeColor: #6e3800;
 
 .group-guide {
   float: left;
-  margin-top: -$divideWidth;
   margin-left: -$divideWidth;
   width: $guideWidth;
   height: $itemHeightTg* 2;
-  border: $divideBorder;
   box-sizing: border-box;
 
   .guide-title {
+    position: relative;
     padding-left: 20px;
     margin-top: -$divideWidth;
     height: $guideTitleHeight;
@@ -84,6 +83,27 @@ $activeColor: #6e3800;
 
     & > a {
       @include link(#fff);
+    }
+
+    .more {
+      position: absolute;
+      line-height: 30px;
+      right: 20px;
+      bottom: 10px;
+      font-size: 16px;
+
+      &:hover {
+        &:before {
+          right: -10px;
+        }
+      }
+
+      &:before {
+        position: absolute;
+        bottom: 8px;
+        right: -8px;
+        transition: right 0.3s ease;
+      }
     }
   }
 
@@ -108,16 +128,16 @@ $activeColor: #6e3800;
 
   &.normal {
     .item {
-      &:hover > .item-tip {
-        transform: translateY(0);
-      }
-
-      &:hover > .item-img {
-        transform: translateY(-10px);
-      }
-
-      &:hover > .item-info > h5 {
-        transform: translateY(-6px);
+      &:hover {
+        & > .item-tip {
+          transform: translateY(0);
+        }
+        & > .item-img {
+          transform: translateY(-10px);
+        }
+        & > .item-info > h5 {
+          transform: translateY(-6px);
+        }
       }
 
       &:nth-child(5n+1) {
@@ -148,10 +168,22 @@ $activeColor: #6e3800;
       height: $itemHeightTg - $itemPaddingTop * 2 - $divideWidth * 1.5;
       box-sizing: content-box;
 
+      &:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        display: block;
+        width: 100%;
+        height: 0;
+        background-color: #9e0808;
+        transition: height .2s ease;
+      }
+
       &:hover {
-        border-bottom-color: darken($priceColor, 10);
-        // box-shadow: 0 10px 8px 8px #f2f2f2;
-        z-index: 10;
+        &:after {
+          height: 2px;
+        }
       }
 
       .item-img {
@@ -186,6 +218,15 @@ $activeColor: #6e3800;
     text-align: center;
     overflow: hidden;
 
+    &:hover {
+      & > .item-img {
+        transform: translateY(-4px);
+      }
+      & > .item-info {
+        transform: translateY(-2px);
+      }
+    }
+
     .item-badge {
       position: absolute;
       display: block;
@@ -215,12 +256,17 @@ $activeColor: #6e3800;
     }
 
     .item-info {
+      position: relative;
+      transform: translateY(0);
+      transition: transform 0.2s ease;
 
       & > h5 {
         @extend .paragraph;
         margin-top: 20px;
+        height: 40px;
         font-size: $titleFontSize;
         line-height: 1.2;
+        overflow: hidden;
         transform: translateY(0);
         transition: transform 0.3s ease;
 
@@ -233,7 +279,7 @@ $activeColor: #6e3800;
         position: absolute;
         @extend .paragraph;
         width: $itemWidth - $itemPaddingLeft * 2;
-        bottom: 20px;
+        bottom: -24px;
         color: $priceColor;
         font-size: $priceFontSize;
       }
