@@ -97,6 +97,7 @@ $activeColor: #6e3800;
 .items {
   position: relative;
   width: $itemsWidth;
+  background-color: #fff;
   // overflow: hidden;
 
   &:after {
@@ -148,7 +149,8 @@ $activeColor: #6e3800;
       box-sizing: content-box;
 
       &:hover {
-        border-color: $priceColor;
+        border-bottom-color: darken($priceColor, 10);
+        // box-shadow: 0 10px 8px 8px #f2f2f2;
         z-index: 10;
       }
 
@@ -173,6 +175,7 @@ $activeColor: #6e3800;
   .item {
     position: relative;
     float: left;
+    display: block;
     margin-top: $itemMargin;
     margin-left: $itemMargin;
     width: $itemWidth;

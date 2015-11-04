@@ -77,7 +77,7 @@ var Category = React.createClass({
   render: function() {
     return (
       <li className="category">
-        <a href="#">{this.props.category.title}</a>
+        <a href="#" className="am-icon-angle-right">{this.props.category.title}</a>
         <CategoryItems items={this.props.category.subpart} />
       </li>
     );
@@ -108,7 +108,7 @@ var Nav = React.createClass({
     return (
       <div className="nav">
         <NavTitle title={this.props.title} color={this.props.color} />
-        <ul className="category_list">
+        <ul className="category-list">
           {this.props.items.map(function(category, i) {
             return <Category category={category} key={i} index={i} />;
           }.bind(this))}

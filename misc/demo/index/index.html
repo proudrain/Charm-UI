@@ -2,19 +2,19 @@
 <html>
   <head>
     <meta charset='utf-8'>
-    <title>Nav Component</title>
-		<link rel='stylesheet' href='../../../dist/Charm-UI.css' />
+    <title>Index</title>
     <link rel="stylesheet" href="../lib/amazeui.css"/>
+		<link rel='stylesheet' href='../../../dist/Charm-UI.css' />
     <script src='../lib/react.js'></script>
 		<script src='../lib/JSXTransformer.js'></script>
-		<script src='../../../dist/Charm-UI.js'></script>
     <script src="../lib/amazeui.react.js"></script>
+		<script src='../../../dist/Charm-UI.js'></script>
     <style>
       body {
         min-height: 100vh;
         margin: 0;
         color: #333;
-        background-color: rgb(121, 120, 8);
+        background-color: #f5f5f5;
         /*background-color: #231716;*/
       }
 
@@ -28,19 +28,26 @@
       }
 
       #root {
-        margin: 20px auto;
+        margin: 0 auto;
         width: 1200px;
       }
-
     </style>
   </head>
   <body>
-    <div id='root'>
-      <div id='nav'></div>
+    <div id="top-bar"></div>
+    <div id="root">
+      <div id="header"></div>
+      <div id="body">
+        <div id="slider"></div>
+        <div id="group-1"></div>
+        <div id="group-2"></div>
+        <div id="group-3"></div>
+      </div>
+      <div id="footer"></div>
     </div>
 
     <script type='text/jsx'>
-      var MOCK_ITEMS = [
+      var MOCK_NAV_ITEMS = [
         {
           id: 0,
           title: '书房',
@@ -166,10 +173,97 @@
         }
       ];
 
-      var nav = React.render(
-        <Nav items={MOCK_ITEMS} />,
-        document.getElementById('nav')
+      var MOCK_ITEMS = [
+        {
+          id: 13826,
+          image_url: 'http://static.wanmujia.com/images/item/26/a48932eefa2b4dad3993371075ce494a/df749d2f7c4e6e569c89e84d39a27a70.jpg',
+          item: '二闷橱',
+          price: 168000
+        }, {
+          id: 13851,
+          image_url: 'http://static.wanmujia.com/images/item/51/8fd2b6a905998718475dc7247ef2b9bc/e46a0c76b5b4067acbf2361fba71daeb.jpg',
+          item: '小叶檀梅花条案',
+          price: 368000
+        }, {
+          id: 13892,
+          image_url: 'http://static.wanmujia.com/images/item/92/ea1dc35074d70be99f0cc54198b6bf74/3de87dd30c03d45d33175ffdb52ca458.jpg',
+          item: '书架书架书架书架书架书架书架书架',
+          price: 600000
+        }, {
+          id: 13892,
+          image_url: 'http://static.wanmujia.com/images/item/92/ea1dc35074d70be99f0cc54198b6bf74/3de87dd30c03d45d33175ffdb52ca458.jpg',
+          item: '书架书架书架书架书架书架书架书架',
+          price: 6000
+        }, {
+          id: 13851,
+          image_url: 'http://static.wanmujia.com/images/item/51/8fd2b6a905998718475dc7247ef2b9bc/e46a0c76b5b4067acbf2361fba71daeb.jpg',
+          item: '小叶檀梅花条案',
+          price: 368000
+        }, {
+          id: 13892,
+          image_url: 'http://static.wanmujia.com/images/item/92/ea1dc35074d70be99f0cc54198b6bf74/3de87dd30c03d45d33175ffdb52ca458.jpg',
+          item: '书架书架书架书架书架书架书架书架',
+          price: 6000
+        }, {
+          id: 13851,
+          image_url: 'http://static.wanmujia.com/images/item/51/8fd2b6a905998718475dc7247ef2b9bc/e46a0c76b5b4067acbf2361fba71daeb.jpg',
+          item: '小叶檀梅花条案',
+          price: 368000
+        }, {
+          id: 13851,
+          image_url: 'http://static.wanmujia.com/images/item/51/8fd2b6a905998718475dc7247ef2b9bc/e46a0c76b5b4067acbf2361fba71daeb.jpg',
+          item: '小叶檀梅花条案',
+          price: 368000
+        }
+      ];
+
+      var MOCK_GUIDE = {
+        title: '客厅系列',
+        img: '',
+        url: '/item/?scene=5',
+        color: '#6e3800'
+      };
+
+      React.render(
+        <TopBar />,
+        document.getElementById('top-bar')
+      );
+
+      React.render(
+        <Header items={MOCK_NAV_ITEMS} />,
+        document.getElementById('header')
+      );
+
+      React.render(
+        <ItemGroup items={MOCK_ITEMS} guide={MOCK_GUIDE} />,
+        document.getElementById('group-1')
+      );
+
+      var sliderData = [
+        {
+          title: '标题',
+          img: 'http://s.amazeui.org/media/i/demos/bing-1.jpg',
+          url: ''
+        }, {
+          title: '标题',
+          img: 'http://s.amazeui.org/media/i/demos/bing-2.jpg',
+          url: '/'
+        }, {
+          title: '标题',
+          img: 'http://s.amazeui.org/media/i/demos/bing-3.jpg',
+          url: '/'
+        }, {
+          title: '标题',
+          img: 'http://s.amazeui.org/media/i/demos/bing-4.jpg',
+          url: '/'
+        }
+      ];
+
+
+      React.render(
+        <Slider theme="a1" slideSpeed={2500} items={sliderData} />,
+        document.getElementById('slider')
       );
     </script>
-  </body>
+</body>
 </html>

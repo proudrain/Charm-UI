@@ -34,13 +34,19 @@ $navItemImgSize: $navCateHeight * 5 / 3 - 20;
 .nav {
   position: relative;
   width: $navWidth;
-  height: $navHeight;
+  // height: $navHeight;
   text-align: center;
 
   .nav-title {
     height: $navTitleHeight;
     color: #fafafa;
     line-height: $navTitleHeight;
+  }
+
+  .category-list {
+    position: absolute;
+    width: $navWidth;
+    z-index: 200;
   }
 
   .category {
@@ -55,6 +61,10 @@ $navItemImgSize: $navCateHeight * 5 / 3 - 20;
       color: $navCateBackColor;
     }
 
+    // &:hover > a:after {
+    //   transform: translateX(4px);
+    // }
+
     &:hover > .category-subpart {
       display: block;
     }
@@ -65,18 +75,19 @@ $navItemImgSize: $navCateHeight * 5 / 3 - 20;
 
       @include link(inherit);
 
-      &:after {
-        content: ">";
+      &:before {
         position: absolute;
-        top: 0;
+        top: 20px;
         right: 18px;
+        font-size: 18px;
       }
     }
 
     .category-subpart {
       position: absolute;
       display: none;
-      top: $navTitleHeight;
+      // top: $navTitleHeight;
+      top: 0;
       left: $navWidth;
       width: $pageWidth - $navWidth;
       height: $navCateHeight * 5;

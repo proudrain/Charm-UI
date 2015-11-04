@@ -34,7 +34,7 @@ var ItemBadge = React.createClass({
 var ItemImg = React.createClass({
   render: function() {
     return (
-      <a href={"/item/" + this.props.id} className="item-img">
+      <a href={"/item/" + this.props.id} className="item-img" title={this.props.item}>
         <img src={this.props.imgUrl} alt={this.props.item} />
       </a>
     );
@@ -55,7 +55,7 @@ var ItemInfo = React.createClass({
     return (
       <div className="item-info">
         <h5>
-          <a href={'/item/' + this.props.id}>
+          <a href={'/item/' + this.props.id} title={this.props.item}>
             {this.props.item}
           </a>
         </h5>
